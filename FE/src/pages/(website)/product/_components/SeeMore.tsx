@@ -1,25 +1,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import "react-quill/dist/quill.snow.css";
 import CommentUser from "./CommentUser";
-
-interface IUser {
-  _id: string;
-  imageUrl: string;
-  firstName: string;
-  lastName: string;
-}
+import { Comments } from "../../shop/types";
 
 const SeeMore = ({
   comments,
   descriptionDetail,
 }: {
-  comments: {
-    _id: string;
-    userId: IUser;
-    content: string;
-    rating: number;
-    createdAt: Date;
-  }[];
+  comments: Comments[];
   descriptionDetail: string;
 }) => {
   return (

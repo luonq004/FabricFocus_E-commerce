@@ -11,10 +11,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { toast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import Select from "react-select";
 import { AddNewValue } from "./AddNewValue";
-import { toast } from "@/components/ui/use-toast";
+import { useFieldArray } from "react-hook-form";
 
 const AttributeTab = ({
   attributes,
@@ -29,28 +30,34 @@ const AttributeTab = ({
   stateAttribute: State;
   dispatch: React.Dispatch<Action>;
   selectedValues: {
-    [key: string]: { value: string; label: string; _id: string; type: string };
+    [key: string]: {
+      value: string;
+      label: string;
+      _id: string;
+      type: string;
+    }[];
   };
   setSelectedValues: React.Dispatch<
     React.SetStateAction<{
       [key: string]: {
         _id: string;
-        attribute: string;
+        type: string;
         value: string;
         label: string;
-      };
+      }[];
     }>
   >;
   handleAttributeValueChange: (
     attributeId: string,
     selectedOptions: {
       _id: string;
-      attribute: string;
+      type: string;
       value: string;
       label: string;
-    }
+    }[]
   ) => void;
-  replaceFields: (fields: Variant[]) => void;
+  // replaceFields: (fields: Variant[]) => void;
+  replaceFields: ReturnType<typeof useFieldArray>["replace"];
 }) => {
   // State
   const [valueOptions, setValueOptions] = useState<{
@@ -72,9 +79,6 @@ const AttributeTab = ({
 
     dispatch({ type: "ADD_ATTRIBUTE", payload: chooseAttribute });
   }
-
-  // console.log("valueOptions: ", stateAttribute.attributesChoose);
-  // console.log("selectedValues: ", selectedValues);
 
   return (
     <>
@@ -124,7 +128,6 @@ const AttributeTab = ({
       </div>
 
       {stateAttribute.attributesChoose.map((value) => (
-        // console.log("VALUE: ", value),
         <Collapsible key={value._id} className="py-3 border-b">
           <CollapsibleTrigger className="flex justify-between items-center w-full">
             <p className="text-lg font-medium text-gray-500">{value.name}</p>

@@ -5,6 +5,8 @@ import {
   Value,
   Variant,
 } from "@/common/types/Product";
+import { ProductVariant } from "@/pages/(dashboard)/product/types";
+import { ProductItem } from "@/pages/(website)/shop/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -31,7 +33,7 @@ export function getUniqueTypes(product: IProduct) {
   return Array.from(types); // Chuyển Set về mảng và trả về
 }
 
-export function getUniqueTypesFromFields(fields: Variant[] | Attribute[]) {
+export function getUniqueTypesFromFields(fields: ProductVariant[]) {
   const types = new Set(); // Sử dụng Set để đảm bảo không có giá trị trùng lặp
 
   // Duyệt qua tất cả các biến thể (variants) của sản phẩm
@@ -148,6 +150,8 @@ export const getAttributesUsedInArray = (array1, attributes) => {
 export function formatDataLikeFields(valeMix: Data[][]) {
   return valeMix.map((group) => ({
     price: 0,
+    originalPrice: 0,
+    priceSale: 0,
     values: group.map((item) => ({
       _id: item._id,
       name: item.label,
@@ -156,7 +160,8 @@ export function formatDataLikeFields(valeMix: Data[][]) {
     })),
     countOnStock: 0,
     image: "",
-    deleted: false,
+
+    // deleted: false,
     // id: crypto.randomUUID(), // Tạo id ngẫu nhiên cho mỗi phần tử
   }));
 }
@@ -235,7 +240,7 @@ export const extractAttributes = (variants: any) => {
 };
 
 export const filterAndFormatAttributes = (
-  product: IProduct,
+  product: ProductItem,
   type: string,
   value: string
 ) => {

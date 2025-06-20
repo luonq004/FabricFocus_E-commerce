@@ -52,7 +52,6 @@ const LayoutWebsite = () => {
     }
 
     if (user) {
-      // console.log("user", user);
       // Gọi saveUserToDatabase một lần
       const saveUserIfNeeded = async () => {
         if (user && !isUserSaved.current) {

@@ -1,20 +1,20 @@
 import { GrLinkNext } from "react-icons/gr";
-import { IoBagHandleSharp } from "react-icons/io5";
 import { SlHeart } from "react-icons/sl";
 
 import noData from "@/assets/icons/noData.svg";
 
 import { IProduct } from "@/common/types/Product";
 
+import { useUserContext } from "@/common/context/UserProvider";
 import { formatCurrency } from "@/lib/utils";
 import { useState } from "react";
 import { IoEyeOutline } from "react-icons/io5";
-import PreviewProduct from "./PreviewProduct";
-import SkeletonProduct from "./SkeletonProduct";
 import { Link } from "react-router-dom";
 import { useAddToWishList } from "../../wishlist/action/useAddToWishList";
-import { useUserContext } from "@/common/context/UserProvider";
 import { useGetWishList } from "../../wishlist/action/useGetWishList";
+import PreviewProduct from "./PreviewProduct";
+import SkeletonProduct from "./SkeletonProduct";
+import { WishList } from "../types";
 
 type ProductItemProps = {
   data: IProduct[];
@@ -35,7 +35,7 @@ const ProductItem = ({
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { _id } = useUserContext();
   const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
-  const { wishList, isError } = useGetWishList(_id);
+  const { wishList }: { wishList: WishList } = useGetWishList(_id);
   const { addWishList, isAdding } = useAddToWishList();
 
   if (isLoading) {
@@ -155,7 +155,7 @@ const ProductItem = ({
                         destrucId?.includes(product?._id)
                           ? "bg-[#b8cd06] text-white"
                           : ""
-                      }`}
+                      } ${isAdding ? "cursor-not-allowed" : ""}`}
                     >
                       <SlHeart
                         className={`cursor-pointer text-lg text-current hover:bg-[#b8cd06] text-[#979797] hover:text-white `}

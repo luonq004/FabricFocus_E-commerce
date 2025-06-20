@@ -2,7 +2,9 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface ProductAttributesProps {
   attributes: [string, string[]][];
-  attributesChoose: Record<string, string[]>;
+  attributesChoose: {
+    [key: string]: string | string[][];
+  };
   onAttributeSelect: (type: string, value: string) => void;
   deleted: boolean;
 }

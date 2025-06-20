@@ -3,7 +3,6 @@ import vnpay from "@/assets/icons/vnpay-logo.svg";
 
 //other
 import { useUserContext } from "@/common/context/UserProvider";
-import Icart from "@/common/types/cart";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,13 +20,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import axios from "@/configs/axios";
 import { formatCurrency } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "@/configs/axios";
 import { ChevronRight, Ticket } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { CartResponse } from "../types";
 import CountdownVoucher from "./CountdownVoucher";
 
 const formSchema = z.object({
@@ -40,7 +40,7 @@ const CartRight = ({
   cart,
   userAction,
 }: {
-  cart: Icart;
+  cart: CartResponse;
   userAction: (action: { type: string }, payload: any) => void;
 }) => {
   const { _id }: { _id: string } = useUserContext();
@@ -56,21 +56,18 @@ const CartRight = ({
     userAction({ type: "applyVoucher" }, values);
   }
 
-  function handleApplyVoucher(item: any) {
-    // console.log(item)
+  function handleApplyVoucher(item: string) {
     userAction({ type: "applyVoucher" }, { voucherCode: item });
   }
 
-  function handleRemoveVoucher(item: any) {
-    // console.log(item)
+  function handleRemoveVoucher(item: string) {
     userAction({ type: "removeVoucher" }, { voucherCode: item });
   }
-  // console.log("selectedOne", cart)
 
   async function lastCheck() {
     if (cart?.voucher?.length > 0) {
       for (const item of cart.voucher) {
-        const { data } = await axios.get(`http/voucher/get-one/${item._id}`);
+        const { data } = await axios.get(`voucher/get-one/${item._id}`);
         if (data?.status === "inactive") {
           console.log("remove", item.code);
           toast({
@@ -106,7 +103,7 @@ const CartRight = ({
       }
     }
 
-    if (cart?.products?.every((item: any) => item.selected === false)) {
+    if (cart?.products?.every((item) => item.selected === false)) {
       return; // Chặn nếu không có sản phẩm nào được chọn
     }
 
@@ -166,7 +163,7 @@ const CartRight = ({
                   </div>
                   <div className="text-start truncate">
                     {cart?.voucher?.length > 0
-                      ? cart?.voucher?.map((item: any) => item.code)?.join(", ")
+                      ? cart?.voucher?.map((item) => item.code)?.join(", ")
                       : "Chọn hoặc nhập Voucher"}
                   </div>
                   <div className="items-end">
@@ -228,7 +225,7 @@ const CartRight = ({
           {/* <Link to={`${cart?.products?.every((item: any) => item.selected === false) ? '' : 'checkout'}`}> */}
           <div
             className={`bg-[#C8C9CB] ${
-              cart?.products?.every((item: any) => item.selected === false)
+              cart?.products?.every((item) => item.selected === false)
                 ? "cursor-not-allowed"
                 : "bg-light-400 hover:bg-light-500"
             } transition-all duration-300 flex justify-center items-center w-full py-4 gap-4 rounded-full text-white font-medium select-none`}

@@ -133,7 +133,6 @@ const ProductAddPage = () => {
         <div className="spinner mx-auto"></div>
       </Container>
     );
-  // console.log(form.formState.errors);
 
   const types = id ? getUniqueTypes(product) : [];
 
@@ -142,8 +141,6 @@ const ProductAddPage = () => {
     : [];
 
   const attributeValue = id ? getUniqueAttributeValue(product) : [];
-
-  // console.log(form.formState.errors.variants);
 
   return (
     // <Container>
@@ -157,7 +154,6 @@ const ProductAddPage = () => {
           <div className="flex flex-wrap xl:flex-nowrap gap-4">
             {/* Info Product */}
             <InfoGeneralProduct
-              id={id ? true : false}
               form={form}
               filteredData={filteredData}
               attributeValue={attributeValue}

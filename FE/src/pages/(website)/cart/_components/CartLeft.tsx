@@ -2,26 +2,22 @@
 import cartEmpty from "@/assets/images/cart-empty.png";
 
 //type
-import Icart from "@/common/types/cart";
 
 //other
 import { useUserContext } from "@/common/context/UserProvider";
 import { formatCurrency } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { CartResponse } from "../types";
 import PolicyCart from "./PolicyCart";
 
 const CartLeft = ({
   cart,
-
-  setAttribute,
   userAction,
   isLoading,
   isError,
 }: {
-  cart: Icart;
-  attribute: any;
-  setAttribute: (idCart: string) => void;
+  cart: CartResponse;
   userAction: (action: { type: string }, payload: any) => void;
   isLoading: boolean;
   isError: boolean;
@@ -46,9 +42,8 @@ const CartLeft = ({
       {_id && (
         <div className="w-full grid grid-cols-[auto_37%] justify-between items-center gap-x-4 bg-gray-100 py-1.5">
           <div className="flex gap-x-5 items-center">
-            {cart?.products?.filter((item: any) => item.selected === true)
-              .length === cart?.products.length &&
-            cart?.products.length !== 0 ? (
+            {cart?.products?.filter((item) => item.selected === true).length ===
+              cart?.products.length && cart?.products.length !== 0 ? (
               <div className="flex items-center">
                 <div
                   className="inline-flex justify-center p-0.5 items-center rounded-sm bg-[#b8cd06] cursor-pointer"
@@ -75,9 +70,8 @@ const CartLeft = ({
               className="cursor-pointer"
             >
               Xóa (
-              {cart?.products?.filter(
-                (product: any) => product.selected === true
-              ).length ?? 0}
+              {cart?.products?.filter((product) => product.selected === true)
+                .length ?? 0}
               )
             </span>
           </div>
@@ -93,7 +87,7 @@ const CartLeft = ({
             <p className="text-[#9D9EA2] max-sm:text-[14px]">Giỏ hàng trống</p>
           </div>
         )}
-        {cart?.products.map((item: any, index: number) => (
+        {cart?.products.map((item, index: number) => (
           <div
             key={index}
             className={`grid transition-all duration-500 grid-cols-[18px_81px_auto] max-sm:grid-cols-[18_px_75px_auto] gap-x-4 border-[#F4F4F4] border-b pb-6 ${
@@ -182,7 +176,7 @@ const CartLeft = ({
                       <input
                         onChange={(value) =>
                           userAction(
-                            { type: "changeQuality" },
+                            { type: "changeQuantity" },
                             {
                               productId: item.productItem._id,
                               variantId: item.variantItem._id,
@@ -263,30 +257,14 @@ const CartLeft = ({
                   Phân loại
                 </p>
                 <div className="relative">
-                  {/* Attribute__Table  */}
-                  {/* <SizeColorSelector
-                    idProduct={item.productItem._id}
-                    idVariant={item.variantItem._id}
-                    attribute={attribute}
-                    idCart={item._id}
-                    onChangeAttribute={hanldeOnChangeAttribute}
-                    onChangeVariant={(value: any) =>
-                      userAction({ type: "changeVariant" }, value)
-                    }
-                  /> */}
                   <div className="flex items-center gap-1 px-2 py-1 border rounded-md cursor-pointer max-sm:text-[14px] select-none">
-                    {item.variantItem.values.map(
-                      (value: any, index: number) => (
-                        <div key={value._id}>
-                          {value.type}: {value.name}
-                          {index < item.variantItem.values.length - 1
-                            ? ","
-                            : ""}
-                        </div>
-                      )
-                    )}
+                    {item.variantItem.values.map((value, index: number) => (
+                      <div key={value._id}>
+                        {value.type}: {value.name}
+                        {index < item.variantItem.values.length - 1 ? "," : ""}
+                      </div>
+                    ))}
                   </div>
-                  {/* End Attribute__Table  */}
                 </div>
               </div>
               {/* End Attribute  */}

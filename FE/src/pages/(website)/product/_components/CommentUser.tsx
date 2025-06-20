@@ -1,22 +1,9 @@
 import { TiStarFullOutline } from "react-icons/ti";
 import { format } from "date-fns";
-
-interface IUser {
-  _id: string;
-  imageUrl: string;
-  firstName: string;
-  lastName: string;
-}
+import { Comments } from "../../shop/types";
 
 interface CommentProps {
-  comment: {
-    _id: string;
-    userId: IUser;
-    content: string;
-    rating: number;
-    createdAt: Date;
-    infoProductBuy: string;
-  };
+  comment: Comments;
 }
 
 const CommentUser: React.FC<CommentProps> = ({ comment }) => {
@@ -60,14 +47,8 @@ const CommentUser: React.FC<CommentProps> = ({ comment }) => {
       </div>
 
       {/* Content Comment */}
-
-      {/* {comment?.content} */}
-      {/* </div> */}
     </div>
   );
 };
 
 export default CommentUser;
-
-// format(date, "HH:mm MMM dd / yy")
-// dangerouslySetInnerHTML={{ __html: descriptionDetail }}

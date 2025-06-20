@@ -1,6 +1,11 @@
 import { useUserContext } from "@/common/context/UserProvider";
 import useAddress from "@/common/hooks/address/useAddress";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useState, useEffect } from "react"; // Sử dụng useState và useEffect để quản lý địa chỉ đã chọn
 import EditAddress from "../../address/EditAddress";
 import { updateAddressByUserId } from "../../services/address/Address";
@@ -33,10 +38,11 @@ const AddressDialog = ({ isOpen, onClose }) => {
     return <div>Error: {error.message}</div>; // Hiển thị lỗi nếu có
   }
 
-  const handledefault = async(address : Address) => {
+  const handledefault = async (address: Address) => {
     await updateAddressByUserId({
-      ...address, isDefault: true,
-      addressId: address._id
+      ...address,
+      isDefault: true,
+      addressId: address._id,
     });
     queryClient.invalidateQueries(["ADDRESS_", address]);
     toast({
@@ -44,15 +50,19 @@ const AddressDialog = ({ isOpen, onClose }) => {
       description: "đã đặt địa chỉ làm mặc định.",
       variant: "default",
     });
-  }
-  const sortedData = data?.sort((a : Address, b : Address) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
+  };
+  const sortedData = data?.sort(
+    (a: Address, b: Address) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0)
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-1 text-[24px]">Danh sách địa chỉ</DialogTitle>
-          <CreateAddress/>
+          <DialogTitle className="mb-1 text-[24px]">
+            Danh sách địa chỉ
+          </DialogTitle>
+          <CreateAddress />
         </DialogHeader>
         <div className="space-y-4">
           {/* Danh sách địa chỉ */}
@@ -68,7 +78,9 @@ const AddressDialog = ({ isOpen, onClose }) => {
                     type="radio"
                     name="address"
                     value={address._id}
-                    checked={selectedAddress?._id === address._id || address.isDefault} // Kiểm tra nếu là địa chỉ mặc định
+                    checked={
+                      selectedAddress?._id === address._id || address.isDefault
+                    } // Kiểm tra nếu là địa chỉ mặc định
                     onChange={() => handledefault(address)} // Chỉ cập nhật khi chọn radio
                     className="h-4 w-4 mt-[2%]"
                   />
@@ -77,14 +89,22 @@ const AddressDialog = ({ isOpen, onClose }) => {
                     onClick={() => handledefault(address)} // Chỉ cập nhật khi click vào phần địa chỉ
                   >
                     <div className="flex mb-1 items-center gap-2">
-                      <h2 className="text-xl font-medium text-gray-800">{address.name}</h2>
-                      <span className="text-[rgba(0,0,0,0.54)]">| {address.phone}</span>
+                      <h2 className="text-xl font-medium text-gray-800">
+                        {address.name}
+                      </h2>
+                      <span className="text-[rgba(0,0,0,0.54)]">
+                        | {address.phone}
+                      </span>
                     </div>
-                    <p className="text-[rgba(0,0,0,0.54)]">{address.addressDetail}</p>
-                    <p className="text-[rgba(0,0,0,0.54)]">{address.wardId}, {address.districtId}, {address.cityId}</p>
+                    <p className="text-[rgba(0,0,0,0.54)]">
+                      {address.addressDetail}
+                    </p>
+                    <p className="text-[rgba(0,0,0,0.54)]">
+                      {address.wardId}, {address.districtId}, {address.cityId}
+                    </p>
                   </div>
                 </div>
-                <EditAddress addressId={address._id}/>
+                <EditAddress addressId={address._id} />
               </li>
             ))}
           </ul>

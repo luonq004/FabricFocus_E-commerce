@@ -3,7 +3,7 @@ export default interface ICart {
   products?: any;
   voucher?: any;
   subTotal?: number;
-  discount?: number;
+  discount: number;
   ship?: number;
   total?: number;
 }

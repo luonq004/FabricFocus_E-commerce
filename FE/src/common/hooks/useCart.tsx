@@ -20,8 +20,6 @@ const putCart = async (actiton: string, item: Icart) => {
 const useCart = (userId: string) => {
   const queryClient = useQueryClient();
 
-  console.log("userIdCC: ", userId);
-
   const {
     data: cart,
     isLoading,
@@ -37,7 +35,7 @@ const useCart = (userId: string) => {
 
   const addItem = () => {};
 
-  const cartActiton = (action: string) => {
+  const useCartActiton = (action: string) => {
     return useMutation({
       mutationFn: async (item: Icart) => {
         const data = await putCart(action, item);
@@ -48,12 +46,10 @@ const useCart = (userId: string) => {
         queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, userId] });
       },
       onError: (error: any) => {
-        // console.log(error.response.data.message)
         toast({
           variant: "destructive",
           title: "Lỗi giỏ hàng",
           description: `${error.response.data.message}`,
-          // action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
       },
     });
@@ -64,16 +60,16 @@ const useCart = (userId: string) => {
     isLoading,
     isError,
     addItem,
-    updateQuantity: cartActiton("update"),
-    removeItem: cartActiton("remove"),
-    increaseItem: cartActiton("increase"),
-    decreaseItem: cartActiton("decrease"),
-    addVoucher: cartActiton("add-voucher"),
-    removeVoucher: cartActiton("remove-voucher"),
-    changeVariant: cartActiton("change-variant"),
-    selectedOneItem: cartActiton("selected-one"),
-    selectedAllItem: cartActiton("selected-all"),
-    removeAllItemSelected: cartActiton("remove-all-selected"),
+    updateQuantity: useCartActiton("update"),
+    removeItem: useCartActiton("remove"),
+    increaseItem: useCartActiton("increase"),
+    decreaseItem: useCartActiton("decrease"),
+    addVoucher: useCartActiton("add-voucher"),
+    removeVoucher: useCartActiton("remove-voucher"),
+    changeVariant: useCartActiton("change-variant"),
+    selectedOneItem: useCartActiton("selected-one"),
+    selectedAllItem: useCartActiton("selected-all"),
+    removeAllItemSelected: useCartActiton("remove-all-selected"),
   };
 };
 

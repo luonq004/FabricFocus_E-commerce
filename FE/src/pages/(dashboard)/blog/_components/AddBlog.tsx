@@ -1,8 +1,10 @@
 import { Blog } from "@/common/types/Blog";
 import { useToast } from "@/components/ui/use-toast";
-import { uploadFile } from "@/lib/upload";
-import { useUser } from "@clerk/clerk-react";
 import axios from "@/configs/axios";
+import { uploadFile } from "@/lib/upload";
+import { Categories } from "@/pages/(website)/shop/types";
+import { useUser } from "@clerk/clerk-react";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactQuill from "react-quill";
@@ -22,7 +24,7 @@ const AddBlog = () => {
       author: user?.fullName || "",
     },
   });
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Categories[]>([]);
   const [value, setValueEditor] = useState(""); // Lưu giá trị editor của React Quill
   const [previewImage, setPreviewImage] = useState<string | null>(null); // Lưu ảnh xem trước
   const [imageFile, setImageFile] = useState<File | null>(null); // Lưu file ảnh
@@ -125,18 +127,19 @@ const AddBlog = () => {
         title: "Bài viết đã được tạo thành công!",
       });
       navigate("/admin/blogs");
-    } catch (error) {
-      console.error("Lỗi khi tạo bài viết:", error);
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
+
       toast({
         variant: "destructive",
         title: "Thất bại",
         description: "Có lỗi sảy ra khi tạo bài viết!",
       });
-      if (axios.isAxiosError(error)) {
+      if (error) {
         toast({
           variant: "destructive",
           description: `Có lỗi xảy ra: ${
-            error.response?.data.message || error.message
+            err.response?.data.message || err.message
           }`,
         });
       } else {

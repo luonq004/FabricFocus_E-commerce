@@ -1,40 +1,37 @@
-import { IProduct } from "@/common/types/Product";
 import {
   extractAttributes,
   filterAndFormatAttributes,
   formatCurrency,
 } from "@/lib/utils";
-import React, { useState } from "react";
+import { useState } from "react";
 import { TiStarFullOutline } from "react-icons/ti";
 import ButtonQuantity from "./ButtonQuantity";
 
-import Attributes from "./Attributes";
-import { IoBagHandleSharp } from "react-icons/io5";
-import { SlHeart } from "react-icons/sl";
-import { useAddToCart } from "../../shop/actions/useAddToCart";
 import { useUserContext } from "@/common/context/UserProvider";
 import { toast } from "@/components/ui/use-toast";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import { useGetWishList } from "../../wishlist/action/useGetWishList";
+import { IoBagHandleSharp } from "react-icons/io5";
+import { SlHeart } from "react-icons/sl";
+import { Link, useParams } from "react-router-dom";
+import { useAddToCart } from "../../shop/actions/useAddToCart";
+import { Comments, ProductItem, WishList } from "../../shop/types";
 import { useAddToWishList } from "../../wishlist/action/useAddToWishList";
+import { useGetWishList } from "../../wishlist/action/useGetWishList";
+import Attributes from "./Attributes";
 
-interface ProductInfoProps {
-  product: IProduct;
-}
-
-const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
+const ProductInfo = ({ product }: { product: ProductItem }) => {
   const { addCart, isAdding } = useAddToCart();
   const { _id } = useUserContext();
-  const { wishList, isError } = useGetWishList(_id);
+  const { wishList }: { wishList: WishList } = useGetWishList(_id);
   const { id } = useParams();
   const { addWishList } = useAddToWishList();
 
-  const [attributesChoose, setAttributesChoose] = useState<
-    Record<string, string[]>
-  >({});
-  const [selectedAttributes, setSelectedAttributes] = useState<
-    Record<string, string>
-  >({});
+  const [attributesChoose, setAttributesChoose] = useState<{
+    [key: string]: string | string[][];
+  }>({});
+
+  const [selectedAttributes, setSelectedAttributes] = useState<{
+    [key: string]: string | string[];
+  }>({});
 
   const [quantity, setQuantity] = useState(1);
 
@@ -129,7 +126,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
     addCart(data);
   };
 
-  const activeData = product.comments.filter((item) => !item.deleted); // Lọc ra các item chưa bị xóa
+  const activeData: Comments[] | [] = product.comments.filter(
+    (item) => !item.deleted
+  ); // Lọc ra các item chưa bị xóa
   const totalRating = activeData.reduce((sum, item) => sum + item.rating, 0); // Tính tổng rating
   const averageRating = totalRating / activeData.length; // Tính trung bình rating
 
@@ -205,7 +204,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
             <TiStarFullOutline
               key={index}
               className={`text-[#b8cd06] ${
-                index < averageRating || 5 ? "text-[#b8cd06]" : "text-[#ccc]"
+                averageRating && index <= averageRating
+                  ? "text-[#b8cd06]"
+                  : "text-[#ccc]"
               }`}
             />
           ))}

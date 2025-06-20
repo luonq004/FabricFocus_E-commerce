@@ -21,6 +21,8 @@ import AttributeTab from "./AttributeTab";
 import { reducer } from "./reducer";
 
 import { Attribute, Data, State } from "@/common/types/Product";
+import { FormTypeProductVariation } from "@/common/types/validate";
+import { Label } from "@/components/ui/label";
 import {
   formatDataLikeFields,
   getSelectedValues,
@@ -31,8 +33,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useGetAtributes } from "../actions/useGetAttributes";
 import VariationTab from "./VariationTab";
-import { FormTypeProductVariation } from "@/common/types/validate";
-import { Label } from "@/components/ui/label";
+import { ProductVariant } from "../types";
 
 const formats = [
   "header",
@@ -49,12 +50,11 @@ const formats = [
 ];
 
 const InfoGeneralProduct: React.FC<{
-  id: boolean;
   form: FormTypeProductVariation;
   filteredData: Attribute[];
   attributeValue: Data[][];
   duplicate: number[];
-}> = ({ id, form, filteredData, attributeValue, duplicate }) => {
+}> = ({ form, filteredData, attributeValue, duplicate }) => {
   const [valuetab, setValueTab] = useState("attributes");
   const { attributes } = useGetAtributes();
   const [openAccordionItem, setOpenAccordionItem] = useState<
@@ -89,18 +89,23 @@ const InfoGeneralProduct: React.FC<{
   const [stateAttribute, dispatch] = useReducer(reducer, initialState);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [selectedValues, setSelectedValues] = useState<Record<string, any>>(
-    getSelectedValues(attributeValue, attributes)
-  );
+  const [selectedValues, setSelectedValues] = useState<{
+    [key: string]: {
+      _id: string;
+      type: string;
+      value: string;
+      label: string;
+    }[];
+  }>(getSelectedValues(attributeValue, attributes));
 
   const handleAttributeValueChange = (
     attributeId: string,
     selectedOptions: {
+      _id: string;
       value: string;
       label: string;
-      _id: string;
-      attribute: string;
-    }
+      type: string;
+    }[]
   ) => {
     setSelectedValues((prevSelectedValues) => ({
       ...prevSelectedValues,
@@ -114,19 +119,32 @@ const InfoGeneralProduct: React.FC<{
     name: "variants",
   });
 
+  console.log("fields", fields);
+
   useEffect(() => {
     const initialImages = fields.reduce((acc, field) => {
       if (field.image) {
-        acc[field.id] = field.image; // Use the existing image URL
+        acc[field.id] = field.image as string; // Use the existing image URL
       }
       return acc;
     }, {} as { [key: string]: string | "" });
     setPreviewImages(initialImages);
   }, [fields]);
 
-  const typeFields: string[] = getUniqueTypesFromFields(fields) as string[];
+  const convertedFields: ProductVariant[] = fields.map((item) => ({
+    ...item,
+    values: item.values.map((v) => ({
+      ...v,
+      name: "",
+      slugName: "",
+      value: "",
+    })),
+    image: typeof item.image === "string" ? item.image : "", // hoặc xử lý khác nếu là File
+  }));
 
-  // console.log("attributeValue", getSelectedValues(attributeValue, attributes));
+  const typeFields = getUniqueTypesFromFields(convertedFields);
+
+  console.log(fields);
 
   return (
     <div className="w-full xl:w-3/4">

@@ -23,9 +23,9 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import axios from "@/configs/axios";
 import { formatCurrency } from "@/lib/utils";
 import { useUser } from "@clerk/clerk-react";
-import axios from "@/configs/axios";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -35,9 +35,10 @@ import AddressDialog from "./AddressDialog ";
 import sendOrderConfirmationEmail from "./sendEmail";
 
 import { useQueryClient } from "@tanstack/react-query";
-import io from "socket.io-client";
-import CheckOutCart from "./CheckOutCart";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
+import io from "socket.io-client";
+import { CartProduct, VariantValue, Voucher } from "../types";
+import CheckOutCart from "./CheckOutCart";
 const socket = io("http://localhost:8080");
 
 interface ErrorResponse {
@@ -78,9 +79,10 @@ const CheckOut = () => {
   // lấy dữ liệu giỏ hàng
   const { cart: carts, isLoading: isLoadingCart, isError } = useCart(_id ?? "");
   const fullName = user?.fullName;
+  console.log("CARRT: ", carts);
   const onSubmit = async (data: FormOut) => {
     if (carts?.voucher?.length > 0) {
-      const voucherChecks = carts.voucher.map(async (item: any) => {
+      const voucherChecks = carts.voucher.map(async (item: Voucher) => {
         const { data: voucherData } = await axios.get(
           `/voucher/get-one/${item._id}`
         );
@@ -111,11 +113,12 @@ const CheckOut = () => {
 
       try {
         await Promise.all(voucherChecks); // Chạy song song tất cả API kiểm tra voucher
-      } catch (error: any) {
+      } catch (error: unknown) {
         toast({
           variant: "destructive",
           title: "Lỗi voucher",
-          description: error.message,
+          description:
+            error instanceof Error ? error.message : "Đã có lỗi xảy ra",
         });
         return; // Dừng hàm onSubmit
       }
@@ -139,23 +142,23 @@ const CheckOut = () => {
       // Gửi yêu cầu tạo đơn hàng đến backend
 
       if (data.paymentMethod === "Vnpay") {
-        // const orderResponse = await axios.post(
-        //   "/create-order-Vnpay",
-        //   orderData
-        // );
+        const orderResponse = await axios.post(
+          "/create-order-Vnpay",
+          orderData
+        );
         console.log("orderData", carts);
         const createOrder = orderResponse.data;
         const orderCode = createOrder?.order?.orderCode;
-        // const response = await axios.post("/create_payment_url", {
-        //   amount: carts?.total ?? 0,
-        //   orderCode: orderCode,
-        //   bankCode: "VNB",
-        // });
+        const response = await axios.post("/create_payment_url", {
+          amount: carts?.total ?? 0,
+          orderCode: orderCode,
+          bankCode: "VNB",
+        });
         const paymentUrl = response.data.redirectUrl;
         window.location.href = paymentUrl;
-        // if (Gmail) {
-        //   await sendOrderConfirmationEmail(Gmail, orderCode);
-        // }
+        if (Gmail) {
+          await sendOrderConfirmationEmail(Gmail, orderCode);
+        }
       }
 
       if (data.paymentMethod === "COD") {
@@ -165,7 +168,7 @@ const CheckOut = () => {
         const orderId = createOrder?.order?._id;
 
         if (data.paymentMethod === "COD" && response.status === 201) {
-          queryClient.invalidateQueries(["CART"]);
+          queryClient.invalidateQueries({ queryKey: ["CART"] });
           // Đơn hàng đã được tạo thành công
           toast({
             className: "bg-green-400 text-white h-auto",
@@ -198,12 +201,15 @@ const CheckOut = () => {
     } catch (error: unknown) {
       console.error("Lỗi khi tạo đơn hàng: ", error);
 
-      if (axios.isAxiosError(error)) {
-        // Kiểm tra nếu error là một AxiosError
-        const errResponse: ErrorResponse = error.response?.data;
+      if (
+        error &&
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error
+      ) {
+        const errResponse: ErrorResponse = (error as any).response?.data;
         const message = errResponse?.message || "Đã có lỗi xảy ra";
 
-        // Hiển thị thông báo lỗi từ backend
         toast({
           title: "Thất bại!",
           description: message,
@@ -370,8 +376,8 @@ const CheckOut = () => {
               ) : (
                 <>
                   {carts?.products
-                    .filter((item) => item.selected)
-                    .map((item: any, index: number) => (
+                    .filter((item: CartProduct) => item.selected)
+                    .map((item: CartProduct, index: number) => (
                       <div
                         key={index}
                         className="grid transition-all duration-500 grid-cols-[81px_auto] max-sm:grid-cols-[75px_auto] gap-x-4 border-[#F4F4F4] border-b pb-6"
@@ -431,7 +437,7 @@ const CheckOut = () => {
                               {/* Attribute__Table  */}
                               <div className="flex items-center gap-1 px-2 py-1 border rounded-md cursor-pointer max-sm:text-[14px] select-none">
                                 {item.variantItem.values.map(
-                                  (value: any, index: number) => (
+                                  (value: VariantValue, index: number) => (
                                     <div key={value._id}>
                                       {value.type}: {value.name}
                                       {index <

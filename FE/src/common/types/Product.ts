@@ -158,6 +158,7 @@ export interface Order {
 
 export interface Variant {
   _id?: string;
+  id?: string;
   price: number;
   priceSale?: number;
   values: {

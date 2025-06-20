@@ -91,10 +91,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-app.get("/", (req, res) => {
-  res.send("Test endpoint is working!");
-});
-
 const port = process.env.PORT;
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

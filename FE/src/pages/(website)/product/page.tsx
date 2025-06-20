@@ -5,22 +5,41 @@ import SkeletonProduct from "./_components/SkeletonProduct";
 import SliderImage from "./_components/SliderImage";
 import { useGetProductById } from "./actions/useGetProductById";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/configs/axios";
 import ListProductFavorite from "./_components/ListProductFavorite";
-const apiUrl = import.meta.env.VITE_API_URL;
+import { ProductItem } from "../shop/types";
+
+export type ListProductProps = {
+  bestFavoriteProducts: Product[];
+  bestSellerProducts: Product[];
+  listRelatedProducts: Product[];
+};
+
+export type Product = {
+  _id: string;
+  name: string;
+  price: number;
+  priceSale: number;
+  image: string;
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ListProductProps>();
   const [isGetting, setIsGetting] = useState(false);
-  const { isLoading, product, error } = useGetProductById(id!);
+  const {
+    isLoading,
+    product,
+    error,
+  }: { isLoading: boolean; product: ProductItem; error: Error | null } =
+    useGetProductById(id!);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsGetting(true);
         const response = await axios.get(
-          `${apiUrl}/listProductFavorite?categoryId=${product.category[0]._id}&productId=${product._id}`
+          `/listProductFavorite?categoryId=${product.category[0]._id}&productId=${product._id}`
         ); // URL API
         setIsGetting(false);
         setData(response.data);
@@ -83,7 +102,7 @@ const ProductDetail = () => {
         comments={product?.comments}
       />
       <div className="h-[35px] md:h-[70px]"></div>
-      <ListProductFavorite data={data} />
+      {data && <ListProductFavorite data={data} />}
     </div>
   );
 };

@@ -1,30 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 //other
+import { useUserContext } from "@/common/context/UserProvider";
 import useCart from "@/common/hooks/useCart";
 import { toast } from "@/components/ui/use-toast";
-import SkeletonCart from "./SkeletonCart";
-import CartRight from "./CartRight";
-import CartLeft from "./CartLeft";
-import { useUserContext } from "@/common/context/UserProvider";
-import { io } from "socket.io-client";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
-
-// const socket = io("http://localhost:8080");
-
-// order
+import CartLeft from "./CartLeft";
+import CartRight from "./CartRight";
+import SkeletonCart from "./SkeletonCart";
 
 const ShopCart = () => {
-  const [attribute, setAttribute] = useState<string | 1>("1");
-
-  const { _id }: any = useUserContext();
-
-  // console.log('id: ', _id);
-
-  // useEffect(() => {
-  //   socket.on("order", (data) => {
-  //     console.log(data);
-  //   });
-  // }, []);
+  const { _id }: { _id: string } = useUserContext();
 
   useEffect(() => {
     document.title = "Giỏ hàng";
@@ -40,22 +25,21 @@ const ShopCart = () => {
     removeItem,
     addVoucher,
     removeVoucher,
-    changeVariant,
     selectedOneItem,
     selectedAllItem,
     removeAllItemSelected,
   } = useCart(_id);
-  console.log("cart", cart);
 
   function userAction(action: any, value: any) {
+    console.log("userAction", action, value);
     const item = {
       userId: _id,
       ...value,
     };
     // console.log(item)
     switch (action.type) {
-      case "changeQuality":
-        if (value.quantity < 0) {
+      case "changeQuantity":
+        if (!value.quantity || value.quantity < 0) {
           return;
         }
         if (isNaN(value.quantity)) {
@@ -66,6 +50,7 @@ const ShopCart = () => {
           });
           return;
         }
+
         updateQuantity.mutate(item);
         break;
 
@@ -83,15 +68,13 @@ const ShopCart = () => {
         break;
 
       case "removeItem":
-        const confirm = window.confirm("Bạn chắc chứ?");
-        if (!confirm) return;
+        if (!window.confirm("Bạn chắc muốn xóa sản phẩm không?")) return;
         removeItem.mutate(item);
         break;
 
       case "applyVoucher":
         addVoucher.mutate(item, {
           onSuccess: () => {
-            // console.log(`Thêm mã giảm giá ${value.voucherCode} thành công`)
             toast({
               title: "Thành công",
               description: `Thêm mã giảm giá ${value.voucherCode} thành công`,
@@ -107,18 +90,6 @@ const ShopCart = () => {
               title: "Thành công",
               description: `Gỡ mã giảm giá thành công`,
             });
-          },
-        });
-        break;
-
-      case "changeVariant":
-        changeVariant.mutate(item, {
-          onSuccess: () => {
-            toast({
-              title: "Thành công",
-              description: "Đổi thành công!",
-            });
-            setAttribute("1");
           },
         });
         break;
@@ -147,7 +118,6 @@ const ShopCart = () => {
         </span>
       </div>
     );
-  // console.log('cart', cart);
 
   return (
     <>
@@ -157,8 +127,6 @@ const ShopCart = () => {
         {/* Cart__Left */}
         <CartLeft
           cart={cart}
-          attribute={attribute}
-          setAttribute={setAttribute}
           userAction={userAction}
           isLoading={isLoading}
           isError={isError}

@@ -1,17 +1,8 @@
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { ListProductProps, Product } from "../page";
 
-type Product = {
-  _id: string;
-  name: string;
-  price: number;
-  priceSale: number;
-  image: string;
-};
-
-const ListProductFavorite = ({ data }) => {
-  console.log(data.bestSellerProducts);
-
+const ListProductFavorite = ({ data }: { data: ListProductProps }) => {
   return (
     <div className="grid gap-4 lg:gap-0 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 justify-between">
       {data.bestSellerProducts && data.bestSellerProducts.length ? (

@@ -36,7 +36,18 @@ export async function createAttributeValues(
     const response = await axios.post(`${apiUrl}/attributevalue/${id}`, data);
     return response?.data;
   } catch (error: unknown) {
-    throw new Error(error.response.data.message);
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.data &&
+      error.response.data.message
+    ) {
+      throw new Error(error.response.data.message);
+    } else if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 }
 
@@ -51,7 +62,18 @@ export async function updateAttributeValueByID(
   try {
     const response = await axios.put(`${apiUrl}/attributevalue/${id}`, data);
     return response?.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
+  } catch (error: unknown) {
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.data &&
+      error.response.data.message
+    ) {
+      throw new Error(error.response.data.message);
+    } else if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 }

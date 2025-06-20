@@ -35,7 +35,7 @@ const voucherMutation = async (
   action: string,
   item: Ivoucher
 ) => {
-  const { data } = await axios[method](`${BASE_URL}/voucher/${action}`, item);
+  const { data } = await axios[method](`/voucher/${action}`, item);
   return data;
 };
 

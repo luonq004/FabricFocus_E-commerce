@@ -14,7 +14,6 @@ import {
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-import { IProduct, Variant } from "@/common/types/Product";
 import {
   extractAttributes,
   filterAndFormatAttributes,
@@ -27,6 +26,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Link } from "react-router-dom";
 import { useAddToWishList } from "../../wishlist/action/useAddToWishList";
 import { useGetWishList } from "../../wishlist/action/useGetWishList";
+import { Comments, ProductItem, WishList } from "../types";
 
 const PreviewProduct = ({
   isOpen,
@@ -41,21 +41,21 @@ const PreviewProduct = ({
   const [apiImage, setApiImage] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [productPopup, setProductPopup] = useState<IProduct>();
+  const [productPopup, setProductPopup] = useState<ProductItem>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { addCart, isAdding } = useAddToCart();
   const { addWishList } = useAddToWishList();
 
-  const { wishList } = useGetWishList(_id);
+  const { wishList }: { wishList: WishList } = useGetWishList(_id);
 
-  const [attributesChoose, setAttributesChoose] = useState<
-    Record<string, string>
-  >({});
+  const [attributesChoose, setAttributesChoose] = useState<{
+    [key: string]: string | string[][];
+  }>({});
 
-  const [selectedAttributes, setSelectedAttributes] = useState<
-    Record<string, string>
-  >({});
+  const [selectedAttributes, setSelectedAttributes] = useState<{
+    [key: string]: string | string[];
+  }>({});
 
   useEffect(() => {
     if (!selectedIndex || productPopup?._id === selectedIndex) return;
@@ -96,10 +96,6 @@ const PreviewProduct = ({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
-  if (isLoading) {
-    return null;
-  }
-
   const attributesProduct =
     !isLoading &&
     Object.entries(extractAttributes(productPopup?.variants || []));
@@ -135,8 +131,11 @@ const PreviewProduct = ({
       Object.keys(attributeSelected).forEach((key) => {
         const newValue = attributeSelected[key]; // Giá trị mới từ attributeSelected
 
+        console.log("attributeSelected", attributeSelected);
+
         // Kiểm tra nếu key đã tồn tại trong state (newSelected)
         if (newSelected[key]) {
+          console.log("newValue", newSelected);
           // Kiểm tra nếu value trong attributeSelected trùng với value hiện tại trong state
           if (
             newValue.length === newSelected[key][0].length &&
@@ -214,11 +213,17 @@ const PreviewProduct = ({
   ];
 
   // console.log("productPopup", productPopup);
-  const activeData =
+  const activeData: Comments[] | undefined =
     productPopup && productPopup.comments.filter((item) => !item.deleted); // Lọc ra các item chưa bị xóa
+
   const totalRating =
-    productPopup && activeData.reduce((sum, item) => sum + item.rating, 0); // Tính tổng rating
-  const averageRating = productPopup && totalRating / activeData.length; // Tính trung bình rating
+    productPopup && activeData?.reduce((sum, item) => sum + item.rating, 0); // Tính tổng rating
+
+  const averageRating =
+    productPopup &&
+    totalRating &&
+    activeData &&
+    totalRating / activeData.length; // Tính trung bình rating // Tính trung bình rating
 
   const targetId = "675dadfde9a2c0d93f9ba531";
 
@@ -229,11 +234,13 @@ const PreviewProduct = ({
     : false;
 
   const categories =
-    productPopup?.category.length >= 2 && exists
+    (productPopup?.category?.length ?? 0) >= 2 && exists
       ? productPopup?.category.filter((category) => category._id !== targetId)
       : productPopup?.category;
 
-  // console.log(productPopup?.variants);
+  if (!productPopup || isLoading) return null; // Trả về null nếu productPopup không có dữ liệu
+
+  // console.log("wishList", wishList);
 
   return createPortal(
     <div
@@ -292,7 +299,7 @@ const PreviewProduct = ({
             {/* Category */}
             <div className="uppercase text-[#555] text-sm leading-5 flex gap-4 mb-2">
               {productPopup &&
-                categories.map((category) => (
+                categories?.map((category) => (
                   <Link
                     key={category._id}
                     onClick={onClose}
@@ -325,7 +332,7 @@ const PreviewProduct = ({
                         {formatCurrency(variantChoose.price)} VNĐ
                       </span>
                     )
-                  ) : productPopup?.priceSale > 0 ? (
+                  ) : (productPopup?.priceSale ?? 0) > 0 ? (
                     <>
                       <span className="text-xl">
                         {formatCurrency(productPopup?.priceSale)} VNĐ
@@ -348,7 +355,7 @@ const PreviewProduct = ({
                   <TiStarFullOutline
                     key={index}
                     className={`text-[#b8cd06] ${
-                      index < averageRating || 5
+                      averageRating && index <= averageRating
                         ? "text-[#b8cd06]"
                         : "text-[#ccc]"
                     }`}
@@ -385,9 +392,10 @@ const PreviewProduct = ({
                       if (item.split(":")[1].startsWith("#")) {
                         return (
                           <ToggleGroupItem
-                            onClick={() =>
-                              handleAttributeSelect(key, item.split(":")[0])
-                            }
+                            onClick={() => {
+                              console.log("item", item);
+                              handleAttributeSelect(key, item.split(":")[0]);
+                            }}
                             key={`${item.split(":")[0]}-${idx}`}
                             className={`rounded-none border data-[state=on]:border-2 size-6 p-0 cusor-pointer transition-all`}
                             value={item.split(":")[0]}
@@ -406,9 +414,10 @@ const PreviewProduct = ({
                       } else {
                         return (
                           <ToggleGroupItem
-                            onClick={() =>
-                              handleAttributeSelect(key, item.split(":")[0])
-                            }
+                            onClick={() => {
+                              console.log("item", attributesChoose);
+                              handleAttributeSelect(key, item.split(":")[0]);
+                            }}
                             className="rounded-none border data-[state=on]:border-2 data-[state=on]:text-black transition-all uppercase px-3 h-8"
                             value={item.split(":")[0]}
                             key={item.split(":")[0]}

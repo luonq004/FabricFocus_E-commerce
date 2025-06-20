@@ -1,7 +1,6 @@
 export const saveUserToDatabase = async (userId: string, userInfo?: any) => {
   try {
     if (!userId) {
-      // console.log(userId);
       console.error("No userId provided");
       return;
     }

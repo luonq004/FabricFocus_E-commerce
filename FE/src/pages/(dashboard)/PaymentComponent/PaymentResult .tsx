@@ -12,6 +12,8 @@ import { useUser } from "@clerk/clerk-react";
 import useCart from "@/common/hooks/useCart";
 import { Cart } from "@/common/types/formCheckOut";
 import io from "socket.io-client";
+import { OrderDetail } from "./types";
+import { CartProduct } from "@/pages/(website)/cart/types";
 const socket = io("http://localhost:8080");
 
 type PaymentResult = {
@@ -24,8 +26,8 @@ const PaymentResult = () => {
   const queryClient = useQueryClient(); // Đặt useQueryClient ở trên đầu
   const [result, setResult] = useState<PaymentResult | null>(null);
   const navigate = useNavigate();
-  const [orderDetails, setOrderDetails] = useState<any>(null);
-  const [orderCart, setOrderCart] = useState<any>(null);
+  const [orderDetails, setOrderDetails] = useState<OrderDetail | null>(null);
+  const [orderCart, setOrderCart] = useState<CartProduct[] | []>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { user } = useUser();
@@ -35,6 +37,8 @@ const PaymentResult = () => {
   const emailSentRef = useRef(false);
 
   // Lấy mã đơn hàng từ URL
+  console.log("orderDetails", orderDetails);
+  console.log("orderCart", orderCart);
 
   const orderId = searchParams.get("vnp_TxnRef");
   const notificationSentRef = useRef(false);
@@ -96,7 +100,6 @@ const PaymentResult = () => {
     setOrderCart(selectedProducts);
   }, [carts]);
 
-  console.log("orderCart", orderCart);
   useEffect(() => {
     const cancelOrder = async () => {
       const clearCart = async () => {
@@ -109,7 +112,9 @@ const PaymentResult = () => {
             });
 
             console.log("Cart đã được xóa hoàn toàn.");
-            queryClient.invalidateQueries(["CART"]);
+            queryClient.invalidateQueries({
+              queryKey: ["CART"],
+            });
 
             // Lấy ảnh của sản phẩm đầu tiên trong danh sách sản phẩm đã chọn
             const firstProductImage = orderCart?.[0]?.productItem?.image;
@@ -147,17 +152,19 @@ const PaymentResult = () => {
       // Chạy lại khi orderCart thay đổi
 
       try {
-        if (result?.code === "00") {
+        if (result?.code === "00" && orderDetails?._id) {
           await clearCart();
           const response = await axios.put(
-            `${apiUrl}/update-status/${orderDetails._id}`,
+            `${apiUrl}/update-status/${orderDetails._id!}`,
             {
               isPaid: true,
             }
           );
 
           if (response.status === 200) {
-            queryClient.invalidateQueries(["ORDER_HISTORY", _id]);
+            queryClient.invalidateQueries({
+              queryKey: ["ORDER_HISTORY", _id],
+            });
             // clearCart();
             if (
               result?.code === "00" &&
@@ -172,12 +179,14 @@ const PaymentResult = () => {
             // Hiển thị thông báo thành công
           }
         }
-        if (result?.code === "24") {
+        if (result?.code === "24" && orderDetails?._id) {
           const response = await axios.put(
             `${apiUrl}/delete-orderAdmin/${orderDetails._id}`
           );
           if (response.status === 200) {
-            queryClient.invalidateQueries(["ORDER_HISTORY", _id]);
+            queryClient.invalidateQueries({
+              queryKey: ["ORDER_HISTORY", _id],
+            });
             // Hiển thị thông báo thành công
             toast({
               title: "Thanh toán thất bại!",

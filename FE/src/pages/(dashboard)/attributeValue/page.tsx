@@ -7,7 +7,7 @@ import { useGetAtributes } from "./actions/useGetAllAttributeValues";
 const AttributeValuePage = () => {
   const { id } = useParams();
 
-  const { isLoading, atributeValues, error } = useGetAtributes(id!);
+  const { isLoading, atributeValues } = useGetAtributes(id!);
 
   if (isLoading) {
     return <div>Loading...</div>;
