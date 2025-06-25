@@ -4,7 +4,7 @@ const SubscribeSection = () => {
       {/* Hình ảnh bên trái */}
       <div className="md:flex hidden  justify-center md:ml-16 mb-8 md:mb-0 w-full md:w-1/2">
         <img
-          src={"http://unionagency.one/exzo/img/background-8.jpg"}
+          src="/background-8.jpg"
           alt="Ưu Đãi Đặc Biệt"
           className=" max-h[100%] max-w[100%] object-cover"
         />

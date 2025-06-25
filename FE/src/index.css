@@ -110,7 +110,7 @@ body {
   content: "";
   width: 5px;
   height: 9px;
-  background: url(../src/assets/icons/ChevronRight.png);
+  background: url(/icons/ChevronRight.png);
   display: inline-block;
   vertical-align: top;
   content: "";
@@ -120,13 +120,13 @@ body {
 }
 
 .bg-change {
-  background-image: url("../src/assets/icons/ChevronRight.png");
+  background-image: url("/icons/ChevronRight.png");
   background-repeat: no-repeat;
   background-position: right 10px center;
 }
 
 .group:hover .bg-change {
-  background-image: url("../src/assets/icons/ChevronRightGreen.png");
+  background-image: url("/icons/ChevronRightGreen.png");
 }
 
 /* CATEGORIES */

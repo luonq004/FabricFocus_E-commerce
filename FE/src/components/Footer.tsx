@@ -55,10 +55,10 @@ const Footer = () => {
                 />
               </svg>
               <a
-                href="tel:+3625551238745"
+                href="tel:+84986 066 907"
                 className="hover:text-[#b8cd06] cursor-pointer"
               >
-                CONTECT US: +3 (625) 555 123 8745
+                CONTECT US: 0986 066 907
               </a>
             </li>
             <li className="flex items-center gap-2">
@@ -73,10 +73,10 @@ const Footer = () => {
               </svg>
 
               <a
-                href="mailto:office@exzo.com"
+                href="mailto:luongvq004@gmail.com"
                 className="hover:text-[#b8cd06] cursor-pointer"
               >
-                EMAIL: office@exzo.com
+                EMAIL: luongvq004@gmail.com
               </a>
             </li>
             <li className="flex items-center gap-2">

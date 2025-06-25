@@ -10,21 +10,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // build: {
-  //   rollupOptions: {
-  //     output: {
-  //       manualChunks(id) {
-  //         if (id.includes("node_modules")) {
-  //           if (id.includes("react")) return "react";
-  //           if (id.includes("react-router-dom")) return "router";
-  //           if (id.includes("zustand")) return "zustand";
-  //           if (id.includes("axios")) return "axios";
-  //           if (id.includes("lodash")) return "lodash";
-  //           return "vendor";
-  //         }
-  //       },
-  //     },
-  //   },
-  //   chunkSizeWarningLimit: 1000,
-  // },
 });

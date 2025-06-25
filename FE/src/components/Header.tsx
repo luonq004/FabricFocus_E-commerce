@@ -282,9 +282,9 @@ const Header = () => {
                   <b className="text-[#555] font-bold">liên hệ: </b>
                   <a
                     className="cursor-pointer hover:text-[#b8cd06]"
-                    href="tel:0986066907"
+                    href="tel:+84986 066 907"
                   >
-                    098 6066 907
+                    0986 066 907
                   </a>
                 </div>
                 {/* CLASS BI LAP */}
@@ -292,7 +292,7 @@ const Header = () => {
                   <b className="text-[#555] font-bold">email: </b>
                   <a
                     className="cursor-pointer hover:text-[#b8cd06]"
-                    href="mailto:office@exzo.com"
+                    href="mailto:luongvq004@gmail.com"
                   >
                     luongvq004@gmail.com
                   </a>
