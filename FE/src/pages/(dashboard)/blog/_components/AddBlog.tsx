@@ -120,8 +120,7 @@ const AddBlog = () => {
       formData.append("image", imageUrl); // Gửi URL ảnh đã upload từ frontend
 
       // Gửi yêu cầu POST lên BE
-      const response = await axios.post("/blogs", formData);
-      console.log("Bài viết đã được tạo:", response.data);
+      await axios.post("/blogs", formData);
       toast({
         className: "bg-green-400 text-white h-auto",
         title: "Bài viết đã được tạo thành công!",

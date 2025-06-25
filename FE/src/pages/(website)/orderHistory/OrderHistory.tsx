@@ -1,10 +1,5 @@
 import { useUserContext } from "@/common/context/UserProvider";
 import useOrder from "@/common/hooks/order/UseOrder";
-import { useState } from "react";
-import StatusMenu from "./StatusMenu";
-import { toast } from "@/components/ui/use-toast";
-import axios from "@/configs/axios";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   Pagination,
   PaginationContent,
@@ -13,12 +8,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"; // Import pagination components
-import { OrderProduct } from "@/common/types/Product";
-import CommentProduct from "./CommentProduct";
+import { toast } from "@/components/ui/use-toast";
+import axios from "@/configs/axios";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import StatusMenu from "./StatusMenu";
+
+import { formatCurrencyVND, socket } from "@/lib/utils";
 import { useUser } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
-import { io } from "socket.io-client";
-const socket = io("http://localhost:8080");
+import CommentProduct from "./CommentProduct";
+import { OrderResponse } from "./types";
 
 interface Order {
   _id: string;
@@ -36,19 +36,12 @@ interface ErrorResponse {
   };
 }
 
-export const formatCurrencyVND = (amount: number): string => {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(amount);
-};
-
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const OrderHistory = () => {
   const { _id } = useUserContext() ?? {}; // Lấy _id từ UserContext
   const queryClient = useQueryClient(); // Đặt useQueryClient ở trên đầu
-  const { data, isLoading } = useOrder(_id); // Destructure loading and error status
+  const { data, isLoading } = useOrder(_id || undefined); // Destructure loading and error status
   const [selectedStatus, setSelectedStatus] = useState<string>("chờ xác nhận");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,7 +71,7 @@ const OrderHistory = () => {
 
     // Lấy orderCode từ orderIdToCancel
     const orderToCancel = (data || []).find(
-      (order: any) => order._id === orderIdToCancel
+      (order: OrderResponse) => order._id === orderIdToCancel
     );
     const orderCode = orderToCancel?.orderCode;
 
@@ -102,7 +95,9 @@ const OrderHistory = () => {
         }
       ); // Đường dẫn API hủy đơn hàng
       if (response.status === 200) {
-        queryClient.invalidateQueries(["ORDER_HISTORY", _id]);
+        queryClient.invalidateQueries({
+          queryKey: ["ORDER_HISTORY", _id],
+        });
         toast({
           className: "bg-green-400 text-white h-auto",
 
@@ -140,7 +135,7 @@ const OrderHistory = () => {
     setIsOpen(false); // Đóng modal sau khi hủy
   };
 
-  const paymentMethod = async (orderId: OrderProduct) => {
+  const paymentMethod = async (orderId: OrderResponse) => {
     try {
       const response = await axios.post("/create_payment_url", {
         amount: orderId.totalPrice,
@@ -150,7 +145,9 @@ const OrderHistory = () => {
       const paymentUrl = response.data.redirectUrl;
       window.location.href = paymentUrl;
       if (response.status === 200) {
-        queryClient.invalidateQueries(["ORDER_HISTORY", _id]);
+        queryClient.invalidateQueries({
+          queryKey: ["ORDER_HISTORY", _id],
+        });
       }
     } catch (error) {
       console.error(error);
@@ -185,7 +182,7 @@ const OrderHistory = () => {
   // Xử lý phân trang
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = filteredOrders.slice(
+  const currentOrders: OrderResponse[] = filteredOrders.slice(
     indexOfFirstOrder,
     indexOfLastOrder
   );
@@ -221,7 +218,7 @@ const OrderHistory = () => {
             <div className="spinner"></div>
           </div>
         ) : currentOrders.length > 0 ? (
-          currentOrders?.map((order: OrderProduct) => (
+          currentOrders?.map((order) => (
             <div key={order._id} className="p-4 border rounded-lg shadow-md">
               <div className="flex justify-between items-center">
                 <div>

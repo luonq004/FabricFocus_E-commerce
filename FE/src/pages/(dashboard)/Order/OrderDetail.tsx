@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import useOrder from "@/common/hooks/order/UseOrder";
 import {
   Table,
   TableBody,
@@ -8,14 +7,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import html2pdf from "html2pdf.js"; // Import html2pdf.js
-import useOrder from "@/common/hooks/order/UseOrder";
-import { formatCurrencyVND } from "@/pages/(website)/orderHistory/OrderHistory";
+import html2pdf from "html2pdf.js";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+
+import { formatCurrencyVND } from "@/lib/utils";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { OrderDetailResponse } from "./types";
 
 const OrderDetail = () => {
   const { id } = useParams();
-  const { data , isLoading, isError} = useOrder(undefined, id);
+  const { data, isLoading, isError } = useOrder(undefined, id);
   // State để theo dõi việc xuất PDF
   const [isExported, setIsExported] = useState(false);
 
@@ -31,22 +33,24 @@ const OrderDetail = () => {
       second: "numeric",
     }).format(date);
   };
-    if (isLoading) {
-      return (
-        <div className="min-h-[50vh] flex justify-center items-center text-gray-500">
-          <div className="spinner"></div>
-        </div>
-      );
-    }
-  
-    if (isError) {
-      return (
-       <div className="flex items-center justify-center p-[10rem] my-10   ">
-           <AiOutlineExclamationCircle className="text-red-500 text-xl mr-2" />
-           <span className="text-red-600 font-semibold">Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.</span>
-         </div>
-      );
-    }
+  if (isLoading) {
+    return (
+      <div className="min-h-[50vh] flex justify-center items-center text-gray-500">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center p-[10rem] my-10   ">
+        <AiOutlineExclamationCircle className="text-red-500 text-xl mr-2" />
+        <span className="text-red-600 font-semibold">
+          Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.
+        </span>
+      </div>
+    );
+  }
   const {
     addressId,
     note,
@@ -64,24 +68,11 @@ const OrderDetail = () => {
   } = data;
 
   // Hàm xử lý xuất PDF
-  const handleExportPDF = async() => {
+  const handleExportPDF = async () => {
     setIsExported(true); // Cập nhật state khi đã xuất PDF
     const element = document.getElementById("order-detail"); // Lấy phần tử cần xuất ra PDF
 
     if (element) {
-      // const options = {
-      //   margin: 10,
-      //   filename: `order_${orderCode}.pdf`, // Tên file PDF
-      //   image: { type: "jpeg", quality: 0.98 },
-      //   html2canvas: {
-      //     scale: 2,
-      //     useCORS: true, // Cho phép tải ảnh từ nguồn ngoài
-      //     logging: true, // Hiển thị log để kiểm tra việc tải ảnh
-      //     allowTaint: true, // Cho phép vẽ ảnh từ các nguồn không phải cùng domain
-      //     letterRendering: true, // Hiển thị các ký tự chính xác hơn
-      //   },
-      //   jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      // };
       const options = {
         margin: 10,
         filename: `order_${orderCode}.pdf`,
@@ -95,34 +86,39 @@ const OrderDetail = () => {
         },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       };
-      
+
       try {
         await html2pdf().from(element).set(options).save();
-        setIsExported(false) // Sử dụng đúng phương thức của html2pdf.js
+        setIsExported(false); // Sử dụng đúng phương thức của html2pdf.js
       } catch (error) {
         console.error("Lỗi khi xuất PDF:", error);
-      } 
+      }
     }
   };
+
   return (
     <div className="p-6 bg-gray-100">
-    <div className="flex justify-between items-center">
-      <Link 
-        className="mb-6 px-4 py-2 bg-black text-white rounded hover:bg-[rgb(37_36_36)]"
-      
-      to={`/admin/orders`}>Trờ lại</Link>
-    <button
-        onClick={handleExportPDF}
-        className="mb-6 px-4 py-2 bg-black text-white rounded hover:bg-[rgb(37_36_36)]"
-      >
-        Xuất hóa đơn
-      </button>
-    </div>
+      <div className="flex justify-between items-center">
+        <Link
+          className="mb-6 px-4 py-2 bg-black text-white rounded hover:bg-[rgb(37_36_36)]"
+          to={`/admin/orders`}
+        >
+          Trờ lại
+        </Link>
+        <button
+          onClick={handleExportPDF}
+          className="mb-6 px-4 py-2 bg-black text-white rounded hover:bg-[rgb(37_36_36)]"
+        >
+          Xuất hóa đơn
+        </button>
+      </div>
 
       <div id="order-detail">
         {" "}
         {/* Phần tử bao bọc nội dung cần xuất */}
-        <h2 className="text-2xl text-center font-bold mb-6">Chi tiết đơn hàng</h2>
+        <h2 className="text-2xl text-center font-bold mb-6">
+          Chi tiết đơn hàng
+        </h2>
         {/* Thông tin tổng quan */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-6">
           <div className="grid grid-cols-2 gap-4">
@@ -146,7 +142,8 @@ const OrderDetail = () => {
             ) : null}
 
             <p>
-              <strong>Hình thức thanh toán:</strong> <span className={getPaymentClassName(payment)}>{payment}</span>
+              <strong>Hình thức thanh toán:</strong>{" "}
+              <span className={getPaymentClassName(payment)}>{payment}</span>
             </p>
             <p>
               <strong>Ghi chú:</strong> {note || "Không có ghi chú"}
@@ -156,8 +153,12 @@ const OrderDetail = () => {
         {/* Thông tin giao hàng */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-6">
           <h3 className="text-xl font-semibold mb-4">Thông tin giao hàng</h3>
-          <p className="leading-8"><strong>Người đặt hàng: </strong> {fullName}</p>
-          <p className="leading-8"><strong>Gmail: </strong> {email} </p>
+          <p className="leading-8">
+            <strong>Người đặt hàng: </strong> {fullName}
+          </p>
+          <p className="leading-8">
+            <strong>Gmail: </strong> {email}{" "}
+          </p>
           <p className="leading-8">
             <strong>Người nhận:</strong> {addressId.name}
           </p>
@@ -182,19 +183,28 @@ const OrderDetail = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {statusHistory?.map((history: any, index: number) => (
-                  <TableRow key={index} className="hover:bg-gray-50">
-                    <TableCell className="py-3 px-4">
-                      {history.status}
-                    </TableCell>
-                    <TableCell className="py-3 px-4">
-                      {formatDate(history.timestamp)}
-                    </TableCell>
-                    <TableCell className="py-3 px-4">
-                      {history.updatedBy}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {statusHistory?.map(
+                  (
+                    history: {
+                      status: string;
+                      timestamp: string;
+                      updatedBy: string;
+                    },
+                    index: number
+                  ) => (
+                    <TableRow key={index} className="hover:bg-gray-50">
+                      <TableCell className="py-3 px-4">
+                        {history.status}
+                      </TableCell>
+                      <TableCell className="py-3 px-4">
+                        {formatDate(history.timestamp)}
+                      </TableCell>
+                      <TableCell className="py-3 px-4">
+                        {history.updatedBy}
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
               </TableBody>
             </Table>
           </div>
@@ -218,7 +228,7 @@ const OrderDetail = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products?.map((item: any) => (
+              {products?.map((item: OrderDetailResponse) => (
                 <TableRow key={item._id} className="hover:bg-gray-50">
                   <TableCell className="py-3 px-4">
                     <img
@@ -232,7 +242,7 @@ const OrderDetail = () => {
                     {item.productItem.name}
                   </TableCell>
                   <TableCell className="py-3 px-4 text-gray-600">
-                    {item.variantItem.values.map((v: any) => v.name).join(", ")}
+                    {item.variantItem.values.map((v) => v.name).join(", ")}
                   </TableCell>
                   <TableCell className="py-3 px-4 text-center">
                     {item.quantity}
@@ -253,8 +263,9 @@ const OrderDetail = () => {
             <p className="flex items-center justify-between">
               <span className="text-gray-500">Giảm giá sản phẩm:</span>
               <span className="text-gray-800">
-                {discount > 0 ? `- ${formatCurrencyVND(discount)}` : formatCurrencyVND(0)}
-
+                {discount > 0
+                  ? `- ${formatCurrencyVND(discount)}`
+                  : formatCurrencyVND(0)}
               </span>
             </p>
             <p className="flex items-center justify-between">

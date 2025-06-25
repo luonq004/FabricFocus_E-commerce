@@ -1,8 +1,6 @@
-import { useSearchParams } from "react-router-dom";
-
-import Header from "./components/Header";
 import { useGetAllCategory } from "./actions/useGetAllCategory";
 import { DataTable } from "./components/DataTable";
+import Header from "./components/Header";
 import { columnCategories } from "./components/columnCategories";
 
 const CategotiesPage = () => {
@@ -10,6 +8,14 @@ const CategotiesPage = () => {
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center w-full uppercase text-2xl">
+        Xảy ra lỗi, vui lòng kiểm tra lại
+      </div>
+    );
   }
 
   return (

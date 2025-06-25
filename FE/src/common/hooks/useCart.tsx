@@ -1,19 +1,21 @@
 import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "@/configs/axios";
-import Icart from "../types/cart";
+
+import axios, { AxiosError } from "axios";
+import { ActionType } from "@/pages/(website)/cart/types";
 
 const CART_QUERY_KEY = "CART";
 
 const getCart = async (userId: string) => {
-  const { data } = await axios.get(`/cart/${userId}`);
+  const { data } = await axios.get(
+    `${import.meta.env.VITE_API_URL}/cart/${userId}`
+  );
   return data;
 };
 
-const putCart = async (actiton: string, item: Icart) => {
-  const url = `/cart/${actiton}`;
+const putCart = async (actiton: string, item: ActionType["value"]) => {
+  const url = `${import.meta.env.VITE_API_URL}/cart/${actiton}`;
   const { data } = await axios.put(url, item);
-  // console.log(data)
   return data;
 };
 
@@ -37,19 +39,21 @@ const useCart = (userId: string) => {
 
   const useCartActiton = (action: string) => {
     return useMutation({
-      mutationFn: async (item: Icart) => {
+      mutationFn: async (item: ActionType["value"]) => {
         const data = await putCart(action, item);
-        // console.log(data)
         return data;
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, userId] });
       },
-      onError: (error: any) => {
+      onError: (error: AxiosError<unknown>) => {
         toast({
           variant: "destructive",
           title: "Lỗi giỏ hàng",
-          description: `${error.response.data.message}`,
+          description: `${
+            (error.response?.data as { message?: string })?.message ??
+            "Đã xảy ra lỗi"
+          }`,
         });
       },
     });

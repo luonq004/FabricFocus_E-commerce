@@ -1,8 +1,9 @@
 import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/configs/axios";
+import { AxiosError } from "axios";
 
-export const useDisplayComment = (idP: string) => {
+export const useDisplayComment = () => {
   const queryClient = useQueryClient();
 
   const { mutate: displayComment, isPending: isUpdating } = useMutation({
@@ -26,11 +27,11 @@ export const useDisplayComment = (idP: string) => {
         title: "Hiển thị đánh giá thành công",
       });
     },
-
-    onError: (error) => {
+    onError: (error: unknown) => {
+      const err = error as AxiosError<{ message?: string }>;
       toast({
         variant: "destructive",
-        title: error.response?.data.message || "Cập nhật đánh giá thất bại",
+        title: err.response?.data?.message || "Cập nhật đánh giá thất bại",
       });
     },
   });

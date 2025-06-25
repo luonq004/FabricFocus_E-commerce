@@ -1,35 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import ActionCell from "./ActionCell";
-// import ActionCell from "./ActionCell";
-
-interface IComment {
-  _id: string;
-  userId: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    imageUrl: string;
-  };
-  productId: {
-    _id: string;
-    name: string;
-    image: string;
-  };
-  infoProductBuy: string;
-  content: string;
-  rating: number;
-  deleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import { IComment } from "../types";
 
 export const column: ColumnDef<IComment>[] = [
-  // {
-  //   header: "STT",
-  //   cell: ({ row }) => {
-  //     return <span className="text-sm text-gray-500">{row.index + 1}</span>;
-  //   },
-  // },
   {
     header: "Tên sản phẩm",
     id: "productId.name", // Đặt id để liên kết với filter

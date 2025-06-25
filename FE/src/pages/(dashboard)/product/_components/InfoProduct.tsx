@@ -20,7 +20,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AttributeTab from "./AttributeTab";
 import { reducer } from "./reducer";
 
-import { Attribute, Data, State } from "@/common/types/Product";
+import {
+  Attribute,
+  Data,
+  ProductFormValues,
+  State,
+} from "@/common/types/Product";
 import { FormTypeProductVariation } from "@/common/types/validate";
 import { Label } from "@/components/ui/label";
 import {
@@ -114,12 +119,14 @@ const InfoGeneralProduct: React.FC<{
   };
 
   // Variant:
-  const { fields, replace, remove } = useFieldArray({
+  const { fields, replace, remove } = useFieldArray<
+    ProductFormValues,
+    "variants",
+    "id"
+  >({
     control: form.control,
     name: "variants",
   });
-
-  console.log("fields", fields);
 
   useEffect(() => {
     const initialImages = fields.reduce((acc, field) => {
@@ -142,9 +149,7 @@ const InfoGeneralProduct: React.FC<{
     image: typeof item.image === "string" ? item.image : "", // hoặc xử lý khác nếu là File
   }));
 
-  const typeFields = getUniqueTypesFromFields(convertedFields);
-
-  console.log(fields);
+  const typeFields = getUniqueTypesFromFields(convertedFields) as string[];
 
   return (
     <div className="w-full xl:w-3/4">

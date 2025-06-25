@@ -1,4 +1,4 @@
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import {
   Collapsible,
@@ -14,23 +14,106 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { PiChatCentered } from "react-icons/pi";
+import { TbFileDescription } from "react-icons/tb";
+import { Link, useLocation } from "react-router-dom";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title?: string;
-      url?: string;
-    }[];
-  }[];
-}) {
+import {
+  Book,
+  File,
+  Grip,
+  Image,
+  LayoutDashboard,
+  LayoutPanelLeft,
+  ShoppingCart,
+  Sliders,
+  Ticket,
+  User,
+} from "lucide-react";
+
+const data = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  navMain: [
+    {
+      title: "Thống kê",
+      url: "/admin",
+      icon: LayoutDashboard,
+      isActive: false,
+    },
+    {
+      title: "Sản phẩm",
+      url: "#",
+      icon: File,
+      items: [
+        {
+          title: "Danh sách",
+          url: "/admin/products",
+        },
+        {
+          title: "Thêm sản phẩm",
+          url: "/admin/products/add",
+        },
+      ],
+    },
+    {
+      title: "Danh mục",
+      url: "/admin/categories",
+      icon: LayoutPanelLeft,
+    },
+    {
+      title: "Thuộc tính",
+      url: "/admin/attributes",
+      icon: Grip,
+    },
+    {
+      title: "Voucher",
+      url: "/admin/voucher",
+      icon: Ticket,
+    },
+    {
+      title: "Đơn hàng",
+      url: "/admin/orders",
+      icon: ShoppingCart,
+    },
+    {
+      title: "Người dùng",
+      url: "/admin/users",
+      icon: User,
+    },
+    {
+      title: "Bài viết",
+      url: "/admin/blogs",
+      icon: Book,
+    },
+    {
+      title: "Sliders",
+      url: "/admin/sliders",
+      icon: Sliders,
+    },
+    {
+      title: "Logos",
+      url: "/admin/Logos",
+      icon: Image,
+    },
+    {
+      title: "Tin nhắn",
+      url: "/admin/message",
+      icon: PiChatCentered,
+    },
+    {
+      title: "Đánh giá",
+      url: "/admin/testimonial",
+      icon: TbFileDescription,
+    },
+  ],
+};
+
+export function NavMain() {
   // State để theo dõi mục đang được chọn
 
   const location = useLocation();
@@ -44,7 +127,7 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) =>
+        {data.navMain.map((item) =>
           item.items ? (
             <Collapsible
               key={item.title}
@@ -54,9 +137,12 @@ export function NavMain({
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip={item.title}
-                  onClick={() => handleMenuItemClick(item.url)} // Cập nhật khi click vào mục
-                  className={activeItem === item.url ? "bg-black text-white" : ""}
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    onClick={() => handleMenuItemClick(item.url)} // Cập nhật khi click vào mục
+                    className={
+                      activeItem === item.url ? "bg-black text-white" : ""
+                    }
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -80,10 +166,10 @@ export function NavMain({
             </Collapsible>
           ) : (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild
-              
-              onClick={() => handleMenuItemClick(item.url)} // Cập nhật khi click vào mục
-              className={activeItem === item.url ? "bg-black text-white" : ""} 
+              <SidebarMenuButton
+                asChild
+                onClick={() => handleMenuItemClick(item.url)} // Cập nhật khi click vào mục
+                className={activeItem === item.url ? "bg-black text-white" : ""}
               >
                 <Link to={item.url}>
                   {item.icon && <item.icon />}

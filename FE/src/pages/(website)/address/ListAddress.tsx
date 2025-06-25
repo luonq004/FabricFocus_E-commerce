@@ -23,7 +23,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export interface Address {
   _id: string;
-  userId: string | number;
+  userId: string | null;
   createdAt: string;
   country: string;
   cityId: string | number;
@@ -39,7 +39,7 @@ export interface Address {
 
 const ListAddress = () => {
   const { _id } = useUserContext() ?? {}; // Lấy _id từ UserContext
-  const { data, isLoading } = useAddress(_id); // Lấy danh sách địa chỉ từ hook useAddress
+  const { data, isLoading } = useAddress(_id!); // Lấy danh sách địa chỉ từ hook useAddress
   const queryClient = useQueryClient();
   const [selectedAddressId, setSelectedAddressId] = useState<
     string | undefined
@@ -62,7 +62,7 @@ const ListAddress = () => {
       addressId: address._id,
     });
     queryClient.invalidateQueries({
-      queryKey: ["ADDRESS_", address],
+      queryKey: ["ADDRESS", address],
     });
     toast({
       title: "Thành công!",
@@ -75,7 +75,7 @@ const ListAddress = () => {
       // Xử lý xóa địa chỉ ở đây (gọi API hoặc cập nhật DB)
       await deleteAddressByUserId(addressToDelete);
       queryClient.invalidateQueries({
-        queryKey: ["ADDRESS_", _id],
+        queryKey: ["ADDRESS", _id],
       });
       toast({
         title: "Thành công!",

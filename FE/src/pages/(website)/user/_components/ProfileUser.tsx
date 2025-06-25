@@ -57,7 +57,6 @@ const ProfilePageModern: React.FC = () => {
   }, [user, navigate]);
 
   const handleSaveChanges = async (data: any) => {
-    console.log("Dữ liệu form gửi lên BE:", data);
     try {
       const formData = new FormData();
       Object.keys(data).forEach((key) => {
@@ -65,11 +64,6 @@ const ProfilePageModern: React.FC = () => {
           formData.append(key, data[key]);
         }
       });
-
-      console.log("FormData sau khi thêm dữ liệu:");
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
 
       if (imageUserRef.current) {
         await imageUserRef.current.updateProfileImage();
@@ -80,7 +74,7 @@ const ProfilePageModern: React.FC = () => {
       });
       if (response.status === 200) {
         toast({ title: "Thành công", description: "Cập nhật thành công!" });
-        await user?.reload(); 
+        await user?.reload();
       } else {
         toast({
           variant: "destructive",

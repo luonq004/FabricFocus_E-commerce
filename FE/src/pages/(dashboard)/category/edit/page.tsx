@@ -20,17 +20,14 @@ import {
 } from "@/components/ui/accordion";
 
 import { Input } from "@/components/ui/input";
-// import { useCreateAttribute } from "../actions/useCreateAttribute";
-// import { useGetAttributeByID } from "../actions/useGetAttributeByID";
-import { useParams } from "react-router-dom";
+
+import { Textarea } from "@/components/ui/textarea";
+import { uploadFile } from "@/lib/upload";
 import { useEffect, useState } from "react";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 import { useGetCategoryByID } from "../actions/useGetCategoryByID";
 import { useUpdateCategoryByID } from "../actions/useUpdateCategoryByID";
-import { uploadFile } from "@/lib/upload";
-import { toast } from "@/components/ui/use-toast";
-import { FaCloudUploadAlt } from "react-icons/fa";
-import { Textarea } from "@/components/ui/textarea";
-// import { useUpdateAttributeByID } from "../actions/useUpdateAttributeByID";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -54,7 +51,7 @@ const UpdateAttributePage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { isLoadingCategory, category, error } = useGetCategoryByID(id!);
+  const { isLoadingCategory, category } = useGetCategoryByID(id!);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,8 +67,6 @@ const UpdateAttributePage = () => {
   const [previewImagesMain, setPreviewImagesMain] = useState<string | File>(
     form.getValues("image") || ""
   );
-
-  console.log("category", previewImagesMain);
 
   // 2. Define a submit handler.
   useEffect(() => {
@@ -103,12 +98,8 @@ const UpdateAttributePage = () => {
     if (typeof values.image !== "string")
       imageFormat = await uploadFile(values.image as File);
 
-    updateCategory({ ...values, image: imageFormat, _id: id });
+    updateCategory({ ...values, image: imageFormat as string });
     setIsLoading(false);
-    toast({
-      variant: "success",
-      title: "Tạo danh mục thành công",
-    });
   }
   return (
     <Form {...form}>

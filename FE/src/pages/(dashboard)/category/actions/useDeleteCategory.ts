@@ -3,14 +3,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { deleteCategory } from "./api";
 
-export const useDeleteCategory = (idC: string) => {
+export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
 
   const { mutate: deleteCategories, isPending: isDeleting } = useMutation({
     mutationFn: async (id: string) => deleteCategory(id),
 
     onSuccess: (data) => {
-      console.log("data", data);
       queryClient.invalidateQueries({
         queryKey: ["Categories"],
       });

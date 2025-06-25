@@ -1,14 +1,11 @@
-//images
 import cartEmpty from "@/assets/images/cart-empty.png";
-
-//type
 
 //other
 import { useUserContext } from "@/common/context/UserProvider";
 import { formatCurrency } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import { CartResponse } from "../types";
+import { ActionType, CartResponse } from "../types";
 import PolicyCart from "./PolicyCart";
 
 const CartLeft = ({
@@ -18,11 +15,11 @@ const CartLeft = ({
   isError,
 }: {
   cart: CartResponse;
-  userAction: (action: { type: string }, payload: any) => void;
+  userAction: (action: ActionType) => void;
   isLoading: boolean;
   isError: boolean;
 }) => {
-  const { _id }: { _id: string } = useUserContext();
+  const { _id }: { _id: string | null } = useUserContext();
 
   if (isLoading) return <div>is Loading</div>;
   if (isError) return <div>is Error</div>;
@@ -47,7 +44,7 @@ const CartLeft = ({
               <div className="flex items-center">
                 <div
                   className="inline-flex justify-center p-0.5 items-center rounded-sm bg-[#b8cd06] cursor-pointer"
-                  onClick={() => userAction({ type: "selectedAll" }, {})}
+                  onClick={() => userAction({ type: "selectedAll", value: {} })}
                 >
                   <Check strokeWidth={"3px"} size={16} color="white" />
                 </div>
@@ -56,7 +53,7 @@ const CartLeft = ({
               <div className="flex items-center">
                 <div
                   className="inline-flex p-[9px] rounded-sm border border-[#0000008a] cursor-pointer"
-                  onClick={() => userAction({ type: "selectedAll" }, {})}
+                  onClick={() => userAction({ type: "selectedAll", value: {} })}
                 ></div>
               </div>
             )}
@@ -66,7 +63,9 @@ const CartLeft = ({
           </div>
           <div className="flex justify-end">
             <span
-              onClick={() => userAction({ type: "removeAllSelected" }, {})}
+              onClick={() =>
+                userAction({ type: "removeAllSelected", value: {} })
+              }
               className="cursor-pointer"
             >
               Xóa (
@@ -109,13 +108,13 @@ const CartLeft = ({
                 <div
                   className="rounded-sm p-0.5 bg-[#b8cd06] cursor-pointer"
                   onClick={() =>
-                    userAction(
-                      { type: "selectedOne" },
-                      {
+                    userAction({
+                      type: "selectedOne",
+                      value: {
                         productId: item.productItem._id,
                         variantId: item.variantItem._id,
-                      }
-                    )
+                      },
+                    })
                   }
                 >
                   <Check strokeWidth={"3px"} size={16} color="white" />
@@ -124,13 +123,13 @@ const CartLeft = ({
                 <div
                   className="p-[9px] rounded-sm border border-[#0000008a] cursor-pointer"
                   onClick={() =>
-                    userAction(
-                      { type: "selectedOne" },
-                      {
+                    userAction({
+                      type: "selectedOne",
+                      value: {
                         productId: item.productItem._id,
                         variantId: item.variantItem._id,
-                      }
-                    )
+                      },
+                    })
                   }
                 ></div>
               )}
@@ -159,14 +158,14 @@ const CartLeft = ({
                   <div className="flex rounded-[6px] *:transition-all duration-500 max-w-[8rem]">
                     <div
                       onClick={() =>
-                        userAction(
-                          { type: "decreaseItem" },
-                          {
+                        userAction({
+                          type: "decreaseItem",
+                          value: {
                             productId: item.productItem._id,
                             variantId: item.variantItem._id,
                             quantity: item.quantity,
-                          }
-                        )
+                          },
+                        })
                       }
                       className="px-[15px] py-[6px] flex justify-center items-center cursor-pointer select-none"
                     >
@@ -175,14 +174,14 @@ const CartLeft = ({
                     <div className="border border-[#F4F4F4] rounded-[4px] bg-[#F4F4F4] px-[12.8px] py-[5px] text-black flex justify-center items-center">
                       <input
                         onChange={(value) =>
-                          userAction(
-                            { type: "changeQuantity" },
-                            {
+                          userAction({
+                            type: "changeQuantity",
+                            value: {
                               productId: item.productItem._id,
                               variantId: item.variantItem._id,
                               quantity: Number(value.target.value),
-                            }
-                          )
+                            },
+                          })
                         }
                         className="p-0 w-8 bg-transparent border-0 text-gray-800 text-center focus:ring-0"
                         style={{ MozAppearance: "textfield" }}
@@ -195,13 +194,13 @@ const CartLeft = ({
                     </div>
                     <div
                       onClick={() =>
-                        userAction(
-                          { type: "increaseItem" },
-                          {
+                        userAction({
+                          type: "increaseItem",
+                          value: {
                             productId: item.productItem._id,
                             variantId: item.variantItem._id,
-                          }
-                        )
+                          },
+                        })
                       }
                       className="px-[15px] py-[6px] flex justify-center items-center cursor-pointer select-none"
                     >
@@ -225,13 +224,13 @@ const CartLeft = ({
                 <div
                   className="group transition-all pb-0 hover:pb-1 cursor-pointer max-sm:col-start-2 max-sm:row-start-1 max-sm:flex max-sm:justify-end"
                   onClick={() =>
-                    userAction(
-                      { type: "removeItem" },
-                      {
+                    userAction({
+                      type: "removeItem",
+                      value: {
                         productId: item.productItem._id,
                         variantId: item.variantItem._id,
-                      }
-                    )
+                      },
+                    })
                   }
                 >
                   <svg
@@ -286,13 +285,13 @@ const CartLeft = ({
               <div
                 className="group transition-all pb-0 cursor-pointer max-sm:col-start-2 max-sm:row-start-1 max-sm:flex max-sm:justify-end"
                 onClick={() =>
-                  userAction(
-                    { type: "removeItem" },
-                    {
+                  userAction({
+                    type: "removeItem",
+                    value: {
                       productId: item.productItem._id,
                       variantId: item.variantItem._id,
-                    }
-                  )
+                    },
+                  })
                 }
               >
                 Chạm vào để xóa sản phẩm

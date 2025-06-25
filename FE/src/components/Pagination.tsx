@@ -5,12 +5,12 @@ import { useSearchParams } from "react-router-dom";
 
 const Pagination = function ({
   totalCount,
-  siblingCount = 1,
+  // siblingCount = 1,
   pageSize,
 }: {
   totalCount: number;
-  siblingCount?: number;
-  pageSize?: number | undefined;
+  // siblingCount?: number;
+  pageSize: number;
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = +(searchParams.get("page") ?? 1);
@@ -22,8 +22,6 @@ const Pagination = function ({
     pageSize,
     currentPage,
   });
-
-  // console.log(paginationRange);
 
   if (currentPage === 0 || !paginationRange || paginationRange.length < 2) {
     return null;

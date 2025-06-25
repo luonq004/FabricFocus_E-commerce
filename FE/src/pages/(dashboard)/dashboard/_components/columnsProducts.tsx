@@ -1,4 +1,3 @@
-import { formatCurrency } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 
 // This type is used to define the shape of our data.
@@ -9,18 +8,23 @@ export type Payment = {
   productName: string;
   slug: string;
   quantity: number;
-  category: [];
+  category: Category[];
 };
 
+interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+  title: string;
+  description: string;
+  image: string;
+  defaultCategory: boolean;
+  deleted: boolean;
+  createdAt: string; // ISO Date string
+  updatedAt: string; // ISO Date string
+}
+
 export const columnsProducts: ColumnDef<Payment>[] = [
-  // {
-  //     header: "Xếp hạng",
-  //     cell: ({ row }) => (
-  //         <div className="flex items-center">
-  //             <span className="text-sm font-medium">{row.index + 1}</span>
-  //         </div>
-  //     )
-  // },
   {
     accessorKey: "image",
     header: "Ảnh sản phẩm",

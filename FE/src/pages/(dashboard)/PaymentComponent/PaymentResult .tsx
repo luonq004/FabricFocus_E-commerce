@@ -1,20 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import axios, { AxiosError } from "axios";
-import { useSearchParams } from "react-router-dom";
-import { CheckCircle, CircleX } from "lucide-react";
-import { Button } from "@/components/ui/button"; // Shadcn UI button component
-import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/common/context/UserProvider";
+import { Button } from "@/components/ui/button"; // Shadcn UI button component
+import { toast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/clerk-react";
+import { useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { CheckCircle, CircleX } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import useCart from "@/common/hooks/useCart";
 import { Cart } from "@/common/types/formCheckOut";
-import io from "socket.io-client";
-import { OrderDetail } from "./types";
 import { CartProduct } from "@/pages/(website)/cart/types";
-const socket = io("http://localhost:8080");
+import { OrderDetail } from "./types";
+
+import { socket } from "@/lib/utils";
 
 type PaymentResult = {
   code: string;
@@ -36,12 +35,16 @@ const PaymentResult = () => {
   const { cart: carts } = useCart(_id ?? "");
   const emailSentRef = useRef(false);
 
-  // Lấy mã đơn hàng từ URL
-  console.log("orderDetails", orderDetails);
-  console.log("orderCart", orderCart);
-
   const orderId = searchParams.get("vnp_TxnRef");
   const notificationSentRef = useRef(false);
+
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -111,7 +114,6 @@ const PaymentResult = () => {
               userId: _id, // ID người dùng
             });
 
-            console.log("Cart đã được xóa hoàn toàn.");
             queryClient.invalidateQueries({
               queryKey: ["CART"],
             });
@@ -132,8 +134,6 @@ const PaymentResult = () => {
 
             // Đánh dấu là đã gửi thông báo
             notificationSentRef.current = true;
-
-            console.log("Cart đã được xóa hoàn toàn.");
           }
         } catch (error) {
           console.error("Lỗi khi xóa giỏ hàng:", error);

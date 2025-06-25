@@ -3,6 +3,7 @@ import Pagination from "@/components/Pagination";
 import axios from "@/configs/axios";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { Categories } from "../../shop/types";
 
 const BlogCard = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -11,11 +12,11 @@ const BlogCard = () => {
 
   const [searchParams] = useSearchParams();
   const currentCategory = searchParams.get("category") || null;
-  // console.log("Current category (frontend):", currentCategory);
+
   const currentPage = parseInt(searchParams.get("page") || "1");
   const itemsPerPage = 3;
   const searchQuery = searchParams.get("search") || "";
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Categories[]>([]);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/category`)
@@ -165,7 +166,7 @@ const BlogCard = () => {
         <Pagination
           totalCount={filteredData.length}
           pageSize={itemsPerPage}
-          siblingCount={1}
+          // siblingCount={1}
         />
       </div>
     </div>

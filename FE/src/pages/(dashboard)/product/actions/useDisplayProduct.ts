@@ -2,7 +2,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/configs/axios";
 
-export const useDisplayProduct = (idP: string) => {
+export const useDisplayProduct = () => {
   const queryClient = useQueryClient();
 
   const { mutate: displayProduct, isPending: isUpdating } = useMutation({

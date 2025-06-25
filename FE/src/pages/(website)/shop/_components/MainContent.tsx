@@ -12,6 +12,7 @@ import { useGetAllProduct } from "../actions/useGetAllProduct";
 import CarouselBanner from "./CarouselBanner";
 import ProductItem from "./ProductItem";
 import Pagination from "@/components/Pagination";
+import noData from "@/assets/icons/noData.svg";
 
 export function MainContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,7 +31,12 @@ export function MainContent() {
 
   const { isLoading, listProduct, error } = useGetAllProduct();
 
-  // if (!error) return <div>Đã có lỗi xảy ra</div>;
+  if (error)
+    return (
+      <div className="order-2 w-full flex justify-center">
+        <img src={noData} alt="No data" className="mx-auto mb-5" />
+      </div>
+    );
 
   return (
     <div className="w-full lg:w-[75%] lg:order-1 lg:mb-10">

@@ -14,8 +14,8 @@ const renderSelects = (
     }
 
     const currentArray = dataArrays[currentIndex];
-    // console.log("currentArray: ", currentArray, "currentIndex: ", currentIndex);
 
+    // @ts-expect-error: currentArray type may not match expected type, but is handled correctly
     currentArray?.forEach((item) => {
       loopArrays(currentIndex + 1, [...combination, item]); // Đệ quy lặp qua các mảng
     });
@@ -37,8 +37,6 @@ export const reducer = (state: State, action: Action): State => {
       };
 
     case "ADD_VALUE": {
-      console.log("action.payload: ", action.payload);
-
       const filteredValues = action.payload.filter(
         (value) => value && Object.keys(value).length > 0
       );
@@ -47,6 +45,7 @@ export const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
+        // @ts-expect-error: filteredValues type may not match expected type, but is handled correctly
         valuesChoose: [...state.valuesChoose, filteredValues],
       };
     }

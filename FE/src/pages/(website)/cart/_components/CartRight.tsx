@@ -27,7 +27,7 @@ import { ChevronRight, Ticket } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { CartResponse } from "../types";
+import { ActionType, CartResponse } from "../types";
 import CountdownVoucher from "./CountdownVoucher";
 
 const formSchema = z.object({
@@ -41,9 +41,9 @@ const CartRight = ({
   userAction,
 }: {
   cart: CartResponse;
-  userAction: (action: { type: string }, payload: any) => void;
+  userAction: (action: ActionType) => void;
 }) => {
-  const { _id }: { _id: string } = useUserContext();
+  const { _id }: { _id: string | null } = useUserContext();
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,15 +53,15 @@ const CartRight = ({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    userAction({ type: "applyVoucher" }, values);
+    userAction({ type: "applyVoucher", value: values });
   }
 
   function handleApplyVoucher(item: string) {
-    userAction({ type: "applyVoucher" }, { voucherCode: item });
+    userAction({ type: "applyVoucher", value: { voucherCode: item } });
   }
 
   function handleRemoveVoucher(item: string) {
-    userAction({ type: "removeVoucher" }, { voucherCode: item });
+    userAction({ type: "removeVoucher", value: { voucherCode: item } });
   }
 
   async function lastCheck() {
@@ -69,7 +69,6 @@ const CartRight = ({
       for (const item of cart.voucher) {
         const { data } = await axios.get(`voucher/get-one/${item._id}`);
         if (data?.status === "inactive") {
-          console.log("remove", item.code);
           toast({
             variant: "destructive",
             title: "Lỗi voucher",
@@ -83,7 +82,6 @@ const CartRight = ({
             new Date(data?.endDate).getTime() - 7 * 60 * 60 * 1000
           ).getTime()
         ) {
-          console.log("remove", item.code);
           toast({
             variant: "destructive",
             title: "Lỗi voucher",
@@ -92,7 +90,6 @@ const CartRight = ({
           return;
         }
         if (data?.countOnStock === 0) {
-          console.log("remove", item.code);
           toast({
             variant: "destructive",
             title: "Lỗi voucher",

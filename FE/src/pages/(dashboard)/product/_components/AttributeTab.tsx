@@ -1,10 +1,4 @@
-import {
-  Action,
-  Attribute,
-  Data,
-  State,
-  Variant,
-} from "@/common/types/Product";
+import { Action, Attribute, Data, State } from "@/common/types/Product";
 import { Button } from "@/components/ui/button";
 import {
   Collapsible,
@@ -12,10 +6,10 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { toast } from "@/components/ui/use-toast";
+import { Variant } from "@/pages/(website)/shop/types";
 import { useState } from "react";
 import Select from "react-select";
 import { AddNewValue } from "./AddNewValue";
-import { useFieldArray } from "react-hook-form";
 
 const AttributeTab = ({
   attributes,
@@ -56,8 +50,7 @@ const AttributeTab = ({
       label: string;
     }[]
   ) => void;
-  // replaceFields: (fields: Variant[]) => void;
-  replaceFields: ReturnType<typeof useFieldArray>["replace"];
+  replaceFields: (fields: Variant[]) => void;
 }) => {
   // State
   const [valueOptions, setValueOptions] = useState<{
@@ -173,7 +166,8 @@ const AttributeTab = ({
                       payload: value._id as string,
                     });
                     setSelectedValues((current) => {
-                      const { [value._id]: _, ...rest } = current;
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      const { [value._id]: _unused, ...rest } = current;
                       return rest;
                     });
                   }}

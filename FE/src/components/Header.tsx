@@ -9,11 +9,11 @@ import { useUserContext } from "@/common/context/UserProvider";
 import useCart from "@/common/hooks/useCart";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "@/configs/axios";
-import io from "socket.io-client";
 
 import Logo from "@/assets/SHOPING.jpg";
 
-const socket = io("http://localhost:8080");
+import { Notification } from "@/pages/(dashboard)/notifications/types";
+import { useGetWishList } from "@/pages/(website)/wishlist/action/useGetWishList";
 import { useClerk, useUser } from "@clerk/clerk-react";
 import {
   Link,
@@ -21,7 +21,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { useGetWishList } from "@/pages/(website)/wishlist/action/useGetWishList";
+import { socket } from "@/lib/utils";
 
 const menuItems = [
   { label: "Trang chủ", to: "/" },
@@ -39,7 +39,7 @@ const Header = () => {
   const [logoUrl, setLogoUrl] = useState<string>("");
   const [showUserInfo, setShowUserInfo] = useState(false);
   //thông báo
-  const [notifications, setNotifications] = useState<any[]>([]); // Danh sách thông báo
+  const [notifications, setNotifications] = useState<Notification[]>([]); // Danh sách thông báo
   const [unreadCount, setUnreadCount] = useState<number>(0); // Số lượng thông báo chưa đọc
   const [isNotificationsOpen, setIsNotificationsOpen] =
     useState<boolean>(false);
@@ -56,7 +56,6 @@ const Header = () => {
     if (!keyProduct) return;
 
     if (pathname === "/shopping") {
-      console.log("OK");
       searchParams.set("search", keyProduct);
       setSearchParams(searchParams);
     } else {
@@ -66,8 +65,8 @@ const Header = () => {
     setIsOpen(false);
   }
 
-  const { cart, isLoading } = useCart(_id);
-  const { wishList, isError } = useGetWishList(_id);
+  const { cart } = useCart(_id!);
+  const { wishList } = useGetWishList(_id!);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -117,8 +116,11 @@ const Header = () => {
   useEffect(() => {
     if (_id) {
       socket.emit("join_room", _id); // Tham gia phòng với userId
-      // console.log(`User với id: ${_id} đã tham gia phòng`);
     }
+
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, [_id]);
 
   // Lấy thông báo từ API
@@ -214,8 +216,6 @@ const Header = () => {
   useEffect(() => {
     // Lắng nghe sự kiện orderNotification
     socket.on("orderNotification", (newNotification) => {
-      // console.log("Thông báo nhận được:", newNotification);
-
       // Kiểm tra nếu thông báo không phải của tài khoản hiện tại
       if (newNotification.userId !== _id) {
         return; // Nếu không phải, bỏ qua thông báo này
@@ -245,8 +245,6 @@ const Header = () => {
 
     // Lắng nghe sự kiện orderStatusNotification
     socket.on("orderStatusNotification", (newNotification) => {
-      // console.log("Thông báo trạng thái nhận được:", newNotification);
-
       // Kiểm tra nếu thông báo không phải của tài khoản hiện tại
       if (newNotification.userId !== _id) {
         return; // Nếu không phải, bỏ qua thông báo này
@@ -544,7 +542,7 @@ const Header = () => {
                 <nav className="hidden lg:block">
                   <ul className="flex">
                     {menuItems.map((item) => (
-                      <li className="!list-none" key={item.to}>
+                      <li className="!list-none" key={item.label}>
                         <Link
                           className={`text-[11px] leading-4 uppercase text-[#343434] font-bold rounded-2xl px-5 py-[9px] hover:bg-[#b8cd06] hover:text-white hover:shadow-custom transition-all ${
                             pathname === item.to

@@ -1,4 +1,3 @@
-import { Category } from "@/common/types/Product";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,20 +8,17 @@ import {
 import { Row } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom";
 import { useDeleteComment } from "../actions/useDeleteComment";
 import { useDisplayComment } from "../actions/useDisplayComment";
-// import { useDeleteCategory } from "../actions/useDeleteCategory";
-// import { useDisplayCategory } from "../actions/useDisplayCategory";
-// import { useGettAllProductWithCategory } from "../actions/useGettAllProductWithCategory";
+import { IComment } from "../types";
 
 interface ActionCellProps {
-  row: Row<Category>;
+  row: Row<IComment>;
 }
 
 const ActionCell: React.FC<ActionCellProps> = ({ row }) => {
-  const { deleteComment, isDeleting } = useDeleteComment(row.original._id);
-  const { displayComment, isUpdating } = useDisplayComment(row.original._id);
+  const { deleteComment, isDeleting } = useDeleteComment();
+  const { displayComment, isUpdating } = useDisplayComment();
 
   const handleDelete = async () => {
     if (confirm(`Bạn có chắc ẩn đánh giá này? `)) {

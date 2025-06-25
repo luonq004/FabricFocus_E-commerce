@@ -14,7 +14,6 @@ const OurSeries = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/products/all");
-        console.log("Dữ liệu sản phẩm:", response.data.data);
         const sortedProducts = response.data.data
           .sort((a: any, b: any) => b.count - a.count) // Sắp xếp giảm dần dựa vào count
           .slice(0, 6);

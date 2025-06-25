@@ -1,16 +1,24 @@
 import { toast } from "@/components/ui/use-toast";
 import axios from "axios";
-import { io } from "socket.io-client";
 import { create } from "zustand";
-import { ChatStoreActions, IChatStoreState } from "../types/Chat";
+import { ChatStoreActions, IChatStoreState, IListMessage } from "../types/Chat";
+
+import { socket } from "@/lib/utils";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const socket = io("http://localhost:8080");
+const initialListMessage: IListMessage = {
+  _id: "",
+  user: "",
+  admin: "",
+  messages: [],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
 
 export const useChatStore = create<IChatStoreState & ChatStoreActions>(
   (set, get) => ({
-    listMessage: [],
+    listMessage: initialListMessage,
     newMessage: "",
     conversations: [],
     selectedUser: null,
@@ -27,7 +35,10 @@ export const useChatStore = create<IChatStoreState & ChatStoreActions>(
       } catch (error) {
         toast({
           variant: "destructive",
-          title: error.response.data.message,
+          title:
+            axios.isAxiosError(error) && error.response?.data?.message
+              ? error.response.data.message
+              : "An error occurred",
         });
       } finally {
         set({ isConversationsLoading: false });
@@ -43,10 +54,6 @@ export const useChatStore = create<IChatStoreState & ChatStoreActions>(
         socket.emit("joinChat", res.data._id);
       } catch (error) {
         console.log(error);
-        // toast({
-        //   variant: "destructive",
-        //   title: error.response.data.message,
-        // });
       } finally {
         set({ isMessagesLoading: false });
       }
@@ -76,59 +83,32 @@ export const useChatStore = create<IChatStoreState & ChatStoreActions>(
       } catch (error) {
         toast({
           variant: "destructive",
-          title: error.response.data.message,
+          title:
+            axios.isAxiosError(error) && error.response?.data?.message
+              ? error.response.data.message
+              : "An error occurred",
         });
       }
     },
 
     subscribeToMessages: () => {
-      const { selectedUser, selectedConversation } = get();
-
-      // console.log("selectedUser", selectedUser);
+      const { selectedConversation } = get();
 
       socket.on("messageRecieved", (newMessageRecieved) => {
-        console.log("newMessageRecieved");
+        if (!selectedConversation || !selectedConversation) return;
 
-        if (!selectedConversation || !selectedConversation) {
-          // thong bao
-          // console.log("newMessageRecieved", newMessageRecieved);
-        } else {
-          set({
-            listMessage: {
-              ...get().listMessage, // Giữ nguyên các thuộc tính khác của listMessage
-              messages: [...get().listMessage.messages, newMessageRecieved], // Cập nhật messages
-            },
-          });
-        }
+        set({
+          listMessage: {
+            ...get().listMessage, // Giữ nguyên các thuộc tính khác của listMessage
+            messages: [...get().listMessage.messages, newMessageRecieved], // Cập nhật messages
+          },
+        });
       });
-
-      // const socket = useAuthStore.getState().socket;
-      // console.log("socket", socket);
-
-      // socket.on("newMessage", (newMessage) => {
-      //   // console.log("listMessage", get().listMessage);
-      //   const isMessageSentFromSelectedUser =
-      //     newMessage.senderId === selectedUser;
-
-      //   // console.log(
-      //   //   "isMessageSentFromSelectedUser",
-      //   //   isMessageSentFromSelectedUser
-      //   // );
-
-      //   // if (!isMessageSentFromSelectedUser) return;
-
-      //   set({
-      //     listMessage: {
-      //       ...get().listMessage, // Giữ nguyên các thuộc tính khác của listMessage
-      //       messages: [...get().listMessage.messages, newMessage], // Cập nhật messages
-      //     },
-      //   });
-      // });
     },
 
     unsubscribeFromMessages: () => {
       // const socket = useAuthStore.getState().socket;
-      // socket.off("newMessage");
+      socket.off("newMessage");
     },
 
     setSelectedUser: (selectedUser) => set({ selectedUser }),

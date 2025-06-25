@@ -50,12 +50,10 @@ const CheckOutSubmitVoucher = ({
   }
 
   function handleApplyVoucher(item: any) {
-    // console.log(item)
     userAction({ type: "applyVoucher" }, { voucherCode: item });
   }
 
   function handleRemoveVoucher(item: any) {
-    // console.log(item)
     userAction({ type: "removeVoucher" }, { voucherCode: item });
   }
 

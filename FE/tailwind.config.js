@@ -25,8 +25,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        questrial: ['Questrial"', "sans-serif"],
-        raleway: ['Raleway"', "sans-serif"],
+        questrial: ["Questrial", "sans-serif"],
+        raleway: ["Raleway", "sans-serif"],
       },
       colors: {
         light: {

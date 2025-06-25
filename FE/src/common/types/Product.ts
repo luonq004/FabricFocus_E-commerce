@@ -16,7 +16,7 @@ export interface IProduct {
   _id: string;
   name: string;
   type: string;
-  category: string[];
+  category: Category[];
   countOnStock: number;
   count: number;
   price: number;
@@ -28,7 +28,7 @@ export interface IProduct {
   deleted: boolean;
   updatedAt: Date;
   variants: Variant[];
-  comments: {
+  comments?: {
     _id: string;
     userId: string;
     content: string;
@@ -73,25 +73,12 @@ export interface ProductItem {
   type: string;
   description: string;
   deleted: boolean;
-  reviews: any[]; // Nếu bạn có kiểu dữ liệu cho reviews, bạn có thể thay đổi kiểu này
+  reviews: any[];
   variants: string[];
   createdAt: string;
   updatedAt: string;
 }
 
-// export interface VariantItem {
-//   _id: string;
-//   price?: number;
-//   priceSale?: number;
-//   values: { _id: string; name: string; type: string; value: string; __v: number }[];  // values có cấu trúc này
-//   countOnStock?: number;
-//   image?: string;
-//   type?: string;
-//   name?: string;
-//   deleted?: boolean;
-//   createdAt: string;
-//   updatedAt: string;
-// }
 interface VariantItem {
   _id: string;
   name: string;
@@ -162,7 +149,7 @@ export interface Variant {
   price: number;
   priceSale?: number;
   values: {
-    _id: string;
+    _id?: string;
     name: string;
     type: string;
     value: string;
@@ -174,9 +161,9 @@ export interface Variant {
 
 export interface Value {
   _id: string;
-  name: string;
-  type: string;
-  value: string;
+  name?: string;
+  type?: string;
+  value?: string;
 }
 
 export interface Attribute {
@@ -184,11 +171,33 @@ export interface Attribute {
   name: string;
   deleted: boolean;
   values: {
-    _id?: string;
+    _id: string;
     name: string;
     type: string;
     value: string;
   }[];
+  image: string | File;
+  countOnStock: number;
+  originalPrice: number;
+  id: string;
+  price: number;
+}
+
+export interface AttributeInArr {
+  _id: string;
+  name: string;
+  deleted: boolean;
+  values: {
+    _id: string;
+    name: string;
+    type: string;
+    value: string;
+  }[];
+  image: string | File;
+  countOnStock: number;
+  originalPrice: number;
+  id: string;
+  price: number;
 }
 
 export interface AttributeValue {
@@ -215,9 +224,40 @@ export interface State {
   valuesMix: Data[][];
 }
 
+export interface VariantFormValues {
+  _id?: string;
+  price: number;
+  originalPrice: number;
+  priceSale?: number;
+  values: {
+    _id: string;
+    name?: string;
+    value?: string;
+    type: string;
+    slugName?: string;
+  }[];
+  countOnStock: number;
+  image?: string | File;
+}
+
+export interface ProductFormValues {
+  _id?: string;
+  name: string;
+  description: string;
+  descriptionDetail?: string;
+  category?: string[];
+  image?: string | File | undefined;
+  price?: number;
+  priceSale?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deleted?: boolean;
+  variants: VariantFormValues[];
+}
+
 export type Action =
   | { type: "ADD_ATTRIBUTE"; payload: Attribute } // payload chắc chắn là Attribute
-  | { type: "ADD_VALUE"; payload: Data[] } // payload là mảng Data[]
+  | { type: "ADD_VALUE"; payload: Data[][] } // payload là mảng Data[]
   | { type: "DELETE_ONE_VALUE"; payload: string }
   | { type: "MIX_VALUES" }
   | { type: "UPDATE_ATTRIBUTES"; payload: Attribute }

@@ -1,4 +1,3 @@
-import { useUserContext } from "@/common/context/UserProvider";
 import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -6,8 +5,6 @@ import { addToWishList } from "./api";
 
 export const useAddToWishList = () => {
   const queryClient = useQueryClient();
-
-  const { _id } = useUserContext();
 
   const { mutate: addWishList, isPending: isAdding } = useMutation({
     mutationFn: (data: {
@@ -29,8 +26,6 @@ export const useAddToWishList = () => {
     },
 
     onError: (error: Error) => {
-      console.log(error);
-
       toast({
         className: "h-20",
         variant: "destructive",

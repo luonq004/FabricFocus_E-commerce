@@ -1,5 +1,6 @@
 import axios from "@/configs/axios";
-import { formatCurrencyVND } from "../../orderHistory/OrderHistory";
+import { formatCurrencyVND } from "@/lib/utils";
+import { CartProduct } from "../types";
 
 const sendOrderConfirmationEmail = async (to: string, orderCode: string) => {
   try {
@@ -16,7 +17,13 @@ const sendOrderConfirmationEmail = async (to: string, orderCode: string) => {
     }
 
     // Trích xuất danh sách sản phẩm
-    const products = order?.products?.map((item) => ({
+    const products: {
+      name: string;
+      image: string;
+      price: number;
+      quantity: number;
+      total: number;
+    }[] = order?.products?.map((item: CartProduct) => ({
       name: item.productItem.name, // Tên sản phẩm
       image: item.productItem.image, // URL ảnh sản phẩm
       price: item.variantItem?.price, // Giá sản phẩm từ variantItem
@@ -90,8 +97,6 @@ const sendOrderConfirmationEmail = async (to: string, orderCode: string) => {
       htmlContent: emailContent,
       orderCode: order.orderCode,
     });
-
-    console.log("Email đã được gửi thành công.");
   } catch (error) {
     console.error("Lỗi khi gửi email:", error);
     throw new Error("Lỗi khi gửi email.");

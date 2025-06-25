@@ -96,7 +96,9 @@ const CreateAddress = () => {
       setDistrict("");
       setWard("");
       setAddress("");
-      queryClient.invalidateQueries(["ADDRESS_", _id]);
+      queryClient.invalidateQueries({
+        queryKey: ["ADDRESS", _id],
+      });
 
       toast({
         title: "Thành công!",

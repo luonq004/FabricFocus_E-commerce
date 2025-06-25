@@ -4,11 +4,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const useDeleteAttributeValue = () => {
+export const useDeleteAttributeValue = (id: string) => {
   const queryClient = useQueryClient();
 
   const { mutate: deleteAtributesValue, isPending: isDeleting } = useMutation({
-    mutationFn: (id) => axios.delete(`${apiUrl}/attributevalue/${id}`),
+    mutationFn: () => axios.delete(`${apiUrl}/attributevalue/${id}`),
 
     onSuccess: () => {
       toast({
@@ -19,7 +19,7 @@ export const useDeleteAttributeValue = () => {
       });
     },
 
-    onError: (error: Error) => {
+    onError: () => {
       toast({
         title: "Xóa giá trị thuộc tính thất bại",
       });

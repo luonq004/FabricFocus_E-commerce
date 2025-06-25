@@ -76,6 +76,25 @@ export interface Voucher {
   type: "percent" | "fixed"; // loại giảm giá
 }
 
+// Interface for order email
+export interface OrderEmail {
+  addressId: string;
+  createdAt: string;
+  deleted: boolean;
+  discount: number;
+  email: string;
+  fullName: string;
+  isPaid: boolean;
+  orderCode: string;
+  payment: string;
+  products: CartProduct[];
+  status: string;
+  statusHistory: string[];
+  totalPrice: number;
+  userId: string;
+  _id: string;
+}
+
 export type CartActionType =
   | { type: "increaseItem" }
   | { type: "decreaseItem" }
@@ -90,20 +109,56 @@ export type CartPayload = {
   discount?: number;
 };
 
-// | {
-//     action: { type: "increaseItem" };
-//     value: { quantity: number; productId: string; variantId: string };
-//   }
-// | {
-//     action: { type: "decreaseItem" };
-//     value: { quantity: number; productId: string; variantId: string };
-//   }
-// | {
-//     action: { type: "changeQuantity" };
-//     value: { quantity: number; productId: string; variantId: string };
-//   }
-// | {
-//     action: { type: "removeItem" };
-//     value: { productId: string; variantId: string };
-//   }
-// | { action: { type: "applyVoucher" }; value: { voucherCode: string } };
+export type ActionType =
+  | {
+      type: "changeQuantity";
+      value: {
+        quantity: number;
+        productId: string;
+
+        variantId: string;
+      };
+    }
+  | {
+      type: "decreaseItem";
+      value: {
+        quantity: number;
+        productId: string;
+
+        variantId: string;
+      };
+    }
+  | {
+      type: "increaseItem";
+      value: {
+        productId: string;
+
+        variantId: string;
+      };
+    }
+  | {
+      type: "removeItem";
+      value: {
+        productId: string;
+        variantId: string;
+      };
+    }
+  | { type: "applyVoucher"; value: { voucherCode: string } }
+  | {
+      type: "removeVoucher";
+      value: {
+        voucherCode: string;
+      };
+    }
+  | {
+      type: "selectedOne";
+      value: { productId: string; variantId: string };
+    }
+  | {
+      type: "selectedAll";
+      value: NonNullable<unknown>;
+    }
+  | {
+      type: "removeAllSelected";
+      value: NonNullable<unknown>;
+    };

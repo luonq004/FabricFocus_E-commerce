@@ -1,23 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import ActionCell from "./ActionCell";
+import { Attribute } from "@/common/types/Product";
 
-interface IAttributeValues {
-  _id: string;
-  name: string;
-  value: string;
-  type: string;
-}
-
-interface IAttribute {
-  _id: string;
-  name: string;
-  values: IAttributeValues[];
-}
-
-export const columnAttribute: ColumnDef<IAttribute>[] = [
+export const columnAttribute: ColumnDef<Attribute>[] = [
   {
-    // accessorKey: "_id",
     header: "#",
     cell: ({ row }) => {
       return <span>{row.index + 1}</span>;

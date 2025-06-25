@@ -1,4 +1,4 @@
-import useVoucher from "@/common/hooks/useVouher";
+import { useCreateVoucher } from "@/common/hooks/useVouher";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { DialogClose } from "@/components/ui/dialog";
@@ -20,6 +20,7 @@ import { Calendar as CalendarIcon, CircleX } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Controller, useForm } from "react-hook-form";
+import { VoucherType } from "../types";
 
 const voucherSchema = Joi.object({
   code: Joi.string().min(1).max(255).required().messages({
@@ -72,7 +73,6 @@ const voucherSchema = Joi.object({
 });
 
 const VoucherAddForm = () => {
-  const { createVoucher } = useVoucher();
   const {
     register,
     control,
@@ -80,21 +80,21 @@ const VoucherAddForm = () => {
     formState: { errors },
     reset,
     setValue,
-  } = useForm({
+  } = useForm<VoucherType>({
     resolver: joiResolver(voucherSchema),
   });
 
   const [date, setDate] = React.useState<DateRange | undefined>();
   const [status, setStatus] = useState<string>("");
 
-  const [openDate, setOpenDate] = useState(null);
+  const [openDate, setOpenDate] = useState<null | number>(null);
 
   useEffect(() => {
     reset({
       code: "",
       category: "product",
-      discount: "",
-      countOnStock: "",
+      discount: 0,
+      countOnStock: 0,
       dob: {
         from: undefined,
         to: undefined,
@@ -107,15 +107,15 @@ const VoucherAddForm = () => {
   useEffect(() => {
     if (date?.from || date?.to) {
       setValue("dob", {
-        from: date.from || undefined,
-        to: date.to || undefined,
+        from: date.from || "",
+        to: date.to || "",
       });
     } else {
-      setValue("dob", undefined);
+      setValue("dob", { from: "", to: "" });
     }
   }, [date, setValue]);
 
-  function handleOpenDate(id: any) {
+  function handleOpenDate(id: number) {
     if (openDate === id) {
       setOpenDate(null);
     } else {
@@ -123,7 +123,9 @@ const VoucherAddForm = () => {
     }
   }
 
-  function onSubmit(data: any) {
+  const createVoucher = useCreateVoucher();
+
+  function onSubmit(data: VoucherType) {
     const info = {
       ...data,
       category: "product",
@@ -133,8 +135,9 @@ const VoucherAddForm = () => {
       ),
       endDate: new Date(new Date(data.dob.to).getTime() + 7 * 60 * 60 * 1000),
     };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { dob, ...item } = info;
-    // console.log(item)
     createVoucher.mutate(item, {
       onSuccess: () => {
         toast({

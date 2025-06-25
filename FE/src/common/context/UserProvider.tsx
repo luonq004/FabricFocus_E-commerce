@@ -1,40 +1,44 @@
 import { createContext, useContext, useReducer } from "react";
 
 interface UserContextType {
-  // Define the properties of your context here
-  _id: string;
-  clerkId: string;
-  role: string;
-  login: (id: string) => void;
+  _id: string | null;
+  clerkId: string | null;
+  role: string | null;
+  login: (user: { _id: string; clerkId: string; role: string }) => void;
   logout: () => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
 
-const initialState = {
+type State = {
+  _id: string | null;
+  clerkId: string | null;
+  role: string | null;
+};
+
+const initialState: State = {
   _id: null,
   clerkId: null,
   role: null,
 };
 
-function reducer(state, action) {
+type Action =
+  | { type: "LOGIN"; payload: { _id: string; clerkId: string; role: string } }
+  | { type: "LOGOUT" };
+
+function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "LOGIN":
       return {
         ...state,
-        _id: action.payload._id,
-        clerkId: action.payload.clerkId,
-        role: action.payload.role,
+        ...action.payload,
       };
-
     case "LOGOUT":
       return {
-        ...state,
         _id: null,
         clerkId: null,
         role: null,
       };
-
     default:
       return state;
   }
@@ -43,8 +47,8 @@ function reducer(state, action) {
 function UserInfoProvider({ children }: { children: React.ReactNode }) {
   const [{ _id, role, clerkId }, dispatch] = useReducer(reducer, initialState);
 
-  function login(id: string) {
-    dispatch({ type: "LOGIN", payload: id });
+  function login(user: { _id: string; clerkId: string; role: string }) {
+    dispatch({ type: "LOGIN", payload: user });
   }
 
   function logout() {
@@ -68,10 +72,8 @@ function UserInfoProvider({ children }: { children: React.ReactNode }) {
 
 function useUserContext() {
   const context = useContext(UserContext);
-
   if (context === null)
-    throw new Error("UserContext was outside the UserProvider");
-
+    throw new Error("useUserContext must be used within a UserInfoProvider");
   return context;
 }
 

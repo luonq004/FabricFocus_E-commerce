@@ -2,7 +2,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/configs/axios";
 
-export const useDisplayCategory = (idC: string) => {
+export const useDisplayCategory = () => {
   const queryClient = useQueryClient();
 
   const { mutate: displayCategory, isPending: isUpdating } = useMutation({

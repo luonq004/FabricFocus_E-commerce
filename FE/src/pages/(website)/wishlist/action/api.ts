@@ -19,16 +19,10 @@ export const addToWishList = async (data: {
   try {
     const response = await axios.post(`${apiUrl}/wishlist`, data);
     return response?.data;
-  } catch (error) {
-    throw new Error(error?.response?.data?.message);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw error;
   }
 };
-
-// export const getWishList = async (id: string) => {
-//   try {
-//     const response = await axios.get(`${apiUrl}/users/getWishlist/${id}`);
-//     return response?.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

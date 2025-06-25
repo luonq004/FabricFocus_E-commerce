@@ -1,13 +1,17 @@
 import {
   Attribute,
+  AttributeInArr,
   Data,
   IProduct,
+  ProductFormValues,
   Value,
-  Variant,
+  VariantFormValues,
 } from "@/common/types/Product";
 import { ProductVariant } from "@/pages/(dashboard)/product/types";
-import { ProductItem } from "@/pages/(website)/shop/types";
+import { ProductItem, Variant } from "@/pages/(website)/shop/types";
 import { type ClassValue, clsx } from "clsx";
+
+import { io, Socket } from "socket.io-client";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -16,6 +20,19 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatCurrency = (value: number) =>
   new Intl.NumberFormat("vi-VN").format(value);
+
+export const formatCurrencyVND = (amount: number): string => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(amount);
+};
+
+const URL = import.meta.env.VITE_API_URL_SOCKET;
+
+export const socket: Socket = io(URL, {
+  autoConnect: false,
+});
 
 // ===================================================================
 
@@ -57,6 +74,7 @@ export function areArraysEqual(arr1: string[], arr2: string[]): boolean {
 
 export function getUniqueAttributeValue(product: IProduct): Data[][] {
   return product.variants.reduce<Data[][]>((acc, variant) => {
+    // @ts-expect-error: variant.values may not be typed as Value[] but is expected to have compatible structure
     variant.values.forEach((item: Value) => {
       const { type, value } = item;
 
@@ -74,14 +92,13 @@ export function getUniqueAttributeValue(product: IProduct): Data[][] {
       if (
         !existingTypeArray.some((existingItem) => existingItem.value === value)
       ) {
-        // console.log("VALUE: ", item);
         const revalidateItem = {
           value,
           label: item.name,
           _id: item._id,
           type,
         };
-
+        // @ts-expect-error: revalidateItem is compatible with Data type but may have extra fields
         existingTypeArray.push(revalidateItem);
       }
     });
@@ -93,38 +110,23 @@ export function getSelectedValues(
   valueAttributeProduct: Data[][],
   attributes: Attribute[]
 ) {
-  return attributes.reduce((acc, attribute, index) => {
-    // console.log("valueAttributeProduct: ", valueAttributeProduct);
-    // console.log("attributes: ", attributes);
-
+  return attributes.reduce((acc, attribute) => {
     valueAttributeProduct.filter((item) => {
-      // console.log("item: ", item);
       if (attribute.name == item[0].type) {
-        // console.log("item: ", item);
-        // console.log("attribute.name: ", attribute.name);
+        // @ts-expect-error: acc is an object with dynamic keys based on attribute._id, which may not be typed explicitly
         acc[attribute._id] = item;
       }
     });
 
     return acc;
-
-    // console.log("attr: ", attr);
-
-    // const matchedValues = valueAttributeProduct[index]; // Lấy các giá trị tương ứng từ array1 theo index
-
-    // console.log("matchedValues: ", matchedValues);
-
-    // if (attribute.name == matchedValues?.[0].type) {
-    //   // console.log("mâttch: ", acc);
-    //   // console.log("acc[attribute._id]: ", acc);
-    //   acc[attribute._id] = matchedValues; // Gán mảng giá trị từ array1 vào acc với khóa là _id của attribute
-    // }
-    // return acc;
   }, {});
 }
 
-export const getAttributesUsedInArray = (array1, attributes) => {
-  const usedAttributes = [];
+export const getAttributesUsedInArray = (
+  array1: VariantFormValues[],
+  attributes: AttributeInArr[]
+) => {
+  const usedAttributes: VariantFormValues[] = [];
 
   // Duyệt qua từng item trong array1
   array1.forEach((product) => {
@@ -167,7 +169,15 @@ export function formatDataLikeFields(valeMix: Data[][]) {
 }
 
 // ====================
-const isMatch = (values1: Value[], values2: Value[]) => {
+interface ValOfMatch {
+  _id?: string;
+  name?: string;
+  value?: string;
+  type: string;
+  slugName?: string;
+}
+
+const isMatch = (values1: ValOfMatch[], values2: ValOfMatch[]) => {
   return values2.every((value2) =>
     values1.some(
       (value1) =>
@@ -179,7 +189,10 @@ const isMatch = (values1: Value[], values2: Value[]) => {
 };
 
 // Tạo mảng 2 mới bằng cách thay thế các object nếu tìm thấy trùng trong mảng 1
-export function updateFields(array1: Variant[], array2: Variant[]) {
+export function updateFields(
+  array1: VariantFormValues[],
+  array2: VariantFormValues[]
+) {
   return array2.map((item2) => {
     const matchingItem = array1.find((item1) =>
       isMatch(item1.values, item2.values)
@@ -191,7 +204,7 @@ export function updateFields(array1: Variant[], array2: Variant[]) {
 }
 
 // Check trùng values
-export const checkForDuplicateVariants = (data: IProduct) => {
+export const checkForDuplicateVariants = (data: ProductFormValues) => {
   const variantSet = new Map<string, number>(); // Lưu vị trí của từng variant key
   const duplicateIndices: number[] = []; // Lưu vị trí của các biến thể bị trùng
 
@@ -215,27 +228,29 @@ export const checkForDuplicateVariants = (data: IProduct) => {
 
 //
 
-export const extractAttributes = (variants: any) => {
-  const attributes: any = {};
+export const extractAttributes = (variants: Variant[]) => {
+  const tempAttributes: {
+    [key: string]: Set<string>;
+  } = {};
 
   variants.forEach((variant) => {
     variant.values.forEach((value) => {
       const type = value.type;
-      if (!attributes[type]) {
-        attributes[type] = new Set();
+      if (!tempAttributes[type]) {
+        tempAttributes[type] = new Set<string>();
       }
-      // console.log("attributesTTYE: ", attributes[type]);
-      attributes[type].add(`${value._id}:${value.value}`);
+      tempAttributes[type].add(`${value._id}:${value.value}`);
     });
   });
 
-  // console.log("attributesTT: ", attributes);
+  // Chuyển Set → Array để khớp kiểu string[]
+  const attributes: {
+    [key: string]: string[];
+  } = {};
 
-  // Chuyển đổi Set thành Array cho mỗi thuộc tính
-  Object.keys(attributes).forEach((key) => {
-    attributes[key] = Array.from(attributes[key]);
+  Object.keys(tempAttributes).forEach((key) => {
+    attributes[key] = Array.from(tempAttributes[key]);
   });
-
   return attributes;
 };
 
@@ -291,16 +306,4 @@ export function formatName(input: string) {
     .join("");
 
   return camelCase;
-}
-
-export function debounce<T extends (...args: any[]) => void>(
-  func: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timer: NodeJS.Timeout;
-
-  return (...args: Parameters<T>) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => func(...args), delay);
-  };
 }

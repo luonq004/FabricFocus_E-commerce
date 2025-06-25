@@ -20,7 +20,7 @@ import {
   getUniqueTypes,
 } from "@/lib/utils";
 import { useGetAtributes } from "../actions/useGetAttributes";
-import { Attribute } from "@/common/types/Product";
+import { Attribute, ProductFormValues } from "@/common/types/Product";
 import StatusProduct from "../_components/StatusProduct";
 import { useCreateProduct } from "../actions/useCreateProduct";
 import { useUpdateProduct } from "../actions/useUpdateProduct";
@@ -57,30 +57,15 @@ const ProductAddPage = () => {
   });
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof productSchema>>({
+  const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: id
       ? product
       : {
           name: "",
           description: "",
-          // variants: [
-          //   {
-          //     price: 0,
-          //     priceSale: 0,
-          //     originalPrice: 0,
-          //     image: "",
-          //     values: [
-          //       {
-          //         _id: "",
-          //         name: "",
-          //         type: "",
-          //         value: "",
-          //       },
-          //     ],
-          //     countOnStock: 0,
-          //   },
-          // ],
+          variants: [],
+
           createdAt: "",
           updatedAt: "",
           deleted: false,
@@ -95,7 +80,6 @@ const ProductAddPage = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof productSchema>) {
-    // console.log(values);
     setIsDoing(true);
     if (id) {
       const duplicateValues = checkForDuplicateVariants(values);

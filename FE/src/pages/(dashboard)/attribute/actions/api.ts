@@ -33,10 +33,16 @@ export async function updateAttributeByID(id: string, data: { name: string }) {
     const response = await axios.put(`${apiUrl}/attributes/${id}`, data);
     return response?.data;
   } catch (error) {
-    throw (
-      error.response?.data ||
-      error.message ||
-      "Có lỗi xảy ra khi cập nhật thuộc tính"
-    );
+    if (axios.isAxiosError(error)) {
+      throw (
+        error.response?.data ||
+        error.message ||
+        "Có lỗi xảy ra khi cập nhật thuộc tính"
+      );
+    } else if (error instanceof Error) {
+      throw error.message || "Có lỗi xảy ra khi cập nhật thuộc tính";
+    } else {
+      throw "Có lỗi xảy ra khi cập nhật thuộc tính";
+    }
   }
 }

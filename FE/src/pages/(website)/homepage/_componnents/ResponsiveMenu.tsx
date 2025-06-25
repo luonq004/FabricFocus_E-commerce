@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 function ResponsiveMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,14 +10,17 @@ function ResponsiveMenu() {
   return (
     <div className="relative">
       {/* Menu Toggle Button */}
-      <button onClick={toggleMenu} className="text-3xl p-4 fixed top-4 right-4 z-50">
-        {isOpen ? '✕' : '☰'}
+      <button
+        onClick={toggleMenu}
+        className="text-3xl p-4 fixed top-4 right-4 z-50"
+      >
+        {isOpen ? "✕" : "☰"}
       </button>
 
       {/* Navigation Menu */}
       <div
         className={`fixed top-0 right-0 w-64 h-full bg-white shadow-lg transition-transform duration-300 z-40 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <ul className="flex flex-col p-6">

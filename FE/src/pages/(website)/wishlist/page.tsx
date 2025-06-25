@@ -1,5 +1,5 @@
 import { useUserContext } from "@/common/context/UserProvider";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useGetWishList } from "./action/useGetWishList";
 import useWishList from "./action/useWishList";
@@ -7,6 +7,7 @@ import useWishList from "./action/useWishList";
 import { IoMdTrash } from "react-icons/io";
 
 import { formatCurrency } from "@/lib/utils";
+import { Product } from "./types";
 
 const WishListPage = () => {
   React.useEffect(() => {
@@ -14,39 +15,37 @@ const WishListPage = () => {
   }, []);
   const { _id } = useUserContext();
 
-  const { wishList, isLoading, isError } = useGetWishList(_id);
+  const { wishList, isLoading, isError } = useGetWishList(_id!);
 
-  const {
-    // isLoading,
-    // isError,
-    removeItem,
-  } = useWishList(_id);
+  const { removeItem } = useWishList(_id!);
 
   if (isLoading || isError) {
     return (
       <div className="container h-screen">
         <div className="h-[30px] md:h-[60px]"></div>
         <h1 className="uppercase font-raleway text-4xl text-center text-[#333]">
-          Loading...
+          {isLoading ? "Loading..." : "Bị lỗi, vui lòng kiểm tra lại"}
         </h1>
       </div>
     );
   }
 
-  function userAction(action: any, value: any) {
+  function userAction(
+    action: {
+      type: string;
+    },
+    value: {
+      productId: string;
+    }
+  ) {
     const item = {
-      userId: _id,
+      userId: _id!,
       ...value,
     };
 
     switch (action.type) {
       case "removeItem":
-        const confirm = window.confirm("Bạn chắc muốn xóa chứ?");
-        if (!confirm) return;
-        removeItem.mutate(item);
-        break;
-
-      case "removeItemAfterAddCart":
+        if (!window.confirm("Bạn chắc muốn xóa chứ?")) return;
         removeItem.mutate(item);
         break;
     }
@@ -72,7 +71,7 @@ const WishListPage = () => {
               </p>
             </div>
           )}
-          {wishList?.products.map((item: any, index: number) => (
+          {wishList?.products.map((item: Product) => (
             <div
               className="flex gap-5 pb-8 border-b last:border-none border-dashed"
               key={item.productItem._id}

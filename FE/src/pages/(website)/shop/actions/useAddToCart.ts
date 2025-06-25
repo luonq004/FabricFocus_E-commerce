@@ -3,7 +3,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
@@ -24,13 +24,11 @@ export const useAddToCart = () => {
       });
     },
 
-    onError: (error: Error) => {
-      console.log(error);
-
+    onError: (error: AxiosError) => {
       toast({
         className: "h-20",
         variant: "destructive",
-        title: error?.response?.data?.message,
+        title: (error.response?.data as { message?: string })?.message,
       });
     },
   });

@@ -55,7 +55,6 @@ export async function updateAttributeValueByID(
   id: string,
   data: {
     name: string;
-    type: string;
     value: string;
   }
 ) {

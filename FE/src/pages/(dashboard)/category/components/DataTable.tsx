@@ -1,11 +1,11 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
-  ColumnFiltersState,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -77,16 +77,6 @@ export function DataTable<TData, TValue>({
     paginationGoups.push(paginationButtons);
     paginationButtons = [];
   }
-  const getCurrentPaginationGroup = () => {
-    for (const i in paginationGoups) {
-      if (
-        paginationGoups[i].findIndex((u) => u.key === String(currentPage)) !==
-        -1
-      ) {
-        return paginationGoups[i];
-      }
-    }
-  };
 
   return (
     <>

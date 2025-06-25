@@ -1,17 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import ActionCell from "./ActionCell";
+import { AttributeValue } from "@/common/types/Product";
 
-interface IAttributeValues {
-  _id: string;
-  name: string;
-  value: string;
-  type: string;
-}
-
-export const columnAttributeValues: ColumnDef<IAttributeValues>[] = [
+export const columnAttributeValues: ColumnDef<AttributeValue>[] = [
   {
-    // accessorKey: "_id",
     header: "#",
     cell: ({ row }) => {
       return <span>{row.index + 1}</span>;
@@ -37,7 +30,6 @@ export const columnAttributeValues: ColumnDef<IAttributeValues>[] = [
         >
           {!isColor && row.original.value}
         </span>
-        // <span>{row.original.value}</span>
       );
     },
   },

@@ -18,8 +18,6 @@ import { useEffect, useState } from "react";
 import { useGetAttributeValueByID } from "../actions/useGetAttributeValueByID";
 import { useUpdateAttributeValue } from "../actions/useUpdateAttributeValue";
 
-// import { useUpdateAttributeByID } from "../actions/useUpdateAttributeByID";
-
 const formSchema = z.object({
   name: z.string().min(1, {
     message: "Hãy viết tên giá trị thuộc tính",
@@ -27,18 +25,15 @@ const formSchema = z.object({
   value: z.string().min(1, {
     message: "Hãy viết giá trị thuộc tính",
   }),
-
-  // type: z.string().min(1, {
-  //   message: "Hãy chọn loại giá trị thuộc tính",
-  // }),
 });
 
 const UpdateAttributeValuePage = () => {
   const { id } = useParams<{ id: string }>();
   const [typeValue, setTypeValue] = useState<string>("text");
 
-  const { isLoadingAtributeValue, atributeValue, error } =
-    useGetAttributeValueByID(id!);
+  const { isLoadingAtributeValue, atributeValue } = useGetAttributeValueByID(
+    id!
+  );
 
   const { updateAttributeValue, isUpdating } = useUpdateAttributeValue(id!);
 
@@ -48,7 +43,6 @@ const UpdateAttributeValuePage = () => {
     defaultValues: {
       name: "",
       value: "",
-      // type: "",
     },
   });
 
@@ -67,8 +61,7 @@ const UpdateAttributeValuePage = () => {
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
-    updateAttributeValue({ ...values, _id: id });
+    updateAttributeValue({ ...values });
   }
   return (
     <Form {...form}>
@@ -115,23 +108,8 @@ const UpdateAttributeValuePage = () => {
           >
             {typeValue === "text" ? "Đổi sang màu" : "Đổi sang chữ"}
           </Button>
-
-          {/* <Button className="self-end">asd</Button> */}
         </div>
-        {/* <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Loại giá trị thuộc tính</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} disabled />
-              </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <Button disabled={isUpdating} type="submit">
           {isUpdating ? "Đang cập nhật" : "Cập nhật"}
         </Button>

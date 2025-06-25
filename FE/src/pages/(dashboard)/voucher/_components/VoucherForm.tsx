@@ -1,4 +1,8 @@
-import useVoucher from "@/common/hooks/useVouher";
+import {
+  useGetVoucher,
+  useUpdateVoucher,
+  useDeleteVoucher,
+} from "@/common/hooks/useVouher";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -89,8 +93,9 @@ const voucherSchema = Joi.object({
 });
 
 const VoucherForm = ({ id }: { id: string }) => {
-  const { getVoucher, updateVoucher, deleteVoucher } = useVoucher();
-  const { data, isLoading, isError } = getVoucher("get-one", id);
+  const deleteVoucher = useDeleteVoucher();
+  const updateVoucher = useUpdateVoucher();
+  const { data, isLoading, isError } = useGetVoucher("get-one", id);
   const {
     register,
     control,
@@ -167,7 +172,6 @@ const VoucherForm = ({ id }: { id: string }) => {
   }
 
   function onSubmit(item: VoucherType) {
-    console.log("item", item);
     const startDateUTC = new Date(data.startDate).toISOString();
     const dobFromUTC = new Date(
       new Date(item.dob.from).getTime()
@@ -330,7 +334,6 @@ const VoucherForm = ({ id }: { id: string }) => {
           )}
           <div
             onClick={() => {
-              console.log("openDate", openDate, "id", id);
               openEdit === id && handleOpenDate(id);
             }}
             className={`flex items-center border rounded-md px-4 py-2 ${

@@ -24,9 +24,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import axios from "@/configs/axios";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, socket } from "@/lib/utils";
 import { useUser } from "@clerk/clerk-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import CreateAddress from "../../address/CreatAddress";
@@ -36,10 +36,8 @@ import sendOrderConfirmationEmail from "./sendEmail";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
-import io from "socket.io-client";
 import { CartProduct, VariantValue, Voucher } from "../types";
 import CheckOutCart from "./CheckOutCart";
-const socket = io("http://localhost:8080");
 
 interface ErrorResponse {
   message: string;
@@ -66,20 +64,32 @@ const CheckOut = () => {
   } = form;
 
   const { user } = useUser();
-  const { _id } = useUserContext() ?? {};
+  const { _id } = useUserContext();
   const queryClient = useQueryClient(); // Đặt useQueryClient ở trên đầu
   const Gmail = user?.primaryEmailAddress?.emailAddress;
   const {
     data: addresses,
     isLoading: isLoadingAddresses,
     isError: adressError,
-  } = useAddress(_id);
+  } = useAddress(_id!);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const handleDialogClose = () => setDialogOpen(false);
   // lấy dữ liệu giỏ hàng
   const { cart: carts, isLoading: isLoadingCart, isError } = useCart(_id ?? "");
   const fullName = user?.fullName;
-  console.log("CARRT: ", carts);
+
+  useEffect(() => {
+    if (!_id) {
+      navigate("/");
+    }
+
+    if (!socket.connected) socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [_id, navigate]);
+
   const onSubmit = async (data: FormOut) => {
     if (carts?.voucher?.length > 0) {
       const voucherChecks = carts.voucher.map(async (item: Voucher) => {
@@ -146,7 +156,6 @@ const CheckOut = () => {
           "/create-order-Vnpay",
           orderData
         );
-        console.log("orderData", carts);
         const createOrder = orderResponse.data;
         const orderCode = createOrder?.order?.orderCode;
         const response = await axios.post("/create_payment_url", {
@@ -207,7 +216,8 @@ const CheckOut = () => {
         error !== null &&
         "response" in error
       ) {
-        const errResponse: ErrorResponse = (error as any).response?.data;
+        const errResponse = (error as { response?: { data?: ErrorResponse } })
+          .response?.data;
         const message = errResponse?.message || "Đã có lỗi xảy ra";
 
         toast({
@@ -225,6 +235,7 @@ const CheckOut = () => {
       }
     }
   };
+
   if (adressError) {
     return (
       <div className="flex items-center justify-center p-[10rem] my-10   ">

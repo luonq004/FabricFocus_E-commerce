@@ -11,19 +11,15 @@ import { Link } from "react-router-dom";
 import { useDeleteProduct } from "../actions/useDeleteProduct";
 import { Row } from "@tanstack/react-table";
 import { IProduct } from "@/common/types/Product";
-import { useDisplayProduct } from "../actions/useDisplayproduct";
-
-// import { useDeleteAttribute } from "../actions/useDeleteAttribute";
+import { useDisplayProduct } from "../actions/useDisplayProduct";
 
 interface ActionCellProps {
   row: Row<IProduct>;
 }
 
 const ActionCell: React.FC<ActionCellProps> = ({ row }) => {
-  const { deleteProduct, isDeleting } = useDeleteProduct(row.original._id);
-  const { displayProduct, isUpdating } = useDisplayProduct(row.original._id);
-
-  // console.log("id", row);
+  const { deleteProduct, isDeleting } = useDeleteProduct();
+  const { displayProduct, isUpdating } = useDisplayProduct();
 
   const handleDelete = async () => {
     if (confirm("Bạn có chắc ẩn sản phẩm này?")) {

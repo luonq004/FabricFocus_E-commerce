@@ -1,4 +1,4 @@
-import { User } from "@/common/types/User";
+import { User, UserResponse } from "@/common/types/User";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,15 +10,20 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/clerk-react";
-import axios from "@/configs/axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
 interface EditUserFormProps {
   onClose: () => void;
-  onSuccess: (updatedUser: User) => void;
+  onSuccess: (updatedUser: UserResponse) => void;
   userData: User; // Thông tin người dùng
+}
+
+interface BackendError {
+  code: string;
+  message: string;
 }
 
 const EditUserForm: React.FC<EditUserFormProps> = ({
@@ -35,7 +40,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
     setError,
     reset,
     formState: { errors },
-  } = useForm<any>({
+  } = useForm<User>({
     defaultValues: userData, // Đặt giá trị mặc định là dữ liệu người dùng hiện tại
   });
 
@@ -47,8 +52,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
   const checkAdminCount = async () => {
     setIsChecking(true);
     try {
-      const response = await axios.get("/users");
-      // console.log("Dữ liệu nhận được từ server:", response.data);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
       // Truy cập vào mảng nằm trong response.data.data
       const users = Array.isArray(response.data?.data)
         ? response.data.data
@@ -56,7 +60,6 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
       const adminCount = users.filter(
         (user: User) => user.role === "Admin"
       ).length;
-      // console.log("Số lượng admin:", adminCount);
       return adminCount > 2;
     } catch (error) {
       console.error("Error checking admin count", error);
@@ -83,23 +86,20 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
     }
   }, [userData, reset]);
 
-  const onSubmit = async (updatedUser: any) => {
+  const onSubmit = async (updatedUser: User) => {
     // Gửi mật khẩu gốc cho backend nếu có nhập
     if (updatedUser.password) {
       updatedUser.passwordPlaintext = updatedUser.password; // Gửi mật khẩu gốc
     } else {
       delete updatedUser.password; // Xóa nếu không thay đổi
     }
-    console.log("Dữ liệu gửi đi:", updatedUser);
 
     try {
       // Gửi yêu cầu cập nhật thông tin người dùng
       const response = await axios.put(
-        `/users/${updatedUser.clerkId}`,
+        `${import.meta.env.VITE_API_URL}/users/${updatedUser.clerkId}`,
         updatedUser
       );
-
-      //   console.log(response.data);
 
       if (response.status === 200) {
         if (user?.id === updatedUser.clerkId) {
@@ -112,28 +112,21 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
           className: "bg-green-400 text-white h-auto",
           title: "Thông tin người dùng đã được cập nhật!",
         });
-        // console.log("Cập nhật thành công:", response.data);
         onSuccess(response.data);
         onClose(); // Đóng form
       } else {
         throw new Error("Cập nhật thất bại");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Kiểm tra lỗi từ backend
-      if (error.response && error.response.data) {
+      if (axios.isAxiosError(error) && error.response?.data) {
         const backendMessage = error.response.data.message;
-        const backendErrors = error.response.data.errors;
+        const backendErrors = error.response.data.errors as BackendError[];
 
         // Xử lý lỗi từ backend
         if (backendErrors) {
-          backendErrors.forEach((err: any) => {
+          backendErrors.forEach((err) => {
             // Kiểm tra mã lỗi và thông báo lỗi cụ thể
-            if (err.code === "form_identifier_exists") {
-              setError("email", {
-                type: "manual",
-                message: "Email đã được sử dụng. Vui lòng thử email khác.",
-              });
-            }
 
             if (err.code === "form_password_pwned") {
               setError("password", {
@@ -177,29 +170,6 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
             id="edit-user-form"
           >
             {/* Email */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                {...register("email", {
-                  required: "Email là bắt buộc",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Email không hợp lệ",
-                  },
-                })}
-                placeholder="example@example.com"
-                className="w-full border rounded px-4 py-2 "
-                autoFocus
-              />
-              {errors.email?.message && (
-                <p className="text-red-500 text-sm mt-1">
-                  {String(errors.email.message)}
-                </p>
-              )}
-            </div>
 
             {/* Họ */}
             <div>

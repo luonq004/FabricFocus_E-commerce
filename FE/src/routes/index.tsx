@@ -37,8 +37,6 @@ import SuccessPage from "@/pages/(website)/cart/_components/SuccessPage ";
 import OrderHistory from "@/pages/(website)/orderHistory/OrderHistory";
 import VoucherStorage from "@/pages/(website)/user/_components/VoucherStorage";
 
-import RegisterForm from "@/pages/(dashboard)/user/_component/RegisterForm";
-
 import NotFound from "@/components/Notfound";
 import CreateAttributePage from "@/pages/(dashboard)/attribute/add/page";
 import UpdateAttributePage from "@/pages/(dashboard)/attribute/edit/page";
@@ -60,13 +58,13 @@ import Detail from "@/pages/(website)/blog/_components/Detail";
 import BlogPage from "@/pages/(website)/blog/page";
 import ProductDetail from "@/pages/(website)/product/page";
 
-import PageNotifications from "@/pages/(dashboard)/notifications/Page";
-import NotificationList from "@/pages/(dashboard)/notifications/_components/ListNotifications";
-import CategoriesPage from "@/pages/(dashboard)/category/page";
-import CategoryEditPage from "@/pages/(dashboard)/category/edit/page";
 import CategoryAddPage from "@/pages/(dashboard)/category/add/page";
-import MessagePage from "@/pages/(dashboard)/message/page";
+import CategoryEditPage from "@/pages/(dashboard)/category/edit/page";
+import CategoriesPage from "@/pages/(dashboard)/category/page";
 import Comment from "@/pages/(dashboard)/comment/page";
+import MessagePage from "@/pages/(dashboard)/message/page";
+import NotificationList from "@/pages/(dashboard)/notifications/_components/ListNotifications";
+import PageNotifications from "@/pages/(dashboard)/notifications/Page";
 
 const Router = () => {
   return (
@@ -123,15 +121,6 @@ const Router = () => {
           <Route path="users" element={<UserPage />}>
             <Route index element={<ListUser />} />
             <Route path="detail/:clerkId" element={<UserDetailPage />} />
-            <Route
-              path="create-user"
-              element={
-                <RegisterForm
-                  onClose={() => console.log("Form đóng lại")}
-                  onSuccess={() => console.log("Đăng ký thành công")}
-                />
-              }
-            />
           </Route>
 
           <Route path="blogs" element={<BlogPages />}>

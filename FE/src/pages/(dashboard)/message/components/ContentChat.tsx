@@ -3,10 +3,11 @@ import { useUserContext } from "@/common/context/UserProvider";
 
 import { Button } from "@/components/ui/button";
 import axios from "@/configs/axios";
-import { Socket } from "dgram";
 
 import { useEffect, useRef, useState } from "react";
 import ScrollableFeed from "react-scrollable-feed";
+
+import { socket } from "@/lib/utils";
 
 type Message = {
   _id: string;
@@ -27,7 +28,7 @@ type ConversationResponse = {
   messages: Message[];
 };
 
-const ContentChat = ({ socket }: { socket: Socket }) => {
+const ContentChat = () => {
   const { _id } = useUserContext();
   const [listMessage, setListMessage] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +64,7 @@ const ContentChat = ({ socket }: { socket: Socket }) => {
   useEffect(() => {
     const handleMessage = (message: Message) => {
       // Kiểm tra nếu user hiện tại nằm trong danh sách user liên quan
-      if (message.sender.listUsers?.includes(_id)) {
+      if (message.sender.listUsers?.includes(_id!)) {
         // Chỉ xử lý khi tin nhắn đến từ `selectedUser`
         if (message.sender._id === selectedUser) {
           setListMessage((prev: Message[]) => [...prev, message]);
@@ -105,7 +106,6 @@ const ContentChat = ({ socket }: { socket: Socket }) => {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter" && newMessage) {
-      // console.log("OK");
       // await sendMessage(_id);
     }
   };

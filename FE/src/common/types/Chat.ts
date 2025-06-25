@@ -21,16 +21,6 @@ export interface IMessage {
   _id: string;
 }
 
-// sender: {
-//   _id: string;
-//   firstName: string;
-//   lastName: string;
-//   imageUrl: string;
-//   role: "Admin" | "User";
-// };
-// senderType: "User" | "Admin";
-// text: string;
-
 export interface IMessageData {
   text: string;
   adminId: string;
@@ -54,7 +44,7 @@ export interface IConversation {
 }
 
 export interface IChatStoreState {
-  listMessage: IListMessage | [];
+  listMessage: IListMessage;
   newMessage: string;
   conversations: IConversation[];
   selectedUser: string | null;

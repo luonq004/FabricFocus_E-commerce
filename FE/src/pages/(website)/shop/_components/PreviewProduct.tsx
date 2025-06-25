@@ -47,7 +47,7 @@ const PreviewProduct = ({
   const { addCart, isAdding } = useAddToCart();
   const { addWishList } = useAddToWishList();
 
-  const { wishList }: { wishList: WishList } = useGetWishList(_id);
+  const { wishList }: { wishList: WishList } = useGetWishList(_id!);
 
   const [attributesChoose, setAttributesChoose] = useState<{
     [key: string]: string | string[][];
@@ -131,11 +131,8 @@ const PreviewProduct = ({
       Object.keys(attributeSelected).forEach((key) => {
         const newValue = attributeSelected[key]; // Giá trị mới từ attributeSelected
 
-        console.log("attributeSelected", attributeSelected);
-
         // Kiểm tra nếu key đã tồn tại trong state (newSelected)
         if (newSelected[key]) {
-          console.log("newValue", newSelected);
           // Kiểm tra nếu value trong attributeSelected trùng với value hiện tại trong state
           if (
             newValue.length === newSelected[key][0].length &&
@@ -201,8 +198,6 @@ const PreviewProduct = ({
     ? variantChoose.countOnStock
     : productPopup?.countOnStock;
 
-  // console.log("selectedAttributes", selectedAttributes);
-
   const images = [
     productPopup?.image,
     ...(productPopup?.variants
@@ -212,7 +207,6 @@ const PreviewProduct = ({
       : []),
   ];
 
-  // console.log("productPopup", productPopup);
   const activeData: Comments[] | undefined =
     productPopup && productPopup.comments.filter((item) => !item.deleted); // Lọc ra các item chưa bị xóa
 
@@ -239,8 +233,6 @@ const PreviewProduct = ({
       : productPopup?.category;
 
   if (!productPopup || isLoading) return null; // Trả về null nếu productPopup không có dữ liệu
-
-  // console.log("wishList", wishList);
 
   return createPortal(
     <div
@@ -393,7 +385,6 @@ const PreviewProduct = ({
                         return (
                           <ToggleGroupItem
                             onClick={() => {
-                              console.log("item", item);
                               handleAttributeSelect(key, item.split(":")[0]);
                             }}
                             key={`${item.split(":")[0]}-${idx}`}
@@ -415,7 +406,6 @@ const PreviewProduct = ({
                         return (
                           <ToggleGroupItem
                             onClick={() => {
-                              console.log("item", attributesChoose);
                               handleAttributeSelect(key, item.split(":")[0]);
                             }}
                             className="rounded-none border data-[state=on]:border-2 data-[state=on]:text-black transition-all uppercase px-3 h-8"
@@ -523,7 +513,7 @@ const PreviewProduct = ({
                 }`}
                 onClick={() =>
                   addWishList({
-                    userId: _id,
+                    userId: _id!,
                     productId: productPopup?._id,
                     variantId: "",
                     quantity: 0,

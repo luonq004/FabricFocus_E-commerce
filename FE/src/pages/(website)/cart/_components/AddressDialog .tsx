@@ -10,15 +10,35 @@ import { useState, useEffect } from "react"; // Sử dụng useState và useEffe
 import EditAddress from "../../address/EditAddress";
 import { updateAddressByUserId } from "../../services/address/Address";
 import { toast } from "@/components/ui/use-toast";
-import { Address } from "../../address/ListAddress";
 import { useQueryClient } from "@tanstack/react-query";
 import CreateAddress from "../../address/CreatAddress";
 
-const AddressDialog = ({ isOpen, onClose }) => {
+export interface Address {
+  _id: string;
+  userId: string;
+  addressDetail: string;
+  cityId: string;
+  districtId: string;
+  wardId: string;
+  country: string;
+  name: string;
+  phone: string;
+  isDefault: boolean;
+  createdAt: string; // Nếu muốn dùng dạng Date thì chuyển thành `Date`
+  updatedAt: string;
+}
+
+const AddressDialog = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: ((open: boolean) => void) | undefined;
+}) => {
   const queryClient = useQueryClient();
-  const { _id } = useUserContext() ?? {}; // Lấy _id từ UserContext
+  const { _id } = useUserContext(); // Lấy _id từ UserContext
   const { data, isLoading, error } = useAddress(_id); // Lấy danh sách địa chỉ từ hook useAddress
-  const [selectedAddress, setSelectedAddress] = useState(null); // State để lưu địa chỉ đã chọn
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null); // State để lưu địa chỉ đã chọn
 
   // Cập nhật địa chỉ mặc định khi có dữ liệu
   useEffect(() => {
@@ -44,7 +64,11 @@ const AddressDialog = ({ isOpen, onClose }) => {
       isDefault: true,
       addressId: address._id,
     });
-    queryClient.invalidateQueries(["ADDRESS_", address]);
+
+    queryClient.invalidateQueries({
+      queryKey: ["ADDRESS"],
+    });
+
     toast({
       title: "Thành công!",
       description: "đã đặt địa chỉ làm mặc định.",

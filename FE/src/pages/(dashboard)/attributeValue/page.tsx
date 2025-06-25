@@ -13,8 +13,6 @@ const AttributeValuePage = () => {
     return <div>Loading...</div>;
   }
 
-  console.log("atributeValues", atributeValues);
-
   return (
     <>
       <div className="bg-white p-6">

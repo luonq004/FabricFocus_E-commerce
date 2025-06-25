@@ -1,4 +1,4 @@
-import { User } from "@/common/types/User";
+import { User, UserResponse } from "@/common/types/User";
 import Confirm from "@/components/Confirm/Confirm";
 import {
   Dialog,
@@ -252,9 +252,7 @@ function ListUser() {
     setModalOpen(true); // Mở modal
   };
 
-  const handleSuccessUpdate = (updatedUser: any) => {
-    // console.log("Dữ liệu cập nhật:", updatedUser);
-
+  const handleSuccessUpdate = (updatedUser: UserResponse) => {
     setAllUsers((prevUsers) =>
       prevUsers.map((user) =>
         user.clerkId === updatedUser.data.clerkId
@@ -263,7 +261,7 @@ function ListUser() {
       )
     );
 
-    setSelectedUser(null);
+    // setSelectedUser(null);
     setModalOpen(false); // Đóng modal
     toast({
       className: "bg-green-400 text-white h-auto",

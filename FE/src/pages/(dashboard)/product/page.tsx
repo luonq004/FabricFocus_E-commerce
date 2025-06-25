@@ -5,7 +5,7 @@ import Header from "./_components/Header";
 import { useGetAllProduct } from "./actions/useGetAllProduct";
 
 const ProductPage = () => {
-  const { isLoading, listProduct, error } = useGetAllProduct();
+  const { isLoading, listProduct } = useGetAllProduct();
 
   if (isLoading) {
     return (
@@ -14,8 +14,6 @@ const ProductPage = () => {
       </div>
     );
   }
-
-  // console.log(listProduct);
 
   return (
     // <Container>

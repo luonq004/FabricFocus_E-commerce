@@ -1,10 +1,13 @@
-import { Attribute, State, Variant } from "@/common/types/Product";
+import {
+  Attribute,
+  ProductFormValues,
+  State,
+  VariantFormValues,
+} from "@/common/types/Product";
 import { FormTypeProductVariation } from "@/common/types/validate";
 import { FieldArrayWithId } from "react-hook-form";
 
 import { FaCloudUploadAlt } from "react-icons/fa";
-
-// UI
 
 import {
   Accordion,
@@ -37,12 +40,12 @@ const VariationTab = ({
   previewImages,
   setPreviewImages,
 }: {
-  fields: FieldArrayWithId<Variant>[];
+  fields: FieldArrayWithId<ProductFormValues, "variants", "id">[];
   stateAttribute: State;
   typeFields: string[];
   form: FormTypeProductVariation;
   attributes: Attribute[];
-  replaceFields: (fields: Variant[]) => void;
+  replaceFields: (fields: VariantFormValues[]) => void;
   removeFields: (index: number) => void;
   duplicate: number[];
   previewImages: {
@@ -54,10 +57,6 @@ const VariationTab = ({
 }) => {
   const [stateSelect, setStateSelect] = useState<string>("create");
 
-  // const [previewImages, setPreviewImages] = useState<{
-  //   [key: string]: string | null;
-  // }>({});
-
   const [openItems, setOpenItems] = useState<string[]>([]);
 
   useEffect(() => {
@@ -68,16 +67,6 @@ const VariationTab = ({
     // Mở các mục có lỗi
     setOpenItems((prev) => [...new Set([...prev, ...errorKeys])]);
   }, [form.formState.errors]);
-
-  // useEffect(() => {
-  //   const initialImages = fields.reduce((acc, field) => {
-  //     if (field.image) {
-  //       acc[field.id] = field.image; // Use the existing image URL
-  //     }
-  //     return acc;
-  //   }, {} as { [key: string]: string | null });
-  //   setPreviewImages(initialImages);
-  // }, [fields]);
 
   const handleImageChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -101,7 +90,16 @@ const VariationTab = ({
     if (stateSelect === "create") {
       if (stateAttribute.valuesMix.length !== 0) {
         const typesFromReducer = getUniqueTypesFromFields(
-          stateAttribute.attributesChoose
+          stateAttribute.attributesChoose.map((attr) => ({
+            ...attr,
+            values: attr.values.map((value) => ({
+              slugName: value.name?.toLowerCase().replace(/\s+/g, "-") || "",
+              _id: value._id || "",
+              name: value.name,
+              type: value.type,
+              value: value.value,
+            })),
+          }))
         );
 
         const newFields = areArraysEqual(
@@ -114,7 +112,10 @@ const VariationTab = ({
         replaceFields(newFields);
         newFields.forEach((field, index) => {
           field.values.forEach((value, indx) => {
-            form.setValue(`variants.${index}.values.${indx}._id`, value._id);
+            form.setValue(
+              `variants.${index}.values.${indx}._id`,
+              value._id ?? ""
+            );
           });
         });
       }
@@ -127,7 +128,7 @@ const VariationTab = ({
     if (stateSelect === "countOnStock") {
       const value = prompt("Nhập số lượng tồn kho cho tất cả biến thể");
 
-      fields.forEach((field, index) => {
+      fields.forEach((_, index) => {
         form.setValue(
           `variants.${index}.countOnStock`,
           parseInt(value || "1", 10)
@@ -138,7 +139,7 @@ const VariationTab = ({
     if (stateSelect === "priceOriginal") {
       const value = prompt("Nhập giá gốc cho tất cả biến thể");
 
-      fields.forEach((field, index) => {
+      fields.forEach((_, index) => {
         form.setValue(
           `variants.${index}.originalPrice`,
           parseInt(value || "1", 10)
@@ -149,7 +150,7 @@ const VariationTab = ({
     if (stateSelect === "price") {
       const value = prompt("Nhập giá bán cho tất cả biến thể");
 
-      fields.forEach((field, index) => {
+      fields.forEach((_, index) => {
         form.setValue(`variants.${index}.price`, parseInt(value || "1", 10));
       });
     }
@@ -157,7 +158,7 @@ const VariationTab = ({
     if (stateSelect === "priceSale") {
       const value = prompt("Nhập giá giảm giá cho tất cả biến thể");
 
-      fields.forEach((field, index) => {
+      fields.forEach((_, index) => {
         form.setValue(
           `variants.${index}.priceSale`,
           parseInt(value || "0", 10)
@@ -175,10 +176,10 @@ const VariationTab = ({
     );
   };
 
-  const matchingAttributes = getAttributesUsedInArray(fields, attributes);
-
-  // console.log(form.getValues("variants"));
-  // console.log(previewImages);
+  const matchingAttributes: VariantFormValues[] = getAttributesUsedInArray(
+    fields,
+    attributes
+  );
 
   return (
     <>

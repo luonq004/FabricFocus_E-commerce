@@ -11,6 +11,16 @@ import axios from "@/configs/axios";
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
+interface UserItem {
+  clerkId: string;
+  totalSpent: number;
+  userAvatar: string;
+  userEmail: string;
+  userId: string;
+  userName: string;
+  _id: string;
+}
+
 export function UserList() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["UserList"],
@@ -32,8 +42,8 @@ export function UserList() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {data?.map((user: any) => (
-            <Link to={`users/detail/${user.clerkId}`}>
+          {data?.map((user: UserItem) => (
+            <Link key={user._id} to={`users/detail/${user.clerkId}`}>
               <div
                 key={user._id}
                 className="flex items-center gap-4 rounded-md hover:bg-gray-100 py-4 px-1 cursor-pointer group transition-all duration-200"

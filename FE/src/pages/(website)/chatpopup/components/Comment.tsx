@@ -1,21 +1,29 @@
 import { useUserContext } from "@/common/context/UserProvider";
+import { Message } from "@/common/types/User";
 import { Button } from "@/components/ui/button";
 import axios from "@/configs/axios";
-import { useState } from "react";
-
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8080");
+import { socket } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const Comment = ({
   conversationId,
   setMessages,
 }: {
   conversationId: string | null;
-  setMessages: React.Dispatch<React.SetStateAction<any[]>>;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }) => {
   const { _id } = useUserContext();
   const [newMessage, setNewMessage] = useState("");
+
+  useEffect(() => {
+    if (!_id) return;
+
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [_id]);
 
   const sendUserMessageSocket = async () => {
     try {

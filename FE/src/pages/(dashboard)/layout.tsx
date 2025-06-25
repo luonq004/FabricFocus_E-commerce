@@ -15,7 +15,6 @@ const LayoutAdmin = () => {
   const { user, isLoaded } = useUser();
   const navigate = useNavigate();
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const { _id } = useUserContext();
   const isUserSaved = useRef(false);
   const { login } = useUserContext();
 
@@ -44,9 +43,7 @@ const LayoutAdmin = () => {
       const saveUserIfNeeded = async () => {
         if (user && !isUserSaved.current) {
           try {
-            console.log("user", user.id);
             const data = await saveUserToDatabase(user.id);
-            // console.log("data", data);
             login(data); // Lưu _id vào context
             isUserSaved.current = true; // Đánh dấu đã lưu
           } catch (error) {
@@ -68,46 +65,20 @@ const LayoutAdmin = () => {
     );
   }
 
-  // console.log("user", user);
-
   // Nếu đã xác thực quyền truy cập, render giao diện
   return (
-    // <div className="bg-white flex min-h-screen">
-    //   <Sidebar />
-    //   <div className="w-full">
-    //     <div className="h-20 bg-red-400"></div>
-    //     <div className="bg-slate-300 rounded-lg m-7 min-h-80">
-    //       <Outlet />
-    //     </div>
-    //   </div>
-    // </div>
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
-            {/* <Separator orientation="vertical" className="mr-2 h-4" /> */}
-            {/* <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb> */}
           </div>{" "}
           <NotificationList />
         </header>
 
         <div className="flex flex-1 flex-col gap-4 pt-0">
           <div className="w-full bg-[#f1f5f9] h-full">
-            {/* <div className="h-20 bg-red-400"></div> */}
             <div className="rounded-lg m-7 min-h-80">
               <Outlet />
             </div>

@@ -98,29 +98,3 @@ export const columnProducts: ColumnDef<IProduct>[] = [
     cell: ({ row }) => <ActionCell row={row} />,
   },
 ];
-
-// {
-//   accessorKey: "values",
-//   header: "Giá trị",
-//   cell: ({ row }) => {
-//     const attribute = row.original;
-
-//     return (
-//       <div className="flex space-x-2">
-//         {Array.isArray(attribute.values) && attribute.values.length > 0 ? (
-//           attribute.values.map((value, index) => (
-//             <span
-//               key={index}
-//               className="bg-gray-200 px-2 py-1 rounded"
-//               title={value.name}
-//             >
-//               {value.name}
-//             </span>
-//           ))
-//         ) : (
-//           <span className="text-gray-500">Không có giá trị</span>
-//         )}
-//       </div>
-//     );
-//   },
-// },

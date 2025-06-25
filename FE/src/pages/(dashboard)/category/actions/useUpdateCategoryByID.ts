@@ -9,23 +9,28 @@ export const useUpdateCategoryByID = (id: string) => {
   const navigate = useNavigate();
 
   const { mutate: updateCategory, isPending: isUpdating } = useMutation({
-    mutationFn: (data: { name: string }) => updateCategoryByID(id, data),
+    mutationFn: (data: {
+      name: string;
+      title: string;
+      image: string;
+      description: string;
+    }) => updateCategoryByID(id, data),
 
     onSuccess: () => {
       toast({
         variant: "success",
         title: "Cập nhật danh mục thành công",
       });
-      navigate('/admin/categories')
+      navigate("/admin/categories");
       queryClient.invalidateQueries({
         queryKey: ["Categories"],
       });
     },
 
-    onError: (error: Error) => {
+    onError: (err) => {
       toast({
         variant: "destructive",
-        title: "Cập nhật danh mục thất bại",
+        title: err.message || "Cập nhật danh mục thất bại",
       });
     },
   });

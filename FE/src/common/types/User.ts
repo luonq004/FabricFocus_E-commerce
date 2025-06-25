@@ -11,10 +11,16 @@ export interface User {
   gender: string;
   password?: string;
   isActive?: string;
+  passwordPlaintext?: string;
   paymentInfo: string;
   orders: string;
   isBanned: boolean;
   isDeleted: boolean;
+}
+
+export interface UserResponse {
+  message: string;
+  data: User;
 }
 
 export interface Sender {

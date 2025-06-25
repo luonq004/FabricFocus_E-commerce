@@ -13,7 +13,10 @@ export const createComment = async (data: {
   try {
     const response = await axios.post(`${apiUrl}/comment`, data);
     return response?.data;
-  } catch (error) {
-    throw new Error(error?.response?.data?.message);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "An error occurred");
+    }
+    throw new Error("An unexpected error occurred");
   }
 };

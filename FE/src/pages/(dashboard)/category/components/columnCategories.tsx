@@ -14,7 +14,6 @@ export const columnCategories: ColumnDef<Category>[] = [
     accessorKey: "image",
     header: "Ảnh danh mục",
     cell: ({ row }) => {
-      // console.log(row);
       return (
         <img
           src={row.original.image}

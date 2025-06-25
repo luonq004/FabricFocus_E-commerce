@@ -1,5 +1,3 @@
-import imageEnd from "../../../../assets/products/imageEnd.png"
-
 const SubscribeSection = () => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between pt-16 bg-white">
@@ -20,12 +18,10 @@ const SubscribeSection = () => {
             <span className="text-[#555]">cho người đăng ký</span>
           </p>
           <h2 className="text-3xl justify-center font-extrabold font-raleway text-[#343434] mb-4 ">
-            <span>
-              
-            </span>ƯU ĐÃI MỚI MỖI TUẦN <span className="text-[#b8cd06]">+</span>{" "}
-              <br />
-              HỆ THỐNG GIẢM GIÁ <span className="text-[#b8cd06]">+</span> GIÁ
-              TỐT NHẤT
+            <span></span>ƯU ĐÃI MỚI MỖI TUẦN{" "}
+            <span className="text-[#b8cd06]">+</span> <br />
+            HỆ THỐNG GIẢM GIÁ <span className="text-[#b8cd06]">+</span> GIÁ TỐT
+            NHẤT
           </h2>
         </div>
 

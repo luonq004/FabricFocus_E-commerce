@@ -4,7 +4,6 @@ import React from "react";
 import * as chrono from "chrono-node";
 import { enUS as localeEnUS, type Locale } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { ActiveModifiers } from "react-day-picker";
 
 import {
   Popover,
@@ -125,8 +124,8 @@ const inputBase =
 
 // @source: https://www.perplexity.ai/search/in-javascript-how-RfI7fMtITxKr5c.V9Lv5KA#1
 // use this pattern to validate the transformed date string for the natural language input
-const naturalInputValidationPattern =
-  "^[A-Z][a-z]{2}sd{1,2},sd{4},sd{1,2}:d{2}s[AP]M$";
+// const naturalInputValidationPattern =
+//   "^[A-Z][a-z]{2}sd{1,2},sd{4},sd{1,2}:d{2}s[AP]M$";
 
 const DEFAULT_SIZE = 96;
 
@@ -557,7 +556,7 @@ const NaturalLanguageInput = React.forwardRef<
   const handleKeydown = React.useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       switch (e.key) {
-        case "Enter":
+        case "Enter": {
           const parsedDateTime = parseDateTime(e.currentTarget.value, locale);
           if (parsedDateTime) {
             const PM_AM = parsedDateTime.getHours() >= 12 ? "PM" : "AM";
@@ -577,6 +576,7 @@ const NaturalLanguageInput = React.forwardRef<
             onTimeChange(`${hour}:${parsedDateTime.getMinutes()} ${PM_AM}`);
           }
           break;
+        }
       }
     },
     [locale, hour12, onValueChange, onTimeChange]
@@ -616,11 +616,12 @@ const DateTimeLocalInput = ({
 
   const formateSelectedDate = React.useCallback(
     (
-      date: Date | undefined,
-      selectedDate: Date,
-      m: ActiveModifiers,
-      e: React.MouseEvent
+      // date: Date | undefined,
+      selectedDate: Date | undefined
+      // m: ActiveModifiers,
+      // e: React.MouseEvent
     ) => {
+      if (!selectedDate) return;
       const parsedDateTime = parseDateTime(selectedDate, locale);
 
       if (parsedDateTime) {

@@ -1,4 +1,5 @@
 import axios from "@/configs/axios";
+import { OrderEmail } from "../types";
 
 const sendOrderErrorConfirmationEmail = async (
   to: string,
@@ -7,7 +8,7 @@ const sendOrderErrorConfirmationEmail = async (
   try {
     // Gọi API để lấy thông tin đơn hàng dựa vào orderCode
     const response = await axios.get(`/get-ordersCode/${orderCode}`);
-    const order = response.data; // Thông tin đơn hàng từ API
+    const order: OrderEmail = response.data; // Thông tin đơn hàng từ API
 
     // Kiểm tra xem thông tin đơn hàng có hợp lệ không
     if (!order) {
@@ -73,8 +74,6 @@ const sendOrderErrorConfirmationEmail = async (
       subject: `Đơn hàng ${order.orderCode} sẽ bị hủy sau 5 phút`,
       htmlContent: emailContent,
     });
-
-    console.log("Email đã được gửi thành công.");
   } catch (error) {
     console.error("Lỗi khi gửi email:", error);
     throw new Error("Lỗi khi gửi email.");

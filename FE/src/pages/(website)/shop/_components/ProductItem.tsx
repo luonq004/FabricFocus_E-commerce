@@ -35,7 +35,7 @@ const ProductItem = ({
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { _id } = useUserContext();
   const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
-  const { wishList }: { wishList: WishList } = useGetWishList(_id);
+  const { wishList }: { wishList: WishList } = useGetWishList(_id!);
   const { addWishList, isAdding } = useAddToWishList();
 
   if (isLoading) {
@@ -59,7 +59,6 @@ const ProductItem = ({
         {listProduct &&
           listProduct?.data?.length > 0 &&
           listProduct?.data.map((product) => (
-            // console.log("product", product),
             <div
               className="product-item border-x border-[#f7f7f7] px-[30px] pb-[5px] mb-[60px] overflow-hidden"
               key={product._id}
@@ -144,7 +143,7 @@ const ProductItem = ({
                     <span
                       onClick={() =>
                         addWishList({
-                          userId: _id,
+                          userId: _id!,
                           productId: product._id,
                           variantId: product.variants[0]._id as string,
                           quantity:

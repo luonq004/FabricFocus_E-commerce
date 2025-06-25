@@ -5,9 +5,7 @@ import Content from "./components/Content";
 
 import { useUserContext } from "@/common/context/UserProvider";
 import axios from "@/configs/axios";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8080");
+import { socket } from "@/lib/utils";
 
 interface Message {
   _id: string;
@@ -41,8 +39,6 @@ const ChatPopup = () => {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const { _id } = useUserContext();
 
-  // const { conversation, isLoading, error } = useGetConversation(_id!);
-
   const fetchMessages = async () => {
     try {
       const data = await axios.get<ConversationResponse>(
@@ -57,20 +53,23 @@ const ChatPopup = () => {
   };
 
   useEffect(() => {
+    socket.connect();
     if (!_id) return;
     socket.emit("setup", _id);
     fetchMessages();
-    // socket.emit("joinChat", conversation?._id);
+
+    return () => {
+      socket.disconnect();
+    };
   }, [_id]);
 
   useEffect(() => {
     socket.on("messageRecieved", (message: Message) => {
-      console.log("message", message);
       setMessages((prev) => [...prev, message]);
     });
 
     return () => {
-      socket.off("message");
+      socket.off("messageRecieved");
     };
   }, []);
 

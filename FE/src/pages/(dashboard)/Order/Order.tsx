@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, socket } from "@/lib/utils";
 import { useUser } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -31,10 +31,9 @@ import {
 import axios from "axios";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { io } from "socket.io-client";
-const socket = io("http://localhost:8080");
-import { PaginationProducts } from "../dashboard/_components/PaginationProducts";
+
 import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { PaginationProducts } from "../dashboard/_components/PaginationProducts";
 
 export type Order = {
   id: string;
@@ -153,7 +152,7 @@ const AdminOrder = () => {
       });
 
       if (response.status === 200) {
-        queryClient.invalidateQueries(["ORDER_HISTORY"]);
+        queryClient.invalidateQueries({ queryKey: ["ORDER_HISTORY"] });
         toast({
           className: "bg-green-400 text-white h-auto",
 
@@ -192,44 +191,6 @@ const AdminOrder = () => {
     }
   };
 
-  // hủy
-  // const cancelOrder = async (orderId: string, userId: string) => {
-  //   const newStatus = "đã hủy";
-  //   try {
-  //     const reason = "Lỗi thao tác của người dùng!";
-  //     const response = await axios.put(`${apiUrl}/update-order/${orderId}`, {
-  //       newStatus,
-  //       reason,
-  //       userId,
-  //     }); // Đường dẫn API hủy đơn hàng
-  //     if (response.status === 200) {
-  //       queryClient.invalidateQueries(["ORDER_HISTORY", orderId]);
-  //       toast({
-  //         title: "Thành công",
-  //         description: "Đơn hàng đã được hủy thành công.",
-  //         variant: "default",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     const err = error as ErrorResponse;
-  //     if (err.response && err.response.data) {
-  //       toast({
-  //         title: "Lỗi",
-  //         description:
-  //           err.response.data.message || "Cập nhật trạng thái thất bại!",
-  //         variant: "destructive",
-  //       });
-  //     } else {
-  //       toast({
-  //         title: "Lỗi kết nối",
-  //         description: "Lỗi kết nối server!",
-  //         variant: "destructive",
-  //       });
-  //     }
-  //   }
-  // };
-
   // Kiểm tra nếu đơn hàng cần hủy sau 5 phút từ thời điểm tạo đơn hàng
   React.useEffect(() => {
     // Lưu trữ các ID của timeout để clear sau
@@ -244,7 +205,7 @@ const AdminOrder = () => {
         order.status !== "hủy đơn"
       ) {
         await axios.put(`${apiUrl}/delete-orderAdmin/${order.id}`);
-        queryClient.invalidateQueries(["ORDER_HISTORY"]);
+        queryClient.invalidateQueries({ queryKey: ["ORDER_HISTORY"] });
       }
     });
 
@@ -318,7 +279,6 @@ const AdminOrder = () => {
         header: "Thao tác",
         accessorKey: "id",
         cell: ({ row }) => {
-          console.log(row.original);
           return (
             <div className="flex gap-2">
               <Link to={`/admin/orders/orderdetails/${row.original.id}`}>

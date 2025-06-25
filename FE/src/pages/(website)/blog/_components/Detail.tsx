@@ -2,15 +2,12 @@ import { Blog } from "@/common/types/Blog";
 import { Category } from "@/common/types/Product";
 import axios from "@/configs/axios";
 import { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const Detail = () => {
-  const [searchParams] = useSearchParams();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Blog[]>([]);
-  const [, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const currentCategory = searchParams.get("category");
   const [error, setError] = useState<string | null>(null);
 
   const { id } = useParams();
@@ -23,7 +20,6 @@ const Detail = () => {
         // Lấy danh mục
         const categoryResponse = await axios.get("/category");
         const categoriesData = categoryResponse.data;
-        setCategories(categoriesData);
 
         // Gọi API để lấy chi tiết bài viết
         const postResponse = await axios.get(`/blogs/${id}`);

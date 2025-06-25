@@ -21,7 +21,7 @@ import Attributes from "./Attributes";
 const ProductInfo = ({ product }: { product: ProductItem }) => {
   const { addCart, isAdding } = useAddToCart();
   const { _id } = useUserContext();
-  const { wishList }: { wishList: WishList } = useGetWishList(_id);
+  const { wishList }: { wishList: WishList } = useGetWishList(_id!);
   const { id } = useParams();
   const { addWishList } = useAddToWishList();
 
@@ -262,7 +262,7 @@ const ProductInfo = ({ product }: { product: ProductItem }) => {
           }`}
           onClick={() =>
             addWishList({
-              userId: _id,
+              userId: _id!,
               productId: product._id,
               variantId: "",
               quantity: 0,

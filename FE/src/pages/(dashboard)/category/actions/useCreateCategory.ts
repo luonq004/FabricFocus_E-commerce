@@ -1,6 +1,6 @@
 import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -22,10 +22,11 @@ export const useCreateCategory = () => {
       });
     },
 
-    onError: (error: Error) => {
+    onError: (error: unknown) => {
+      const err = error as AxiosError<{ message?: string }>;
       toast({
         variant: "destructive",
-        title: error.response.data.message,
+        title: err.response?.data?.message || "Đã xảy ra lỗi",
       });
     },
   });

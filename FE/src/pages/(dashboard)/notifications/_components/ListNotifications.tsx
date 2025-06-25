@@ -3,30 +3,30 @@ import { useToast } from "@/components/ui/use-toast";
 import axios from "@/configs/axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import io from "socket.io-client";
-
-const socket = io("http://localhost:8080");
+import { Notification } from "../types";
+import { socket } from "@/lib/utils";
 
 const NotificationList = () => {
   const { _id, role } = useUserContext();
   //thông báo
-  const [notifications, setNotifications] = useState<any[]>([]); // Danh sách thông báo
+  const [notifications, setNotifications] = useState<Notification[]>([]); // Danh sách thông báo
   const [unreadCount, setUnreadCount] = useState<number>(0); // Số lượng thông báo chưa đọc
   const [isNotificationsOpen, setIsNotificationsOpen] =
     useState<boolean>(false);
   const [isMarkAllDropdownOpen, setIsMarkAllDropdownOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { toast } = useToast();
 
   const isAdmin = role === "Admin";
 
-  // console.log("cart", cart);
-
   useEffect(() => {
+    socket.connect();
     if (_id) {
       socket.emit("join_room", _id); // Tham gia phòng với userId
-      console.log(`User với id: ${_id} đã tham gia phòng`);
     }
+
+    return () => {
+      socket.disconnect();
+    };
   }, [_id]);
 
   // Lấy thông báo từ API
@@ -116,7 +116,6 @@ const NotificationList = () => {
   useEffect(() => {
     // Lắng nghe sự kiện orderNotification
     socket.on("adminOrderPlacedNotification", (newNotification) => {
-      console.log("Thông báo nhận được:", newNotification);
       setNotifications((prevNotifications) => {
         // Kiểm tra xem thông báo đã tồn tại chưa
         if (
@@ -141,8 +140,6 @@ const NotificationList = () => {
 
     // Lắng nghe sự kiện orderStatusNotification
     socket.on("adminOrderStatusNotification", (newNotification) => {
-      console.log("Thông báo trạng thái nhận được:", newNotification);
-
       setNotifications((prevNotifications) => {
         const updatedNotifications = [newNotification, ...prevNotifications];
         const unreadCount = updatedNotifications.filter(
@@ -198,7 +195,6 @@ const NotificationList = () => {
           }}
           onMouseLeave={() => {
             setIsMarkAllDropdownOpen(false);
-            setOpenDropdown(null);
           }}
         >
           <div className="sticky top-0 z-10 p-2 flex justify-between items-center bg-white">

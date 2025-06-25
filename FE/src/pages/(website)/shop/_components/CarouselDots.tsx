@@ -24,7 +24,7 @@ import ProductItem from "./ProductItem";
 export function CarouselDots() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
-  const { isLoading, listProduct, error } = useGetAllProduct();
+  const { isLoading, listProduct } = useGetAllProduct();
   const [slidesData, setSlidesData] = React.useState<Slide[]>([]);
 
   React.useEffect(() => {

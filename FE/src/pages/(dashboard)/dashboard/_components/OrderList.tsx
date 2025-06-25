@@ -28,11 +28,9 @@ export function OrderList() {
       amount: order.totalPrice || 0,
       payment: order.payment || "N/A",
       status: order.status || "unknown",
-      // createdAt: order.createdAt || "",
     }));
   }, [data]);
 
-  // console.log(newData);
   if (isLoading)
     return (
       <div className="flex flex-col space-y-3">

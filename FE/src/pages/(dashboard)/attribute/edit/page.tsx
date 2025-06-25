@@ -30,7 +30,7 @@ const UpdateAttributePage = () => {
   const { id } = useParams<{ id: string }>();
   const { updateAttribute, isUpdating } = useUpdateAttributeByID(id!);
 
-  const { isLoadingAtribute, atribute, error } = useGetAttributeByID(id!);
+  const { isLoadingAtribute, atribute } = useGetAttributeByID(id!);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,7 +52,7 @@ const UpdateAttributePage = () => {
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    updateAttribute({ ...values, _id: id });
+    updateAttribute({ ...values });
   }
   return (
     <Form {...form}>

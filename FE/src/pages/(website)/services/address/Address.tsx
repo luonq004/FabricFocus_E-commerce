@@ -1,8 +1,8 @@
 import { Alert } from "@/components/ui/alert";
 import axios, { AxiosError } from "axios";
 
- interface Address {
-  userId: string | number | undefined;
+interface Address {
+  userId: string | null;
   country: string;
   cityId: string | number;
   districtId: string | number;
@@ -21,8 +21,7 @@ export const getAllAddressUserById = async (userId: string | number) => {
     const response = await axios.get(`${apiUrl}/get-all-address/${userId}`);
     return response.data;
   } catch (error) {
-    console.log(error);
-    return <Alert variant="destructive">Lỗi khi lấy danh sách địa chỉ</Alert>;  // Dùng destructive thay vì danger
+    return <Alert variant="destructive">Lỗi khi lấy danh sách địa chỉ</Alert>; // Dùng destructive thay vì danger
   }
 };
 
@@ -32,8 +31,7 @@ export const getAddressById = async (addressId: string | number) => {
     const response = await axios.get(`${apiUrl}/get-address/${addressId}`);
     return response.data.address;
   } catch (error) {
-    console.log(error);
-    return <Alert variant="destructive">Lỗi khi lấy thông tin địa chỉ</Alert>;  // Dùng destructive thay vì danger
+    return <Alert variant="destructive">Lỗi khi lấy thông tin địa chỉ</Alert>; // Dùng destructive thay vì danger
   }
 };
 
@@ -41,14 +39,15 @@ export const getAddressById = async (addressId: string | number) => {
 export const createAddress = async (address: Address) => {
   try {
     const response = await axios.post(`${apiUrl}/create-address`, address);
-      <Alert variant="default">Tạo địa chỉ thành công!</Alert>  // Dùng default cho thông báo thành công
-      return response.data;
-   
+    <Alert variant="default">Tạo địa chỉ thành công!</Alert>; // Dùng default cho thông báo thành công
+    return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError && error.response) {
-      return <Alert variant="destructive">{error.response.data.message}</Alert>;  // Dùng destructive cho thông báo lỗi
+      return <Alert variant="destructive">{error.response.data.message}</Alert>; // Dùng destructive cho thông báo lỗi
     } else {
-      return <Alert variant="destructive">Có lỗi xảy ra. Vui lòng thử lại!</Alert>;  // Dùng destructive cho thông báo lỗi chung
+      return (
+        <Alert variant="destructive">Có lỗi xảy ra. Vui lòng thử lại!</Alert>
+      ); // Dùng destructive cho thông báo lỗi chung
     }
   }
 };
@@ -56,28 +55,29 @@ export const createAddress = async (address: Address) => {
 // Cập nhật địa chỉ dựa trên addressId
 export const updateAddressByUserId = async (address: Address) => {
   try {
-    const response = await axios.put(`${apiUrl}/update-address/${address.addressId}`, address);
-   
-      <Alert variant="default">Cập nhật địa chỉ thành công!</Alert>  // Dùng default cho thông báo thành công
-      return response.data;
-   
+    const response = await axios.put(
+      `${apiUrl}/update-address/${address.addressId}`,
+      address
+    );
+
+    <Alert variant="default">Cập nhật địa chỉ thành công!</Alert>; // Dùng default cho thông báo thành công
+    return response.data;
   } catch (error) {
-    console.log(error);
-    return <Alert variant="destructive">Lỗi khi cập nhật địa chỉ</Alert>;  // Dùng destructive cho thông báo lỗi
+    return <Alert variant="destructive">Lỗi khi cập nhật địa chỉ</Alert>; // Dùng destructive cho thông báo lỗi
   }
 };
 
 // Xóa địa chỉ theo addressId
 export const deleteAddressByUserId = async (addressId: string | number) => {
   try {
-    const response = await axios.delete(`${apiUrl}/delete-addresses/${addressId}`);
-    
-      <Alert variant="default">Xóa địa chỉ thành công!</Alert>  // Dùng default cho thông báo thành công
-      return response.data;
-   
+    const response = await axios.delete(
+      `${apiUrl}/delete-addresses/${addressId}`
+    );
+
+    <Alert variant="default">Xóa địa chỉ thành công!</Alert>; // Dùng default cho thông báo thành công
+    return response.data;
   } catch (error) {
-    console.log(error);
-    return <Alert variant="destructive">Lỗi khi xóa địa chỉ</Alert>;  // Dùng destructive cho thông báo lỗi
+    return <Alert variant="destructive">Lỗi khi xóa địa chỉ</Alert>; // Dùng destructive cho thông báo lỗi
   }
 };
 
@@ -85,12 +85,11 @@ export const deleteAddressByUserId = async (addressId: string | number) => {
 export const deleteManyAddresses = async (addressIds: (string | number)[]) => {
   try {
     const response = await axios.delete(`${apiUrl}/address/delete-many`, {
-      data: { addressIds },  // Truyền danh sách addressIds vào body của request
+      data: { addressIds }, // Truyền danh sách addressIds vào body của request
     });
-      <Alert variant="default">Xóa nhiều địa chỉ thành công!</Alert>  // Dùng default cho thông báo thành công
+    <Alert variant="default">Xóa nhiều địa chỉ thành công!</Alert>; // Dùng default cho thông báo thành công
     return response.data;
   } catch (error) {
-    console.log(error);
-    return <Alert variant="destructive">Lỗi khi xóa nhiều địa chỉ</Alert>;  // Dùng destructive cho thông báo lỗi
+    return <Alert variant="destructive">Lỗi khi xóa nhiều địa chỉ</Alert>; // Dùng destructive cho thông báo lỗi
   }
 };

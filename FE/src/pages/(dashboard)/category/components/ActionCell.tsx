@@ -19,12 +19,9 @@ interface ActionCellProps {
 }
 
 const ActionCell: React.FC<ActionCellProps> = ({ row }) => {
-  const { deleteCategories, isDeleting } = useDeleteCategory(row.original._id);
-  const { displayCategory, isUpdating } = useDisplayCategory(row.original._id);
-  const { isGetting, countProduct, errorGetting } =
-    useGettAllProductWithCategory(row.original._id);
-
-  // console.log("countProduct", countProduct);
+  const { deleteCategories, isDeleting } = useDeleteCategory();
+  const { displayCategory, isUpdating } = useDisplayCategory();
+  const { countProduct } = useGettAllProductWithCategory(row.original._id);
 
   const handleDelete = async () => {
     if (

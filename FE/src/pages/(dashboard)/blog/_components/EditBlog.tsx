@@ -17,7 +17,7 @@ const EditBlog = () => {
     watch,
     formState: { errors },
   } = useForm<Blog>();
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Blog[]>([]);
   const [value, setValueEditor] = useState(""); // Lưu giá trị editor của React Quill
   const [previewImage, setPreviewImage] = useState<string | null>(null); // Lưu ảnh xem trước
   const [imageFile, setImageFile] = useState<File | null>(null); // Lưu file ảnh
@@ -25,6 +25,8 @@ const EditBlog = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const categoryValue = watch("category");
+
+  console.log(categories);
 
   useEffect(() => {
     document.title = "Cập Nhật Bài Viết";
@@ -118,9 +120,7 @@ const EditBlog = () => {
       }
 
       // Gửi yêu cầu PUT lên BE
-      const response = await axios.put(`/blogs/${id}`, formData);
-
-      console.log("Bài viết đã được cập nhật:", response.data);
+      await axios.put(`/blogs/${id}`, formData);
       toast({
         className: "bg-green-400 text-white h-auto",
         title: "Bài viết đã được cập nhật thành công!",

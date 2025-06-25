@@ -2,7 +2,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/configs/axios";
 
-export const useDeleteProduct = (idP: string) => {
+export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
   const { mutate: deleteProduct, isPending: isDeleting } = useMutation({

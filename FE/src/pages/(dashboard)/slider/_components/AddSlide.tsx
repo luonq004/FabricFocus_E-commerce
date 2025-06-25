@@ -27,7 +27,6 @@ const AddSlider = () => {
   }, [id]);
 
   const onSubmit = async (data: FormValuesSlide) => {
-    console.log(data);
     const formData = new FormData();
     formData.append("type", data.type);
     formData.append("title", data.title);

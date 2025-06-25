@@ -14,19 +14,17 @@ export const useUpdateAttributeValue = (id: string) => {
   const queryClient = useQueryClient();
 
   const { mutate: updateAttributeValue, isPending: isUpdating } = useMutation({
-    mutationFn: (data: { name: string }) => updateAttributeValueByID(id, data),
+    mutationFn: (data: { name: string; value: string }) =>
+      updateAttributeValueByID(id, data),
 
     onSuccess: () => {
       toast({
         variant: "success",
         title: "Cập nhật giá trị thuộc tính thành công",
       });
-      queryClient.invalidateQueries([
-        "AttributeValue",
-        idAttr,
-        { status: filterStatus },
-      ]);
-      queryClient.invalidateQueries(["AttributeValue", idAttr]);
+      queryClient.invalidateQueries({
+        queryKey: ["AttributeValue", idAttr, { status: filterStatus }],
+      });
     },
 
     onError: (error: Error) => {

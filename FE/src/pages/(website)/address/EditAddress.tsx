@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
@@ -10,10 +17,10 @@ import useAddress from "@/common/hooks/address/useAddress";
 import { updateAddressByUserId } from "../services/address/Address";
 import { useQueryClient } from "@tanstack/react-query";
 interface EditAddressProps {
-    addressId: string | undefined; // Nhận addressId từ props
-  }
+  addressId: string | undefined; // Nhận addressId từ props
+}
 const EditAddress = ({ addressId }: EditAddressProps) => {
-  const { data } = useAddress( undefined,addressId);
+  const { data } = useAddress(undefined, addressId);
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -42,8 +49,8 @@ const EditAddress = ({ addressId }: EditAddressProps) => {
   const handleWardChange = (wardName: string) => {
     setWard(wardName);
   };
-const country = "Việt Nam"
-  const handleSave = async() => {
+  const country = "Việt Nam";
+  const handleSave = async () => {
     // Kiểm tra các trường không trống
     if (!name || !phone || !city || !district || !ward || !address) {
       toast({
@@ -53,8 +60,8 @@ const country = "Việt Nam"
       });
       return;
     }
-     // Kiểm tra các trường không trống và không chỉ có dấu cách
-     if (
+    // Kiểm tra các trường không trống và không chỉ có dấu cách
+    if (
       !name.trim() ||
       !phone.trim() ||
       !city.trim() ||
@@ -64,7 +71,8 @@ const country = "Việt Nam"
     ) {
       toast({
         title: "Lỗi!",
-        description: "Vui lòng điền đầy đủ thông tin hợp lệ, không chỉ chứa dấu cách.",
+        description:
+          "Vui lòng điền đầy đủ thông tin hợp lệ, không chỉ chứa dấu cách.",
         variant: "destructive",
       });
       return;
@@ -81,16 +89,20 @@ const country = "Việt Nam"
       return;
     }
     const updateAddress = {
-      name, phone, cityId: city, districtId:district, wardId:ward, addressDetail: address, country,
-      userId : data.userId,
+      name,
+      phone,
+      cityId: city,
+      districtId: district,
+      wardId: ward,
+      addressDetail: address,
+      country,
+      userId: data.userId,
       addressId: data._id,
-    }
+    };
     await updateAddressByUserId(updateAddress);
-    queryClient.invalidateQueries(["ADDRESS_", addressId]);
-
-
-
-    console.log("Saved information:", updateAddress);
+    queryClient.invalidateQueries({
+      queryKey: ["ADDRESS", addressId],
+    });
 
     toast({
       title: "Thành công!",
@@ -120,7 +132,7 @@ const country = "Việt Nam"
               onChange={(e) => setName(e.target.value)}
               className="col-span-3"
               required
-              style={{margin: 0}}
+              style={{ margin: 0 }}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -136,7 +148,7 @@ const country = "Việt Nam"
               required
               pattern="^[0-9]{10,11}$"
               title="Số điện thoại phải có từ 10 đến 11 chữ số"
-              style={{margin: 0}}
+              style={{ margin: 0 }}
             />
           </div>
 
@@ -178,4 +190,4 @@ const country = "Việt Nam"
   );
 };
 
-export default EditAddress
+export default EditAddress;

@@ -28,11 +28,11 @@ const chartConfig = {
   visitors: {
     label: "Visitors",
   },
-  desktop: {
+  roughProfit: {
     label: "Doanh thu",
     color: "#2a9d90",
   },
-  mobile: {
+  netProfit: {
     label: "Lợi nhuận",
     color: "#e76e50",
   },
@@ -47,6 +47,7 @@ export function AreaChartList() {
     queryKey: ["chartData"],
     queryFn: async () => {
       const { data } = await axios.get("/dashboard/get-data-area-chart");
+
       setFilteredData(data);
       return data;
     },
@@ -54,59 +55,75 @@ export function AreaChartList() {
   const [filterType, setFilterType] = React.useState("day"); // Mặc định lọc theo ngày
   const [startDate, setStartDate] = React.useState<string>("");
   const [endDate, setEndDate] = React.useState<string>("");
-  const [filteredData, setFilteredData] = React.useState(chartData);
+  const [filteredData, setFilteredData] =
+    React.useState<{ roughProfit: number; netProfit: number; date: string }[]>(
+      chartData
+    );
 
   const filterData = () => {
     const start = new Date(startDate || chartData[0].date);
     const end = new Date(endDate || chartData[chartData.length - 1].date);
 
-    let newData = chartData?.filter((item: any) => {
-      const date = new Date(item.date);
+    let newData: { roughProfit: number; netProfit: number; date: string }[] =
+      chartData?.filter(
+        (item: { roughProfit: number; netProfit: number; date: string }) => {
+          const date = new Date(item.date);
 
-      // Lọc theo ngày
-      if (filterType === "day") {
-        return date >= start && date <= end;
-      }
+          // Lọc theo ngày
+          if (filterType === "day") {
+            return date >= start && date <= end;
+          }
 
-      // Lọc theo tháng
-      if (filterType === "month") {
-        return (
-          (date.getFullYear() > start.getFullYear() ||
-            (date.getFullYear() === start.getFullYear() &&
-              date.getMonth() >= start.getMonth())) &&
-          (date.getFullYear() < end.getFullYear() ||
-            (date.getFullYear() === end.getFullYear() &&
-              date.getMonth() <= end.getMonth()))
-        );
-      }
+          // Lọc theo tháng
+          if (filterType === "month") {
+            return (
+              (date.getFullYear() > start.getFullYear() ||
+                (date.getFullYear() === start.getFullYear() &&
+                  date.getMonth() >= start.getMonth())) &&
+              (date.getFullYear() < end.getFullYear() ||
+                (date.getFullYear() === end.getFullYear() &&
+                  date.getMonth() <= end.getMonth()))
+            );
+          }
 
-      // Lọc theo năm
-      if (filterType === "year") {
-        return (
-          date.getFullYear() >= start.getFullYear() &&
-          date.getFullYear() <= end.getFullYear()
-        );
-      }
+          // Lọc theo năm
+          if (filterType === "year") {
+            return (
+              date.getFullYear() >= start.getFullYear() &&
+              date.getFullYear() <= end.getFullYear()
+            );
+          }
 
-      return false;
-    });
+          return false;
+        }
+      );
 
     // Nếu lọc theo tháng, tổng hợp dữ liệu theo tháng
     if (filterType === "month") {
-      const groupedByMonth = {};
+      const groupedByMonth: {
+        [key: string]: {
+          date: string;
+          roughProfit: number;
+          netProfit: number;
+        };
+      } = {};
 
-      newData.forEach((item: any) => {
+      newData.forEach((item) => {
         const date = new Date(item.date);
         const monthKey = `${date.getFullYear()}-${String(
           date.getMonth() + 1
         ).padStart(2, "0")}`;
 
         if (!groupedByMonth[monthKey]) {
-          groupedByMonth[monthKey] = { date: monthKey, desktop: 0, mobile: 0 };
+          groupedByMonth[monthKey] = {
+            date: monthKey,
+            roughProfit: 0,
+            netProfit: 0,
+          };
         }
 
-        groupedByMonth[monthKey].desktop += item.desktop;
-        groupedByMonth[monthKey].mobile += item.mobile;
+        groupedByMonth[monthKey].roughProfit += item.roughProfit;
+        groupedByMonth[monthKey].netProfit += item.netProfit;
       });
 
       newData = Object.values(groupedByMonth);
@@ -114,24 +131,33 @@ export function AreaChartList() {
 
     // Nếu lọc theo năm, tổng hợp dữ liệu theo năm
     if (filterType === "year") {
-      const groupedByYear = {};
+      const groupedByYear: {
+        [key: string]: {
+          date: string;
+          roughProfit: number;
+          netProfit: number;
+        };
+      } = {};
 
-      newData.forEach((item: any) => {
+      newData.forEach((item) => {
         const date = new Date(item.date);
         const yearKey = `${date.getFullYear()}`;
 
         if (!groupedByYear[yearKey]) {
-          groupedByYear[yearKey] = { date: yearKey, desktop: 0, mobile: 0 };
+          groupedByYear[yearKey] = {
+            date: yearKey,
+            roughProfit: 0,
+            netProfit: 0,
+          };
         }
 
-        groupedByYear[yearKey].desktop += item.desktop;
-        groupedByYear[yearKey].mobile += item.mobile;
+        groupedByYear[yearKey].roughProfit += item.roughProfit;
+        groupedByYear[yearKey].netProfit += item.netProfit;
       });
 
       newData = Object.values(groupedByYear);
     }
 
-    // console.log('newData', newData);
     setFilteredData(newData);
   };
 
@@ -276,7 +302,7 @@ export function AreaChartList() {
               }
             />
             <Area
-              dataKey="mobile"
+              dataKey="netProfit"
               type="natural"
               fill="url(#fillMobile)"
               stroke="#e76e50"
@@ -284,7 +310,7 @@ export function AreaChartList() {
               fillOpacity={0.4}
             />
             <Area
-              dataKey="desktop"
+              dataKey="roughProfit"
               type="natural"
               fill="url(#fillDesktop)"
               stroke="#2a9d90"

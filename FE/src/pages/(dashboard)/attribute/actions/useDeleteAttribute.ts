@@ -1,14 +1,14 @@
 import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const useDeleteAttribute = () => {
   const queryClient = useQueryClient();
 
   const { mutate: deleteAttribute, isPending: isDeleting } = useMutation({
-    mutationFn: (id) => axios.delete(`${apiUrl}/attributes/${id}`),
+    mutationFn: (id: string) => axios.delete(`${apiUrl}/attributes/${id}`),
 
     onSuccess: () => {
       toast({
@@ -20,10 +20,11 @@ export const useDeleteAttribute = () => {
       });
     },
 
-    onError: (error: Error) => {
+    onError: (error: unknown) => {
+      const err = error as AxiosError<{ message: string }>;
       toast({
         variant: "destructive",
-        title: "Ẩn thuộc tính thất bại",
+        title: err.response?.data?.message || "Ẩn thuộc tính thất bại",
       });
     },
   });

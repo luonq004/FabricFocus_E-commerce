@@ -23,10 +23,12 @@ import { useCreateComment } from "./actions/useCreateComment";
 interface IValuesProps {
   _id: string;
   name: string;
-  type: string;
-  value: string;
-  updatedAt: string | Date;
+  slugName: string;
+  type: string; // ví dụ: "Màu sắc", "Kích cỡ"
+  value: string; // ví dụ: "#ffffff" hoặc "XL"
+  createdAt: string;
   deleted: boolean;
+  slugValue?: string;
 }
 const formats = [
   "header",
@@ -87,15 +89,17 @@ const CommentProduct = ({
   function onSubmit(results: z.infer<typeof formSchema>) {
     const { content, rating, infoProductBuy } = results;
 
-    addComment({
-      content: content || "",
-      rating: rating || 5,
-      infoProductBuy: infoProductBuy || "",
-      productId,
-      userId: _id,
-      orderId,
-      itemId,
-    });
+    if (_id) {
+      addComment({
+        content: content || "",
+        rating: rating || 5,
+        infoProductBuy: infoProductBuy || "",
+        productId,
+        userId: _id,
+        orderId,
+        itemId,
+      });
+    }
   }
 
   return (
