@@ -2,7 +2,7 @@ const OurServices = () => {
   return (
     <div
       className="bg-cover bg-center bg-no-repeat bg-fixed fixed-background"
-      style={{ backgroundImage: "url(/src/assets/OurServices.jpg)" }}
+      style={{ backgroundImage: "url(/OurServices.jpg)" }}
     >
       {/*our services */}
       <div className="container px-4 relative min-[1200px]:w-[1170px] min-[992px]:w-[970px] min-[768px]:w-[750px]">
@@ -30,7 +30,9 @@ const OurServices = () => {
                 textShadow: "1px 1px 1px rgba(0, 0, 0, .1)",
               }}
             >
-            Trong dịch vụ của chúng tôi, sự hỗ trợ được thực hiện với tất cả tâm huyết. Chúng tôi luôn gắn kết với sự nhạy cảm, nâng cao phẩm giá và mang lại sự tinh tế như một giá trị cốt lõi.
+              Trong dịch vụ của chúng tôi, sự hỗ trợ được thực hiện với tất cả
+              tâm huyết. Chúng tôi luôn gắn kết với sự nhạy cảm, nâng cao phẩm
+              giá và mang lại sự tinh tế như một giá trị cốt lõi.
             </p>
             <div className="mb-8 sm:mb-16" />
           </div>

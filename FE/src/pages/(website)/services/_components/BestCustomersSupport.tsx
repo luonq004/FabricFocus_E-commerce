@@ -22,11 +22,7 @@ const BestCustomersSupport = () => {
       {/* Quisque scelerisque leo nisl */}
       <div className="grid mt-[70px] gap-y-[30px] max-[768px]:grid-cols-1 grid-cols-[45%_55%] justify-center items-center">
         <div className="">
-          <img
-            className="mx-auto"
-            src="/src/assets/icons/thumbnail-34.jpg"
-            alt="icon"
-          />
+          <img className="mx-auto" src="/icons/thumbnail-34.jpg" alt="icon" />
         </div>
         <div>
           <div className="">
@@ -37,13 +33,27 @@ const BestCustomersSupport = () => {
                   fontFamily: "'Raleway', sans-serif",
                 }}
               >
-              Một sự kết hợp giữa các yếu tố tạo nên sự hoàn hảo.
+                Một sự kết hợp giữa các yếu tố tạo nên sự hoàn hảo.
               </h4>
               <p className="mb-[22px]  highlight text-[#888]">
-              Một hệ thống được xây dựng một cách kỹ lưỡng, với sự phối hợp hoàn hảo giữa các yếu tố, mang lại sự ổn định và hiệu quả. Chúng tôi chú trọng đến từng chi tiết nhỏ, đảm bảo mọi phần đều hoàn thiện và tối ưu hóa hiệu suất. Mọi thứ đều được chuẩn bị chu đáo, hướng đến sự thành công và hiệu quả lâu dài. Chúng tôi cam kết mang đến những giải pháp tối ưu, dễ dàng tiếp cận và đáp ứng mọi nhu cầu của khách hàng.
+                Một hệ thống được xây dựng một cách kỹ lưỡng, với sự phối hợp
+                hoàn hảo giữa các yếu tố, mang lại sự ổn định và hiệu quả. Chúng
+                tôi chú trọng đến từng chi tiết nhỏ, đảm bảo mọi phần đều hoàn
+                thiện và tối ưu hóa hiệu suất. Mọi thứ đều được chuẩn bị chu
+                đáo, hướng đến sự thành công và hiệu quả lâu dài. Chúng tôi cam
+                kết mang đến những giải pháp tối ưu, dễ dàng tiếp cận và đáp ứng
+                mọi nhu cầu của khách hàng.
               </p>
               <p className="text-[#888] highlight">
-              Chúng tôi luôn duy trì sự xuất sắc và uy tín trong mọi dịch vụ mà mình cung cấp. Với các giải pháp linh hoạt và đa dạng, đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn, từ những vấn đề nhỏ nhất cho đến những yêu cầu phức tạp. Môi trường làm việc của chúng tôi luôn sạch sẽ, ngăn nắp và chuyên nghiệp, đảm bảo mang lại sự hài lòng tối đa cho khách hàng. Chúng tôi tận dụng tối đa mọi nguồn lực để tạo ra những kết quả xuất sắc, đáp ứng mọi yêu cầu khắt khe. Cam kết mang lại sự hoàn hảo trong từng chi tiết, mỗi sản phẩm và dịch vụ mà chúng tôi cung cấp.
+                Chúng tôi luôn duy trì sự xuất sắc và uy tín trong mọi dịch vụ
+                mà mình cung cấp. Với các giải pháp linh hoạt và đa dạng, đội
+                ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn, từ những vấn đề nhỏ
+                nhất cho đến những yêu cầu phức tạp. Môi trường làm việc của
+                chúng tôi luôn sạch sẽ, ngăn nắp và chuyên nghiệp, đảm bảo mang
+                lại sự hài lòng tối đa cho khách hàng. Chúng tôi tận dụng tối đa
+                mọi nguồn lực để tạo ra những kết quả xuất sắc, đáp ứng mọi yêu
+                cầu khắt khe. Cam kết mang lại sự hoàn hảo trong từng chi tiết,
+                mỗi sản phẩm và dịch vụ mà chúng tôi cung cấp.
               </p>
             </div>
           </div>

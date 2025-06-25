@@ -1,89 +1,87 @@
-import product9 from "@/assets/products/product10.png";
-
 const Accessories = () => {
   // Dữ liệu sản phẩm ví dụ
-  const products = [
-    {
-      id: 1,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-    {
-      id: 2,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: "32.000₫",
-      badge: "GIẢM GIÁ 20%",
-      imageUrl: product9,
-    },
-    {
-      id: 3,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-    {
-      id: 4,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: "32.000₫",
-      badge: "GIÁ TỐT NHẤT",
-      imageUrl: product9,
-    },
-    {
-      id: 5,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-    {
-      id: 6,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-    {
-      id: 7,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-    {
-      id: 8,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-    {
-      id: 9,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-    {
-      id: 10,
-      name: "BEAT HIỆN ĐẠI",
-      price: "24.000₫",
-      discountPrice: null,
-      badge: null,
-      imageUrl: product9,
-    },
-  ];
+  // const products = [
+  //   {
+  //     id: 1,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: "32.000₫",
+  //     badge: "GIẢM GIÁ 20%",
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: "32.000₫",
+  //     badge: "GIÁ TỐT NHẤT",
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 9,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  //   {
+  //     id: 10,
+  //     name: "BEAT HIỆN ĐẠI",
+  //     price: "24.000₫",
+  //     discountPrice: null,
+  //     badge: null,
+  //     imageUrl: product9,
+  //   },
+  // ];
 
   return (
     <div className="h-auto mx-auto px-5 sm:px-8 lg:px-28 mt-24 md:mt-20">
@@ -104,7 +102,7 @@ const Accessories = () => {
 
       {/* Lưới sản phẩm */}
       <div className="grid grid-cols-1 sm:grid-cols-3 md:mt-20 lg:grid-cols-5">
-        {products.map((product) => (
+        {/* {products.map((product) => (
           <div
             key={product.id}
             className="group text-center relative  border-gray-200 overflow-hidden cursor-pointer"
@@ -143,12 +141,11 @@ const Accessories = () => {
                   </span>
                 )}
               </div>
-
             </div>
 
             <div className="border-b border-gray-200"></div>
           </div>
-        ))}
+        ))} */}
       </div>
 
       <div className="flex justify-center mt-8 md:mt-14">

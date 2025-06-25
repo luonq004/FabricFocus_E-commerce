@@ -7,13 +7,6 @@ import "swiper/css/pagination";
 
 import "@/App.css";
 
-// import required modules
-
-// images
-import thum_40 from "@/assets/images/thumbnail-40.jpg";
-import thum_41 from "@/assets/images/thumbnail-41.jpg";
-import thum_42 from "@/assets/images/thumbnail-42.jpg";
-import thum_43 from "@/assets/images/thumbnail-43.jpg";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 
@@ -42,8 +35,8 @@ const SlideOurTeam = () => {
             <div className="grid place-items-center border border-[#eee] w-full hover:cursor-move">
               <img
                 className="transition duration-300 filter grayscale hover:filter-none"
-                src={thum_40}
-                alt="thum_35"
+                src="/images/thumbnail-40.jpg"
+                alt="thum_40"
               />
             </div>
             <div className="Content relative max-w-[300px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -93,8 +86,8 @@ const SlideOurTeam = () => {
             <div className="grid place-items-center border border-[#eee] -mr-[1px] w-full hover:cursor-move">
               <img
                 className="transition duration-300 filter grayscale hover:filter-none"
-                src={thum_41}
-                alt="thum_35"
+                src="/images/thumbnail-41.jpg"
+                alt="thum_41"
               />
             </div>
             <div className="Content relative max-w-[300px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -144,8 +137,8 @@ const SlideOurTeam = () => {
             <div className="grid place-items-center border border-[#eee] -mr-[1px] w-full hover:cursor-move">
               <img
                 className="transition duration-300 filter grayscale hover:filter-none"
-                src={thum_42}
-                alt="thum_35"
+                src="/images/thumbnail-42.jpg"
+                alt="thum_42"
               />
             </div>
             <div className="Content relative max-w-[300px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -195,8 +188,8 @@ const SlideOurTeam = () => {
             <div className="grid place-items-center border border-[#eee] -mr-[1px] w-full hover:cursor-move">
               <img
                 className="transition duration-300 filter grayscale hover:filter-none"
-                src={thum_43}
-                alt="thum_35"
+                src="/images/thumbnail-43.jpg"
+                alt="thum_43"
               />
             </div>
             <div className="Content relative max-w-[300px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -244,7 +237,7 @@ const SlideOurTeam = () => {
             <div className="grid place-items-center border border-[#eee] -mr-[1px] w-full hover:cursor-move">
               <img
                 className="transition duration-300 filter grayscale hover:filter-none"
-                src={thum_40}
+                src="/images/thumbnail-40.jpg"
                 alt="thum_35"
               />
             </div>

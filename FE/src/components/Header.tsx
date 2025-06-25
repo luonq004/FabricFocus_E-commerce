@@ -10,8 +10,6 @@ import useCart from "@/common/hooks/useCart";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "@/configs/axios";
 
-import Logo from "@/assets/SHOPING.jpg";
-
 import { Notification } from "@/pages/(dashboard)/notifications/types";
 import { useGetWishList } from "@/pages/(website)/wishlist/action/useGetWishList";
 import { useClerk, useUser } from "@clerk/clerk-react";
@@ -533,7 +531,7 @@ const Header = () => {
               <Link to="/" className="w-4/12 md:w-2/12 px-[15px]">
                 <img
                   className="w-20 md:w-36"
-                  src={logoUrl || Logo}
+                  src={logoUrl || "/SHOPING.jpg"}
                   alt="Logo"
                 />
               </Link>

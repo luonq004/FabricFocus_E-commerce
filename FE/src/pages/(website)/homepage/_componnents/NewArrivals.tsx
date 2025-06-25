@@ -8,7 +8,7 @@ const NewArrivals = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState(0);
-  const [activeProductIndex, setActiveProductIndex] = useState(0);
+
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const swiperRef = useRef<SwiperCore | null>(null);
@@ -81,11 +81,6 @@ const NewArrivals = () => {
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
-  };
-
-  const scrollToProduct = (index: number) => {
-    swiperRef.current?.slideTo(index);
-    setActiveProductIndex(index);
   };
 
   return (
@@ -201,11 +196,8 @@ const NewArrivals = () => {
         {/* Container cuộn sản phẩm */}
         <Swiper
           onSwiper={(swiper) => (swiperRef.current = swiper)}
-          onSlideChange={(swiper) => setActiveProductIndex(swiper.realIndex)}
           loop={false}
           touchRatio={1}
-          // resistance={true}
-          // direction="horizontal"
           centerInsufficientSlides={true}
           breakpoints={{
             320: {
@@ -247,9 +239,6 @@ const NewArrivals = () => {
               {/* Phần nút hiển thị khi hover */}
 
               <div>
-                {/* <h5 className="text-xs uppercase font-questrial text-[#b8cd06] mb-1 text-wrap relative transition-all duration-300 top-0 group-hover:top-[-8px]">
-                  {product.edition}
-                </h5> */}
                 <h3 className="font-extrabold font-raleway text-[13px] text-inherit group-hover:text-[#b8cd06] mb-3 text-wrap relative transition-all duration-300 top-0 group-hover:top-[-3px] line-clamp-1">
                   {product.name}
                 </h3>
@@ -300,23 +289,6 @@ const NewArrivals = () => {
           </svg>
         </button>
       </div>
-
-      {/* Chỉ báo vòng tròn - chỉ hiển thị trên màn hình nhỏ */}
-      {filteredProducts.length > 1 && (
-        <div className="flex space-x-2 mt-10 sm:mt-20 lg:hidden justify-center items-center">
-          {filteredProducts.map((_, index) => (
-            <div
-              key={index}
-              className={`rounded-full w-3 h-3 bg-white cursor-pointer ${
-                index === activeProductIndex
-                  ? "border-[3px] w-4 h-4 border-[#b8cd06]"
-                  : "border-[1px] border-gray-500"
-              }`}
-              onClick={() => scrollToProduct(index)}
-            ></div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

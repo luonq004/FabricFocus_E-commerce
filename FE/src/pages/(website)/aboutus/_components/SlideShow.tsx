@@ -7,11 +7,6 @@ import "swiper/css/pagination";
 
 import "@/App.css";
 
-// images
-import thum_35 from "@/assets/images/thumbnail-35.jpg";
-import thum_36 from "@/assets/images/thumbnail-36.jpg";
-import thum_37 from "@/assets/images/thumbnail-37.jpg";
-
 const SlideShow = () => {
   return (
     <>
@@ -34,7 +29,7 @@ const SlideShow = () => {
           <div className="flex flex-col gap-y-6 items-center hover:cursor-move">
             <img
               className="max-w-[415px] w-full rounded-xl"
-              src={thum_35}
+              src="/images/thumbnail-35.jpg"
               alt="thum_35"
             />
             <div className="Content max-w-[415px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -52,7 +47,7 @@ const SlideShow = () => {
           <div className="flex flex-col gap-y-6 items-center">
             <img
               className="max-w-[415px] w-full rounded-xl"
-              src={thum_36}
+              src="/images/thumbnail-36.jpg"
               alt="thum_36"
             />
             <div className="Content max-w-[415px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -71,7 +66,7 @@ const SlideShow = () => {
           <div className="flex flex-col gap-y-6 items-center">
             <img
               className="max-w-[415px] w-full rounded-xl"
-              src={thum_37}
+              src="/images/thumbnail-37.jpg"
               alt="thum_37"
             />
             <div className="Content max-w-[415px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -90,7 +85,7 @@ const SlideShow = () => {
           <div className="flex flex-col gap-y-6 items-center">
             <img
               className="max-w-[415px] w-full rounded-xl"
-              src={thum_35}
+              src="/images/thumbnail-35.jpg"
               alt="thum_35"
             />
             <div className="Content max-w-[415px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">
@@ -108,7 +103,7 @@ const SlideShow = () => {
           <div className="flex flex-col gap-y-6 items-center">
             <img
               className="max-w-[415px] w-full rounded-xl"
-              src={thum_36}
+              src="/images/thumbnail-36.jpg"
               alt="thum_36"
             />
             <div className="Content max-w-[415px] text-[13px] lg:text-[16px] flex flex-col gap-y-[18px]">

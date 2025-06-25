@@ -1,8 +1,6 @@
 import { GrLinkNext } from "react-icons/gr";
 import { SlHeart } from "react-icons/sl";
 
-import noData from "@/assets/icons/noData.svg";
-
 import { IProduct } from "@/common/types/Product";
 
 import { useUserContext } from "@/common/context/UserProvider";
@@ -48,7 +46,11 @@ const ProductItem = ({
   if (listProduct?.data[0] == null || !listProduct?.data) {
     return (
       <div className="w-full text-center">
-        <img src={noData} alt="No data" className="w-2/3 mx-auto mb-5" />
+        <img
+          src="/icons/noData.svg"
+          alt="No data"
+          className="w-2/3 mx-auto mb-5"
+        />
       </div>
     );
   }

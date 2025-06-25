@@ -25,7 +25,7 @@ function WhatWeDo() {
           <div className="mb-[10px] mx-auto">
             <img
               className="mx-auto highlight"
-              src="/src/assets/icons/icon-what-the-do.png"
+              src="/icons/icon-what-the-do.png"
               alt="icon"
             />
           </div>
@@ -38,14 +38,15 @@ function WhatWeDo() {
             Dịch vụ tối ưu và hoàn hảo
           </div>
           <div className="text-[#888] highlight text-[13px] leading-[20px] ">
-          Chúng tôi cung cấp dịch vụ tối ưu với sự kết hợp hoàn hảo giữa chất lượng và tốc độ.
+            Chúng tôi cung cấp dịch vụ tối ưu với sự kết hợp hoàn hảo giữa chất
+            lượng và tốc độ.
           </div>
         </div>
         <div className="text-center px-4">
           <div className="mb-[10px] mx-auto">
             <img
               className="mx-auto highlight"
-              src="/src/assets/icons/icon-what-the-do.png"
+              src="/icons/icon-what-the-do.png"
               alt="icon"
             />
           </div>
@@ -55,20 +56,20 @@ function WhatWeDo() {
               fontFamily: "'Raleway', sans-serif",
             }}
           >
-                       Chúng tôi cung cấp sự kết hợp giữa các yếu tố để phục vụ nhu cầu của bạn.
-
+            Chúng tôi cung cấp sự kết hợp giữa các yếu tố để phục vụ nhu cầu của
+            bạn.
           </div>
           <div className="text-[#888] highlight text-[13px] leading-[20px] ">
-          Chúng tôi cung cấp dịch vụ mềm mại với sự kết hợp hoàn hảo. Chúng tôi cam kết mang lại sự hài lòng với mọi yêu cầu. Dịch vụ khách hàng
-          phải luôn đi trước.
-
+            Chúng tôi cung cấp dịch vụ mềm mại với sự kết hợp hoàn hảo. Chúng
+            tôi cam kết mang lại sự hài lòng với mọi yêu cầu. Dịch vụ khách hàng
+            phải luôn đi trước.
           </div>
         </div>
         <div className="text-center px-4">
           <div className="mb-[10px] mx-auto">
             <img
               className="mx-auto highlight"
-              src="/src/assets/icons/icon-what-the-do.png"
+              src="/icons/icon-what-the-do.png"
               alt="icon"
             />
           </div>
@@ -81,15 +82,16 @@ function WhatWeDo() {
             Những vấn đề cần giải quyết ngay lập tức
           </div>
           <div className="text-[#888] highlight text-[13px] leading-[20px] ">
-          Chúng tôi cung cấp dịch vụ linh hoạt với những giải pháp hiệu quả. Chúng tôi cam kết mang lại sự thoải mái và tiện lợi cho khách hàng. Dịch vụ khách hàng
-          phải luôn đi trước.
+            Chúng tôi cung cấp dịch vụ linh hoạt với những giải pháp hiệu quả.
+            Chúng tôi cam kết mang lại sự thoải mái và tiện lợi cho khách hàng.
+            Dịch vụ khách hàng phải luôn đi trước.
           </div>
         </div>
         <div className="text-center px-4">
           <div className="mb-[10px] mx-auto">
             <img
               className="mx-auto highlight"
-              src="/src/assets/icons/icon-what-the-do.png"
+              src="/icons/icon-what-the-do.png"
               alt="icon"
             />
           </div>
@@ -99,17 +101,18 @@ function WhatWeDo() {
               fontFamily: "'Raleway', sans-serif",
             }}
           >
-           Kết hợp các yếu tố phục vụ nhu cầu của bạn
+            Kết hợp các yếu tố phục vụ nhu cầu của bạn
           </div>
           <div className="text-[#888] highlight text-[13px] leading-[20px] ">
-          Chúng tôi cung cấp sự kết hợp giữa các yếu tố để phục vụ tốt nhất nhu cầu của bạn, đảm bảo chất lượng và hiệu quả công việc.
+            Chúng tôi cung cấp sự kết hợp giữa các yếu tố để phục vụ tốt nhất
+            nhu cầu của bạn, đảm bảo chất lượng và hiệu quả công việc.
           </div>
         </div>
         <div className="text-center px-4">
           <div className="mb-[10px] mx-auto">
             <img
               className="mx-auto highlight"
-              src="/src/assets/icons/icon-what-the-do.png"
+              src="/icons/icon-what-the-do.png"
               alt="icon"
             />
           </div>
@@ -119,17 +122,19 @@ function WhatWeDo() {
               fontFamily: "'Raleway', sans-serif",
             }}
           >
-             Giải quyết vấn đề nhanh chóng
+            Giải quyết vấn đề nhanh chóng
           </div>
           <div className="text-[#888] highlight text-[13px] leading-[20px] ">
-          Chúng tôi cung cấp dịch vụ linh hoạt và nhanh chóng, với những giải pháp tối ưu giúp giải quyết vấn đề ngay lập tức, mang lại sự thoải mái cho khách hàng.
+            Chúng tôi cung cấp dịch vụ linh hoạt và nhanh chóng, với những giải
+            pháp tối ưu giúp giải quyết vấn đề ngay lập tức, mang lại sự thoải
+            mái cho khách hàng.
           </div>
         </div>
         <div className="text-center px-4">
           <div className="mb-[10px] mx-auto">
             <img
               className="mx-auto highlight"
-              src="/src/assets/icons/icon-what-the-do.png"
+              src="/icons/icon-what-the-do.png"
               alt="icon"
             />
           </div>
@@ -139,10 +144,11 @@ function WhatWeDo() {
               fontFamily: "'Raleway', sans-serif",
             }}
           >
-             Đảm bảo sự hài lòng và thoải mái
+            Đảm bảo sự hài lòng và thoải mái
           </div>
           <div className="text-[#888] highlight text-[13px] leading-[20px] ">
-          Chúng tôi luôn cam kết mang lại sự thoải mái và hài lòng cho khách hàng qua các dịch vụ tiện lợi, chất lượng, và luôn sẵn sàng phục vụ.
+            Chúng tôi luôn cam kết mang lại sự thoải mái và hài lòng cho khách
+            hàng qua các dịch vụ tiện lợi, chất lượng, và luôn sẵn sàng phục vụ.
           </div>
         </div>
       </div>

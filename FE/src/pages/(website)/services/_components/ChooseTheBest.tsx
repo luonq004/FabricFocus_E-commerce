@@ -20,23 +20,19 @@ const services = [
   {
     title: "Hỗ trợ thông minh",
     subtitle: "Dành cho mọi vấn đề",
-    description:
-      "Giải pháp linh hoạt và hiệu quả cho các vấn đề của bạn.",
+    description: "Giải pháp linh hoạt và hiệu quả cho các vấn đề của bạn.",
   },
   {
     title: "Chất lượng",
     subtitle: "Nguyên liệu tốt nhất",
-    description:
-      "Cam kết sử dụng những nguyên liệu chất lượng cao nhất.",
+    description: "Cam kết sử dụng những nguyên liệu chất lượng cao nhất.",
   },
   {
     title: "Nhân viên chuyên nghiệp",
     subtitle: "Hơn 5.000 nhân viên",
-    description:
-      "Đội ngũ nhân viên giàu kinh nghiệm, sẵn sàng phục vụ bạn.",
+    description: "Đội ngũ nhân viên giàu kinh nghiệm, sẵn sàng phục vụ bạn.",
   },
 ];
-
 
 const ChooseTheBest = () => {
   return (
@@ -45,7 +41,7 @@ const ChooseTheBest = () => {
       <div className="max-[991px]:w-full w-1/2">
         <div
           className="block-entry bg-cover bg-center  "
-          style={{ backgroundImage: "url(/src/assets/ChooseTheBest.jpg)" }}
+          style={{ backgroundImage: "url(/ChooseTheBest.jpg)" }}
         >
           <div className="container px-4 mx-auto">
             <div className="flex flex-wrap">
@@ -62,7 +58,7 @@ const ChooseTheBest = () => {
                       fontFamily: "'Raleway', sans-serif",
                     }}
                   >
-                  Chọn điều tốt nhất
+                    Chọn điều tốt nhất
                   </h2>
                   <div className="p-[20px_0] light  title-underline h-[21px] ">
                     <span className="w-[55px]  text-white h-[1px] bg-current inline-block align-top relative"></span>
@@ -73,7 +69,8 @@ const ChooseTheBest = () => {
                       textShadow: "1px 1px 1px rgba(0, 0, 0, .1)",
                     }}
                   >
-                   Hãy hướng tới sự hoàn hảo. Chúng tôi mang đến những giải pháp tối ưu, giúp bạn dễ dàng đạt được thành công.
+                    Hãy hướng tới sự hoàn hảo. Chúng tôi mang đến những giải
+                    pháp tối ưu, giúp bạn dễ dàng đạt được thành công.
                   </div>
                   <div className="mb-9 sm:mb-14" />
                 </div>
@@ -92,7 +89,10 @@ const ChooseTheBest = () => {
                 <div className="container max-[991px]:p-0 min-[991px]:mx-auto">
                   <div className="grid lg:px-0 px-4 sm:grid-cols-2 grid-cols-1 ">
                     {services.map((service, index) => (
-                      <div key={index} className="w-full min-[1200px]:w-[80%] p-[15px]">
+                      <div
+                        key={index}
+                        className="w-full min-[1200px]:w-[80%] p-[15px]"
+                      >
                         <div className="text-center sm:text-left">
                           <div className="simple-article highlight text-[13px] leading-5 text-[#b8cd06]  font-light uppercase mb-2">
                             {service.title}

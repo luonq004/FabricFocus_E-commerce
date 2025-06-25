@@ -1,6 +1,3 @@
-//icons
-import vnpay from "@/assets/icons/vnpay-logo.svg";
-
 //other
 import { useUserContext } from "@/common/context/UserProvider";
 import { Button } from "@/components/ui/button";
@@ -242,7 +239,7 @@ const CartRight = ({
           </p>
           <div className="flex gap-3">
             <div className="border border-[#e2e2e2] px-3 flex justify-center items-center rounded-[6px]">
-              <img className="w-10 h-10" src={vnpay} alt="" />
+              <img className="w-10 h-10" src="/icons/vnpay-logo.svg" alt="" />
             </div>
             {/* <div className='border border-[#e2e2e2] py-2 px-3 flex justify-center items-center rounded-[6px]'>
                             <img src={visa} alt="" />

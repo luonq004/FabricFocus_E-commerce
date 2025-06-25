@@ -1,5 +1,3 @@
-import cartEmpty from "@/assets/images/cart-empty.png";
-
 //other
 import { useUserContext } from "@/common/context/UserProvider";
 import { formatCurrency } from "@/lib/utils";
@@ -82,7 +80,11 @@ const CartLeft = ({
         {/* Cart__Product */}
         {cart?.products.length === 0 && (
           <div className="flex flex-col items-center justify-center">
-            <img src={cartEmpty} alt="cart-empty" className="w-1/5" />
+            <img
+              src="/images/cart-empty.png"
+              alt="cart-empty"
+              className="w-1/5"
+            />
             <p className="text-[#9D9EA2] max-sm:text-[14px]">Giỏ hàng trống</p>
           </div>
         )}

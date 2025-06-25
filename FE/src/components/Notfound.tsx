@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import img from "../assets/notfound.png";
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -9,7 +8,7 @@ const NotFound = () => {
       <div
         className=" w-full max-w-[600px] h-[300px] md:h-[350px] lg:h-[450px] bg-cover bg-center"
         style={{
-          backgroundImage: `url(${img})`,
+          backgroundImage: "url('/notfound.png')",
         }}
       />
       <button

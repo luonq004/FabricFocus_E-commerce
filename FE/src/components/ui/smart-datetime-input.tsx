@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import * as chrono from "chrono-node";
 import { enUS as localeEnUS, type Locale } from "date-fns/locale";

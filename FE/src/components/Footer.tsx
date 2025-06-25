@@ -1,4 +1,3 @@
-import logo from "@/assets/logo3.png";
 import { Blog } from "@/common/types/Blog";
 import axios from "@/configs/axios";
 import { useEffect, useState } from "react";
@@ -34,7 +33,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Thông Tin Công Ty */}
         <div>
-          <img src={logo} className="w-32 mb-3" alt="Logo" />
+          <img src="/logo3.png" className="w-32 mb-3" alt="Logo" />
           <p>
             Vị trí và tư thế được thiết lập để nâng cao hiệu quả. Hãy duy trì tư
             thế vững vàng, tập trung vào vị trí để đạt được kết quả tốt nhất.
