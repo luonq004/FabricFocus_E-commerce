@@ -55,7 +55,7 @@ const Footer = () => {
                 />
               </svg>
               <a
-                href="tel:+84986 066 907"
+                href="tel:+84986066907"
                 className="hover:text-[#b8cd06] cursor-pointer"
               >
                 CONTECT US: 0986 066 907

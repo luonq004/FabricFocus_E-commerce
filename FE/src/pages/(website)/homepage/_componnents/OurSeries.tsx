@@ -39,7 +39,7 @@ const OurSeries = () => {
   };
 
   return (
-    <div className="mx-auto px-5 xl:px-28 pt-16 md:pt-36 overflow-hidden cursor-grab select-none">
+    <div className="mx-auto px-5 xl:px-28 pt-20 lg:pt-32 overflow-hidden cursor-grab select-none">
       {/* Tiêu đề phần */}
       <div className="text-center mb-8">
         <h5 className="text-sm uppercase font-questrial text-gray-500 tracking-wider mb-3">

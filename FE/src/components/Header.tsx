@@ -282,7 +282,7 @@ const Header = () => {
                   <b className="text-[#555] font-bold">liên hệ: </b>
                   <a
                     className="cursor-pointer hover:text-[#b8cd06]"
-                    href="tel:+84986 066 907"
+                    href="tel:+84986066907"
                   >
                     0986 066 907
                   </a>

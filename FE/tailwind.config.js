@@ -12,6 +12,7 @@ module.exports = {
   prefix: "",
   theme: {
     screens: {
+      xs: "528px",
       sm: "640px",
       md: "767px",
       lg: "991px",

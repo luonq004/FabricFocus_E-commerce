@@ -7,7 +7,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 const Products = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [activeProductIndex, setActiveProductIndex] = useState(0);
   const swiperRef = useRef<SwiperCore | null>(null);
 
   const fetchProducts = async () => {
@@ -29,11 +28,6 @@ const Products = () => {
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
-  };
-
-  const scrollToProduct = (index: number) => {
-    swiperRef.current?.slideTo(index);
-    setActiveProductIndex(index);
   };
 
   return (
@@ -61,7 +55,6 @@ const Products = () => {
 
       <Swiper
         onSwiper={(swiper) => (swiperRef.current = swiper)}
-        onSlideChange={(swiper) => setActiveProductIndex(swiper.realIndex)}
         loop={false}
         touchRatio={1}
         resistance={false}
@@ -117,7 +110,7 @@ const Products = () => {
               </h3>
 
               {/* Mô tả */}
-              <p className="text-sm font-questrial text-gray-500 mb-2 transition-opacity duration-300 line-clamp-2">
+              <p className="text-sm font-questrial text-gray-500 mb-2 transition-opacity duration-300 line-clamp-1">
                 {product.description}
               </p>
               <div className="flex items-center justify-between mt-3">
@@ -166,21 +159,6 @@ const Products = () => {
           </svg>
         </span>
       </button>
-
-      {/* Chấm đánh dấu*/}
-      <div className="flex lg:hidden space-x-2 mt-8 justify-center items-center">
-        {products.map((_, index) => (
-          <div
-            key={index}
-            className={`rounded-full w-3 h-3 bg-white cursor-pointer ${
-              index === activeProductIndex
-                ? "border-[3px] w-4 h-4 border-[#b8cd06]"
-                : "border-[1px] border-gray-500"
-            }`}
-            onClick={() => scrollToProduct(index)}
-          ></div>
-        ))}
-      </div>
     </div>
   );
 };

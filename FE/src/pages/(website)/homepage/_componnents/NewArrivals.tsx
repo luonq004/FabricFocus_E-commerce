@@ -1,4 +1,5 @@
 import axios from "@/configs/axios";
+import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import SwiperCore from "swiper";
@@ -8,10 +9,10 @@ const NewArrivals = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState(0);
-
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
   const swiperRef = useRef<SwiperCore | null>(null);
+  const swiperCategoriesRef = useRef<SwiperCore | null>(null);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(true);
 
   // Gọi API để lấy danh mục
   useEffect(() => {
@@ -61,18 +62,15 @@ const NewArrivals = () => {
     );
   });
 
-  // Đóng menu khi nhấp ra bên ngoài
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsCategoryOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    if (swiperCategoriesRef.current) {
+      requestAnimationFrame(() => {
+        swiperCategoriesRef.current!.update();
+        setIsBeginning(swiperCategoriesRef.current!.isBeginning);
+        setIsEnd(swiperCategoriesRef.current!.isEnd);
+      });
+    }
+  }, [categories]);
 
   // chuyển sản phẩm
   const handleNext = () => {
@@ -84,7 +82,7 @@ const NewArrivals = () => {
   };
 
   return (
-    <div className="mx-auto pt-32 pb-10 md:pb-0">
+    <div className="mx-auto pt-10 lg:pt-32">
       {/* Tiêu đề phần */}
       <div className="text-center md:mb-20">
         <h5 className="text-sm uppercase text-gray-500 font-questrial tracking-wider mb-3">
@@ -101,75 +99,84 @@ const NewArrivals = () => {
       </div>
 
       {/* Menu danh mục */}
-      <div className="flex md:hidden flex-col items-center mb-16" ref={menuRef}>
-        <button
-          onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-          className="px-6 py-4 text-gray-700 border rounded-full text-xs font-semibold flex justify-between items-center w-full max-w-[300px] uppercase"
-        >
-          {categories[activeCategory] || "Loading..."}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-4 w-4 ml-2 transition-transform duration-300 ${
-              isCategoryOpen ? "rotate-180" : "rotate-0"
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+      <div className="relative w-full">
+        {/* Nút Prev */}
+        {!isBeginning && (
+          <button
+            className="absolute left-0 xs:left-[2%] md:left-[8%] top-1/2 -translate-y-1/2 z-10 px-2"
+            onClick={() => swiperCategoriesRef.current!.slidePrev()}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
+            <CircleChevronLeft className="text-[#b8cd06]" />
+          </button>
+        )}
 
-        {/* Dropdown danh mục */}
-        <ul
-          className={`w-full max-w-[300px] bg-white px-4 border-l border-r mt-2 transition-all duration-300 overflow-hidden ${
-            isCategoryOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-          }`}
+        <Swiper
+          onSwiper={(swiper) => {
+            swiperCategoriesRef.current = swiper;
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
+          }}
+          onSlideChange={(swiper) => {
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
+          }}
+          loop={false}
+          spaceBetween={0}
+          className="w-full md:w-[80%] mb-5 lg:mb-16"
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+            },
+            590: {
+              slidesPerView: 3,
+            },
+            767: {
+              slidesPerView: 4,
+            },
+            950: {
+              slidesPerView: 5,
+            },
+            1199: {
+              slidesPerView: 6,
+            },
+            1340: {
+              slidesPerView: 7,
+            },
+            1490: {
+              slidesPerView: 8,
+            },
+            1800: {
+              slidesPerView: 9,
+            },
+          }}
         >
           {categories.map((category, index) => (
-            <li
-              key={index}
-              onClick={() => {
-                setActiveCategory(index);
-                setIsCategoryOpen(false);
-              }}
-              className={`px-6 py-2 text-xs font-semibold cursor-pointer uppercase ${
-                index === activeCategory
-                  ? "bg-[#b8cd06] rounded-full text-white"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
-            >
-              {category}
-            </li>
+            <SwiperSlide key={index} className="flex justify-center">
+              <div className="flex items-center mb-1">
+                <button
+                  className={`px-4 py-1 mx-2 text-sm whitespace-nowrap font-semibold transition-all duration-300 uppercase text-center ${
+                    index === activeCategory
+                      ? "bg-[#b8cd06] text-white rounded-full"
+                      : "text-gray-500 hover:shadow rounded-full"
+                  }`}
+                  onClick={() => setActiveCategory(index)}
+                >
+                  {category}
+                </button>
+              </div>
+            </SwiperSlide>
           ))}
-        </ul>
-      </div>
+        </Swiper>
 
-      <div className="hidden md:flex justify-center items-center mb-16">
-        {categories.map((category, index) => (
-          <div key={index} className="flex items-center">
-            {/* Đường viền bên trái cho các mục trừ mục đầu tiên */}
-            {index > 0 && (
-              <span className="h-6 border-l border-gray-300"></span>
-            )}
-
-            <button
-              className={`px-6 py-2 mx-3 text-xs font-semibold transition-all duration-300 uppercase ${
-                index === activeCategory
-                  ? "bg-[#b8cd06] text-white rounded-full"
-                  : "text-gray-500 hover:shadow rounded-full"
-              }`}
-              onClick={() => setActiveCategory(index)}
-            >
-              {category}
-            </button>
-          </div>
-        ))}
+        {/* Nút Next */}
+        {!isEnd && (
+          <button
+            className="absolute right-0 xs:right-[2%] md:right-[8%] top-1/2 -translate-y-1/2 z-10"
+            onClick={() => swiperCategoriesRef.current!.slideNext()}
+          >
+            <CircleChevronRight className="text-[#b8cd06]" />
+          </button>
+        )}
       </div>
 
       {/* Slider sản phẩm */}

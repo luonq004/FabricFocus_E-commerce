@@ -263,7 +263,7 @@ const AboutUsPage = () => {
                 trang hoàn hảo cho bạn.
               </span>
             </div>
-            <div className="Content_Feel grid gap-y-7">
+            <div className="Content_Feel grid gap-y-7 mb-6 lg:mb-0">
               <div className="flex gap-x-0 md:gap-x-6">
                 <img
                   className="rounded-xl w-[200px] h-[150px]"

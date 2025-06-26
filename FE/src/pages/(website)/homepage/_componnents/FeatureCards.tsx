@@ -22,7 +22,7 @@ const FeatureCards = () => {
   const defaultGradientColor = "from-green-500 to-lime-400 to-cyan-500";
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-5 pt-20 md:pt-36">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-5 pt-20 lg:pt-32">
       {categories.map((category, index) => (
         <div
           key={index}

@@ -8,7 +8,7 @@ const Sidebar = () => {
   const [categories, setCategories] = useState<any[]>([]); // Lưu danh mục
   const [posts, setPosts] = useState<any[]>([]);
 
-  const [searchQuery, setSearchQuery] = useState(""); // Lưu từ khóa tìm kiếm
+  // const [searchQuery, setSearchQuery] = useState("");
 
   // Lấy danh mục từ API
   useEffect(() => {
@@ -44,12 +44,12 @@ const Sidebar = () => {
   }, []);
 
   // Cập nhật từ khóa tìm kiếm
-  const handleSearchChange = (e: any) => {
-    setSearchQuery(e.target.value);
-    searchParams.set("search", e.target.value);
-    searchParams.set("page", "1"); // Reset trang về 1 khi tìm kiếm
-    setSearchParams(searchParams);
-  };
+  // const handleSearchChange = (e: any) => {
+  //   setSearchQuery(e.target.value);
+  //   searchParams.set("search", e.target.value);
+  //   searchParams.set("page", "1"); // Reset trang về 1 khi tìm kiếm
+  //   setSearchParams(searchParams);
+  // };
 
   // Cập nhật danh mục
   const handleCategoryClick = (category: any) => {
@@ -69,13 +69,13 @@ const Sidebar = () => {
     <div className="mb-20 lg:w-80">
       <div className="flex flex-col uppercase">
         {/* Input tìm kiếm */}
-        <div className="mb-10 relative">
+        {/* <div className="mb-10 relative">
           <input
             value={searchQuery}
-            onChange={handleSearchChange}
+            onClick={handleSearchChange}
             type="text"
             placeholder="Tìm kiếm theo tên bài viết hoặc tác giả..."
-            className="w-full text-xs py-3 pr-10 border border-[#efefef] rounded-full focus:outline-none focus:ring-[#b8cd06] focus:border-transparent"
+            className="w-full text-xs py-3 pr-10 pl-3 border border-[#efefef] rounded-full focus:outline-none focus:ring-[#b8cd06] focus:border-transparent"
           />
           <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-black duration-300">
             <svg
@@ -91,7 +91,7 @@ const Sidebar = () => {
               />
             </svg>
           </span>
-        </div>
+        </div> */}
 
         {/* Danh mục */}
         <div className="mb-10">
