@@ -112,7 +112,13 @@ export const displayComment = async (req, res) => {
 };
 
 export const getAllComment = async (req, res) => {
-  const { _status = "display" } = req.query;
+  const {
+    _page = 1,
+    _limit = 5,
+    _sort = "createdAt",
+    _order = "desc",
+    _status = "display",
+  } = req.query;
 
   let flag;
   if (_status === "hidden") {
@@ -121,19 +127,32 @@ export const getAllComment = async (req, res) => {
     flag = false;
   }
 
+  const options = {
+    page: +_page,
+    limit: +_limit,
+    sort: { [_sort]: _order === "desc" ? -1 : 1 },
+    populate: [
+      { path: "userId", select: "firstName lastName imageUrl" },
+      { path: "productId", select: "name image" },
+    ],
+  };
+
   try {
-    const comments = await Comment.find({ deleted: flag })
-      .populate("userId", "firstName lastName imageUrl") // Populate userId,
-      .populate("productId", "name image")
-      .sort({
-        createdAt: -1,
-      }); // Populate productId, chỉ lấy các trường `name` và `price`
+    const comments = await Comment.paginate({ deleted: flag }, options);
 
     if (!comments) {
       return res.status(400).json({ message: "Không tìm thấy đánh giá" });
     }
 
-    res.json(comments);
+    const results = {
+      data: comments.docs,
+      totalDocs: comments.totalDocs,
+      page: comments.page,
+      totalPages: comments.totalPages,
+      limit: _limit,
+    };
+
+    res.json(results);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

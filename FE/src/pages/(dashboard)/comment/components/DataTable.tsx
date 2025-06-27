@@ -2,10 +2,9 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+  PaginationOptions,
+  PaginationState,
   useReactTable,
-  ColumnFiltersState,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -16,72 +15,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { Input } from "@/components/ui/input";
-
-import { Pagination } from "@/pages/(dashboard)/product/_components/Pagination";
-import { useState } from "react";
+import { Pagination } from "./Pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pagination: PaginationState;
+  paginationOptions: Pick<PaginationOptions, "onPaginationChange" | "rowCount">;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  pagination,
+  paginationOptions,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: 5,
-      },
-    },
     state: {
-      columnFilters,
+      pagination,
     },
+    ...paginationOptions,
+    manualPagination: true,
+    getCoreRowModel: getCoreRowModel(),
   });
-
-  let paginationButtons = [];
-  const paginationGoups = [];
-  const paginationGoupLimit = 10;
-  const currentPage = table.getState().pagination.pageIndex;
-  for (let i = 0; i < table.getPageCount(); i++) {
-    if (i > 0 && i % paginationGoupLimit === 0) {
-      paginationButtons.push(<span>...</span>);
-      paginationGoups.push(paginationButtons);
-      paginationButtons = [];
-    }
-    paginationButtons.push(
-      <button
-        className={currentPage === i ? "active" : ""}
-        key={i}
-        onClick={() => table.setPageIndex(i)}
-      >
-        {i + 1}
-      </button>
-    );
-  }
-  if (paginationButtons.length > 0) {
-    if (paginationGoups.length > 0) {
-      paginationButtons.unshift(<span>...</span>);
-    }
-    paginationGoups.push(paginationButtons);
-    paginationButtons = [];
-  }
 
   return (
     <>
       <div className="flex items-center py-4">
-        <Input
+        {/* <Input
           placeholder="Tìm tên sản phẩm"
           value={
             (table.getColumn("productId.name")?.getFilterValue() as string) ??
@@ -93,7 +56,7 @@ export function DataTable<TData, TValue>({
               ?.setFilterValue(event.target.value)
           }
           className="max-w-52 mb-2"
-        />
+        /> */}
       </div>
 
       <div className="border bg-white rounded-lg ">

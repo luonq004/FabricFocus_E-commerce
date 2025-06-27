@@ -86,7 +86,7 @@ const updateTotal = async (cart) => {
 
 export const getCartByUserId = async (req, res) => {
   const id = req.params.id;
-  // console.log(userId)
+
   try {
     let cart = await Cart.findOne({ userId: id })
       .populate({
@@ -95,7 +95,6 @@ export const getCartByUserId = async (req, res) => {
           { path: "attribute", options: { strictPopulate: false } }, // Bỏ qua kiểm tra schema
           { path: "category", options: { strictPopulate: false } },
         ],
-        // match: { deleted: false },
       })
       .populate({
         path: "products.variantItem",
@@ -113,9 +112,6 @@ export const getCartByUserId = async (req, res) => {
       return res.status(StatusCodes.OK).json(cart);
     }
 
-    // const products = cart.products.filter((product) => product.productItem !== null && product.variantItem !== null);
-    // cart.products = products;
-
     await cart.save();
     cart = await updateTotal(cart);
     // console.log("cart", cart)
@@ -130,26 +126,19 @@ export const getCartByUserId = async (req, res) => {
 export const addToCart = async (req, res) => {
   const { userId, productId, variantId, quantity } = req.body;
 
-  // console.log(req.body);
-
   try {
     let cart = await Cart.findOne({ userId: userId })
       .populate("products.productItem")
       .populate("products.variantItem")
       .populate("voucher");
 
-    // console.log("CART: ", cart);
-
     const product = await Product.findOne({ _id: productId });
     const variantValue = await Variant.findOne({ _id: variantId });
-
-    // console.log("PR: ", product._id);
-    // console.log(variantValue);
 
     if (!userId) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Không tìm thấy người dùng" });
+        .json({ message: "Vui lòng đăng nhập rồi mua hàng" });
     }
 
     if (!product || !variantValue) {

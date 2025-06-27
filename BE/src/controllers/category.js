@@ -58,7 +58,7 @@ export const getAllProductWithCategory = async (req, res) => {
       return res.status(400).json({ message: "Không tìm thấy danh mục nào" });
     }
 
-    const productsCount = await Product.count({
+    const productsCount = await Product.countDocuments({
       category: id,
       deleted: false,
     });

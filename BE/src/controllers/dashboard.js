@@ -163,12 +163,12 @@ export const getDataAreaChart = async (req, res) => {
         },
       },
       {
-        // Tính toán desktop và mobile cho từng đơn hàng
+        // Tính toán lợi nhuận thô và thực tế
         $addFields: {
-          desktop: {
+          roughProfit: {
             $subtract: ["$totalPrice", 30000],
           },
-          mobile: {
+          netProfit: {
             $subtract: [
               {
                 $subtract: [
@@ -195,24 +195,23 @@ export const getDataAreaChart = async (req, res) => {
         },
       },
       {
-        // Nhóm theo "date" và tính tổng desktop và mobile theo ngày
+        // Nhóm theo "date" và tính tổng lợi nhuận mỗi ngày
         $group: {
-          _id: "$date", // Nhóm theo ngày
-          desktop: { $sum: "$desktop" },
-          mobile: { $sum: "$mobile" },
+          _id: "$date",
+          roughProfit: { $sum: "$roughProfit" },
+          netProfit: { $sum: "$netProfit" },
         },
       },
       {
-        // Đổi tên trường _id thành "date" trong kết quả
+        // Chuẩn hóa lại định dạng kết quả
         $project: {
-          _id: 0, // Loại bỏ _id
+          _id: 0,
           date: "$_id",
-          desktop: 1,
-          mobile: 1,
+          roughProfit: 1,
+          netProfit: 1,
         },
       },
       {
-        // Sắp xếp kết quả theo ngày tăng dần
         $sort: { date: 1 },
       },
     ]);

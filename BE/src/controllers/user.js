@@ -1,12 +1,9 @@
-import dotenv, { populate } from "dotenv";
-import { StatusCodes } from "http-status-codes";
-import Users from "../models/users.js";
-import clerkClient from "../config/clerk.js";
-import cloudinary from "../config/cloudinary.js";
-import fs from "fs";
 import bcrypt from "bcryptjs";
-import Product from "../models/product.js";
+import dotenv from "dotenv";
+import clerkClient from "../config/clerk.js";
 import Conversation from "../models/conversation.js";
+import Product from "../models/product.js";
+import Users from "../models/users.js";
 
 dotenv.config();
 
@@ -360,7 +357,7 @@ export const updateUser = async (req, res) => {
     const clerkUpdateData = {
       firstName: updateData.firstName,
       lastName: updateData.lastName,
-      emailAddress: updateData.email,
+      emailAddress: updateData.emailAddress,
       imageUrl: updateData.imageUrl,
       publicMetadata: {
         phone: updateData.phone,
@@ -380,9 +377,17 @@ export const updateUser = async (req, res) => {
     await clerkClient.users.updateUser(clerkId, clerkUpdateData);
 
     // Cập nhật MongoDB
-    const updatedUser = await Users.findOneAndUpdate({ clerkId }, updateData, {
-      new: true,
-    });
+    const updatedUser = await Users.findOneAndUpdate(
+      { clerkId },
+      {
+        firstName: updateData.firstName,
+        lastName: updateData.lastName,
+        password: updateData.password,
+      },
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json({
       message: "Cập nhật người dùng thành công",

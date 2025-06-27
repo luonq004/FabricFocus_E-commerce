@@ -131,10 +131,6 @@ export const getAllProducts = async (req, res) => {
       },
     };
 
-    // setTimeout(() => {
-    //   res.status(200).json(data);
-    // }, 2000);
-
     return res.status(200).json(data);
   } catch (error) {
     return res.status(400).json({ message: error.message });
