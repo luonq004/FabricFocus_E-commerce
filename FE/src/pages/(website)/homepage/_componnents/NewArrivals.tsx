@@ -1,66 +1,28 @@
-import axios from "@/configs/axios";
 import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import SwiperCore from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Category } from "../../wishlist/types";
+import { useGetAllCategory } from "../actions/useGetAllCategory";
+import { useGetProductByCategory } from "../actions/useGetProductByCategory";
 
 const NewArrivals = () => {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
-  const [activeCategory, setActiveCategory] = useState(0);
   const swiperRef = useRef<SwiperCore | null>(null);
   const swiperCategoriesRef = useRef<SwiperCore | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(true);
 
-  // Gọi API để lấy danh mục
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get("/category");
-        const categoryNames = [
-          "TẤT CẢ",
-          ...response.data
-            .filter((cat: any) => cat.name !== "Chưa phân loại")
-            .map((cat: any) => cat.name),
-        ];
-        setCategories(categoryNames);
-      } catch (error) {
-        console.error("Lỗi khi lấy danh mục:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  const [categorySelected, setCategorySelected] = useState<string>("");
+  const { isLoading, listProduct } = useGetProductByCategory(categorySelected);
 
-  // Gọi API để lấy sản phẩm
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("/products/all");
-        setProducts(response.data.data);
-      } catch (error) {
-        console.error("Lỗi khi lấy sản phẩm:", error);
-      }
-    };
-    fetchProducts();
-  }, []);
+  const { isLoadingCategory, listCategory } = useGetAllCategory();
 
   useEffect(() => {
-    if (swiperRef.current && products.length > 0) {
-      swiperRef.current.slideTo(0); // Đặt Swiper về slide đầu tiên
+    if ((swiperRef.current && listProduct?.data?.length) || [].length > 0) {
+      swiperRef.current!.slideTo(0); // Đặt Swiper về slide đầu tiên
     }
-  }, [products]);
-
-  const filteredProducts = products.filter((product) => {
-    // Nếu chọn "TẤT CẢ", hiển thị tất cả sản phẩm
-    if (activeCategory === 0) return true;
-
-    // Kiểm tra nếu danh mục của sản phẩm chứa danh mục đang chọn
-    return product.category.some(
-      (cat: any) => cat.name === categories[activeCategory]
-    );
-  });
+  }, [listProduct]);
 
   useEffect(() => {
     if (swiperCategoriesRef.current) {
@@ -70,7 +32,7 @@ const NewArrivals = () => {
         setIsEnd(swiperCategoriesRef.current!.isEnd);
       });
     }
-  }, [categories]);
+  }, [isLoadingCategory]);
 
   // chuyển sản phẩm
   const handleNext = () => {
@@ -150,22 +112,40 @@ const NewArrivals = () => {
             },
           }}
         >
-          {categories.map((category, index) => (
-            <SwiperSlide key={index} className="flex justify-center">
-              <div className="flex items-center mb-1">
-                <button
-                  className={`px-4 py-1 mx-2 text-sm whitespace-nowrap font-semibold transition-all duration-300 uppercase text-center ${
-                    index === activeCategory
-                      ? "bg-[#b8cd06] text-white rounded-full"
-                      : "text-gray-500 hover:shadow rounded-full"
-                  }`}
-                  onClick={() => setActiveCategory(index)}
-                >
-                  {category}
-                </button>
-              </div>
-            </SwiperSlide>
-          ))}
+          <SwiperSlide className="flex justify-center">
+            <div className="flex items-center mb-1">
+              <button
+                className={`px-4 py-1 mx-2 text-sm whitespace-nowrap font-semibold transition-all duration-300 uppercase text-center ${
+                  categorySelected == ""
+                    ? "bg-[#b8cd06] text-white rounded-full"
+                    : "text-gray-500 hover:shadow rounded-full"
+                }`}
+                onClick={() => setCategorySelected("")}
+              >
+                tất cả
+              </button>
+            </div>
+          </SwiperSlide>
+
+          {listCategory?.map(
+            (category: Category, index: number) =>
+              !category.defaultCategory && (
+                <SwiperSlide key={index} className="flex justify-center">
+                  <div className="flex items-center mb-1">
+                    <button
+                      className={`px-4 py-1 mx-2 text-sm whitespace-nowrap font-semibold transition-all duration-300 uppercase text-center ${
+                        category._id === categorySelected
+                          ? "bg-[#b8cd06] text-white rounded-full"
+                          : "text-gray-500 hover:shadow rounded-full"
+                      }`}
+                      onClick={() => setCategorySelected(category._id)}
+                    >
+                      {category.name}
+                    </button>
+                  </div>
+                </SwiperSlide>
+              )
+          )}
         </Swiper>
 
         {/* Nút Next */}
@@ -221,16 +201,18 @@ const NewArrivals = () => {
             },
           }}
         >
-          {filteredProducts.map((product, index) => (
+          {listProduct?.data.map((product, index) => (
             <SwiperSlide
               key={index}
               className="relative bg-white border cursor-grab p-4 min-w-[100%] sm:min-w-[50%] md:min-w-[33.33%] lg:min-w-[25%] xl:min-w-[20%] max-w-[250px] group overflow-hidden"
             >
               {/* Nhãn giảm giá */}
-              {product.priceSale > 0 && (
+              {product.priceSale ? (
                 <span className="absolute top-5 left-6 text-xs text-white py-1 px-2 rounded-full bg-red-500">
                   GIẢM GIÁ
                 </span>
+              ) : (
+                ""
               )}
 
               <div className="mt-10 mb-5">
@@ -249,26 +231,26 @@ const NewArrivals = () => {
                 <h3 className="font-extrabold font-raleway text-[13px] text-inherit group-hover:text-[#b8cd06] mb-3 text-wrap relative transition-all duration-300 top-0 group-hover:top-[-3px] line-clamp-1">
                   {product.name}
                 </h3>
-                <p className="text-xs text-gray-500 mb-3  duration-200 text-wrap line-clamp-2">
+                <p className="text-xs text-gray-500 mb-3  duration-200 text-wrap line-clamp-1">
                   {product.description}
                 </p>
 
-                <div className="flex items-center justify-center duration-300 gap-2">
-                  {product.priceSale > 0 ? (
+                <div className="flex flex-col h-[43px]">
+                  {product.priceSale && product.priceSale > 0 ? (
                     <>
-                      {/* Giá khuyến mãi */}
-                      <span className="font-bold text-red-600">
-                        {product.priceSale.toLocaleString()} VNĐ
+                      {/* Giá sale */}
+                      <span className="text-[18px] text-red-600 font-bold">
+                        {product.priceSale.toLocaleString("vi-VN")} VNĐ
                       </span>
-                      {/* Gạch ngang giá gốc */}
-                      <span className="text-sm text-gray-400 line-through">
-                        {product.price.toLocaleString()} VNĐ
+                      {/* Giá gốc gạch ngang */}
+                      <span className="text-xs text-gray-400 line-through">
+                        {product.price.toLocaleString("vi-VN")} VNĐ
                       </span>
                     </>
                   ) : (
-                    /* Chỉ hiển thị giá gốc nếu không có giá khuyến mãi */
-                    <span className="font-bold text-red-600">
-                      {product.price.toLocaleString()} VNĐ
+                    /* Chỉ hiển thị giá gốc nếu không có giá sale */
+                    <span className="text-[18px] text-red-600 font-bold">
+                      {product.price.toLocaleString("vi-VN")} VNĐ
                     </span>
                   )}
                 </div>

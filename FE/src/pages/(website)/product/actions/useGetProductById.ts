@@ -3,7 +3,7 @@ import { getProductById } from "./api";
 
 export function useGetProductById(id: string) {
   const {
-    isLoading,
+    isLoading: isLoadingProduct,
     data: product,
     error,
   } = useQuery({
@@ -11,5 +11,5 @@ export function useGetProductById(id: string) {
     queryFn: () => getProductById(id),
   });
 
-  return { isLoading, product, error };
+  return { isLoadingProduct, product, error };
 }

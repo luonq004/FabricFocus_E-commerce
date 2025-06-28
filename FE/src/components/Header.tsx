@@ -529,11 +529,7 @@ const Header = () => {
           <div className="border-x-0 lg:border-x-[50px] border-transparent h-full">
             <div className="flex h-full items-center">
               <Link to="/" className="w-4/12 md:w-2/12 px-[15px]">
-                <img
-                  className="w-20 md:w-36"
-                  src={logoUrl || "/SHOPING.jpg"}
-                  alt="Logo"
-                />
+                <img className="w-20 md:w-36" src={logoUrl || ""} alt="Logo" />
               </Link>
 
               <div className="w-8/12 md:w-10/12 justify-items-end px-[15px]">

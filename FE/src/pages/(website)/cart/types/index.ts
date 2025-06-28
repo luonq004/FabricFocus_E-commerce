@@ -31,6 +31,7 @@ export interface ProductItem {
   image: string;
   name: string;
   price: number;
+  priceSale?: number;
   slug: string;
   totalOrignalPrice: number;
   updatedAt: string;

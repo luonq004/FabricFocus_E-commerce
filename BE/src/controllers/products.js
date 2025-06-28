@@ -148,10 +148,6 @@ export const getAllProductsNoLimit = async (req, res) => {
     _search,
   } = req.query;
 
-  const options = {
-    sort: { [_sort]: _order === "desc" ? -1 : 1 },
-  };
-
   // Chỉ thêm các trường hợp populate hợp lệ
   const populateOptions = _expand
     ? [
