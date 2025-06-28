@@ -51,8 +51,6 @@ connectDB(process.env.DB_URI);
 //Router
 app.use(cookieParser());
 
-const dbUrl = process.env.DB_URI;
-
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -84,6 +82,10 @@ app.use("/api", wishlistRouter);
 app.use("/api/dashboard", dashboardRouter);
 
 app.use("/api/conversation", conversationRouter);
+
+app.get("/wakeup", (req, res) => {
+  res.status(200).send("wakeup");
+});
 
 // Khởi động server
 app.use((err, req, res, next) => {
