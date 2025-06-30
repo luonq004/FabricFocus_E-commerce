@@ -14,7 +14,7 @@ const NewArrivals = () => {
   const [isEnd, setIsEnd] = useState(true);
 
   const [categorySelected, setCategorySelected] = useState<string>("");
-  const { isLoading, listProduct } = useGetProductByCategory(categorySelected);
+  const { listProduct } = useGetProductByCategory(categorySelected);
 
   const { isLoadingCategory, listCategory } = useGetAllCategory();
 

@@ -6,7 +6,6 @@ const Sidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams(); // Lấy và cập nhật tham số URL
   const currentCategory = searchParams.get("category");
   const [categories, setCategories] = useState<any[]>([]); // Lưu danh mục
-  const [posts, setPosts] = useState<any[]>([]);
 
   // const [searchQuery, setSearchQuery] = useState("");
 
@@ -18,23 +17,6 @@ const Sidebar = () => {
         const categoryResponse = await axios.get("/category");
         const categoriesData = categoryResponse.data;
         setCategories([{ _id: null, name: "TẤT CẢ" }, ...categoriesData]);
-
-        // Lấy bài viết
-        const postResponse = await axios.get("/blogs");
-        const postsData = postResponse.data.slice(5, 10);
-
-        // Kết hợp bài viết với tên danh mục
-        const combinedPosts = postsData.map((post: any) => {
-          const category = categoriesData.find(
-            (cat: any) => cat._id === post.category
-          );
-          return {
-            ...post,
-            categoryName: category ? category.name : "Không xác định",
-          };
-        });
-
-        setPosts(combinedPosts);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
       }
@@ -114,42 +96,6 @@ const Sidebar = () => {
               </li>
             ))}
           </ul>
-        </div>
-
-        {/* Bài viết khác */}
-        <div className="mb-10">
-          <div className="mb-10">
-            <h2 className="mb-4 text-[20px] text-[#343434] font-raleway font-extrabold uppercase">
-              Bài viết khác
-            </h2>
-
-            {posts.map((post) => (
-              <div
-                key={post.id}
-                className="flex flex-col w-[350px] items-start mb-10"
-              >
-                <div className="lg:w-full h-full mb-4 bg-gray-200 rounded-md overflow-hidden">
-                  <Link to={`/blog/detail/${post._id}`}>
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </Link>
-                </div>
-                <p className="text-[#343434] text-[15px] font-raleway font-extrabold mb-1 cursor-pointer">
-                  {post.title}
-                </p>
-                <p className="text-[11px] text-gray-500">
-                  {new Date(post.createdAt).toLocaleDateString("vi-VN")}{" "}
-                  &nbsp;&bull;&nbsp;{" "}
-                  <span className="text-[#b8cd06]">{post.author}</span>{" "}
-                  &nbsp;&bull;&nbsp;{" "}
-                  <span className="text-[#b8cd06]">{post.categoryName}</span>
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

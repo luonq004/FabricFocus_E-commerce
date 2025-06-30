@@ -20,7 +20,7 @@ const Footer = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get("/blogs");
-        setPosts(response.data.slice(3, 6));
+        setPosts(response.data.data);
       } catch (error) {
         console.error("Lỗi khi lấy bài viết:", error);
       }

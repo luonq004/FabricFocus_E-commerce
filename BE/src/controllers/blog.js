@@ -1,6 +1,6 @@
 import cloudinary from "../config/cloudinary.js";
 import Blog from "../models/blog.js";
-import fs from "fs";
+import mongoose from "mongoose";
 
 // Tạo bài viết mới
 export const createBlog = async (req, res) => {
@@ -31,25 +31,46 @@ export const createBlog = async (req, res) => {
 
 // Lấy tất cả bài viết (không phân trang)
 export const getBlogs = async (req, res) => {
-  try {
-    const { category, search } = req.query;
+  const {
+    _page = 1,
+    _limit = 3,
+    _sort = "createdAt",
+    _order = "desc",
+    _category,
+    _search,
+  } = req.query;
 
+  const options = {
+    page: _page,
+    limit: _limit,
+    sort: { [_sort]: _order === "desc" ? -1 : 1 },
+  };
+
+  try {
     const filter = {};
 
-    if (category) {
-      filter.category = category; // Lọc theo danh mục
+    if (_category) {
+      filter.category = _category; // Lọc theo danh mục
     }
 
-    if (search) {
+    if (_search) {
       filter.$or = [
-        { title: { $regex: search, $options: "i" } }, // Tìm theo tiêu đề
-        { author: { $regex: search, $options: "i" } }, // Tìm theo tác giả
+        { title: { $regex: _search, $options: "i" } }, // Tìm theo tiêu đề
+        { author: { $regex: _search, $options: "i" } }, // Tìm theo tác giả
       ];
     }
 
-    const blogs = await Blog.find(filter).sort({ createdAt: -1 }); // Sắp xếp mới nhất
+    const data = await Blog.paginate(filter, { ...options });
 
-    res.status(200).json(blogs);
+    const results = {
+      data: data.docs,
+      currentPage: data.page,
+      totalPages: data.totalPages,
+      totalItems: data.totalDocs,
+      limit: _limit,
+    };
+
+    res.status(200).json(results);
   } catch (error) {
     console.error("Lỗi khi lấy bài viết:", error);
     res.status(500).json({ message: "Lỗi server", error });
@@ -59,6 +80,10 @@ export const getBlogs = async (req, res) => {
 // Lấy bài viết theo ID
 export const getBlogById = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Không tìm thấy bài viết" });
+    }
+
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
       return res.status(404).json({ message: "Bài viết không tồn tại" });

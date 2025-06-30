@@ -28,10 +28,10 @@ const ProductDetail = () => {
   const [data, setData] = useState<ListProductProps>();
   const [isGetting, setIsGetting] = useState(false);
   const {
-    isLoading,
+    isLoadingProduct,
     product,
     error,
-  }: { isLoading: boolean; product: ProductItem; error: Error | null } =
+  }: { isLoadingProduct: boolean; product: ProductItem; error: Error | null } =
     useGetProductById(id!);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const ProductDetail = () => {
     if (product) fetchProducts();
   }, [product]);
 
-  if (isLoading || isGetting) {
+  if (isLoadingProduct || isGetting) {
     return (
       <div className="container mb-4">
         <SkeletonProduct />
