@@ -527,7 +527,7 @@ const Header = () => {
         {/* Header BOTTOM */}
         <div className="h-[60px] md:h-[98px] bg-white border-b border-b-[#eee] shadow-custom">
           <div className="border-x-0 lg:border-x-[50px] border-transparent h-full">
-            <div className="flex h-full items-center">
+            <div className="flex h-full items-center justify-between">
               <Link to="/" className="w-4/12 md:w-2/12 px-[15px]">
                 <img className="w-20 md:w-36" src={logoUrl || ""} alt="Logo" />
               </Link>

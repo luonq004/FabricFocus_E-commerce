@@ -151,7 +151,7 @@ const NewArrivals = () => {
         {/* Nút Next */}
         {!isEnd && (
           <button
-            className="absolute right-0 xs:right-[2%] md:right-[8%] top-1/2 -translate-y-1/2 z-10"
+            className="absolute right-0 xs:right-[2%] md:right-[8%] top-1/2 -translate-y-1/2 z-10 px-2"
             onClick={() => swiperCategoriesRef.current!.slideNext()}
           >
             <CircleChevronRight className="text-[#b8cd06]" />

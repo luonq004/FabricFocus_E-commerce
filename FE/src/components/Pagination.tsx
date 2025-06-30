@@ -32,6 +32,7 @@ const Pagination = function ({
 
     searchParams.set("page", prev!.toString());
     setSearchParams(searchParams);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onNext = () => {
@@ -39,6 +40,7 @@ const Pagination = function ({
 
     searchParams.set("page", next!.toString());
     setSearchParams(searchParams);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (pageCount <= 1) return null;
@@ -78,6 +80,7 @@ const Pagination = function ({
             onClick={() => {
               searchParams.set("page", pageNumber!.toString());
               setSearchParams(searchParams);
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
             {pageNumber}
