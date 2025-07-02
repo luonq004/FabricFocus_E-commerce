@@ -525,11 +525,15 @@ const Header = () => {
         </div>
 
         {/* Header BOTTOM */}
-        <div className="h-[60px] md:h-[98px] bg-white border-b border-b-[#eee] shadow-custom">
+        <div className="h-[60px] md:h-[66px] lg:h-[98px] bg-white border-b border-b-[#eee] shadow-custom">
           <div className="border-x-0 lg:border-x-[50px] border-transparent h-full">
             <div className="flex h-full items-center justify-between">
               <Link to="/" className="px-[15px]">
-                <img className="w-20 md:w-36" src={logoUrl || ""} alt="Logo" />
+                <img
+                  className="w-20 md:w-24 lg:w-36"
+                  src={logoUrl || ""}
+                  alt="Logo"
+                />
               </Link>
 
               <div className="px-[15px]">
@@ -774,7 +778,7 @@ const Header = () => {
           </div>
         </div>
       </header>
-      <div className="block h-[100px] md:h-[159px]"></div>
+      <div className="block h-[100px] md:h-[126px] lg:h-[159px]"></div>
     </>
   );
 };
