@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-      <img src="https://raw.githubusercontent.com/luonq004/FabricFocus_E-commerce/main/ecommerce_pro/FE/public/infobasic.png" alt="Project Banner">
+      <img src="../FE/public/infobasic.png" alt="Project Banner">
   <br />
 
   <div>
