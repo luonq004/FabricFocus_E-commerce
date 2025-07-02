@@ -12,7 +12,7 @@ const AboutUsPage = () => {
     <>
       <section
         style={{ backgroundImage: "url('/images/about-us-bg.jpg')" }}
-        className="min-h-[600px] bg-cover md:bg-fixed bg-center bg-no-repeat text-white grid place-items-center"
+        className="min-h-[600px] bg-cover md:bg-fixed bg-[77%] sm:bg-center bg-no-repeat text-white grid place-items-center"
       >
         <div className="grid place-items-center max-w-[650px] text-center gap-3 px-5">
           <span className="uppercase text-[34px] ms:text-[40px] font-bold">
