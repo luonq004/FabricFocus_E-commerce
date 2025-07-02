@@ -12,7 +12,7 @@ const AboutUsPage = () => {
     <>
       <section
         style={{ backgroundImage: "url('/images/about-us-bg.jpg')" }}
-        className="min-h-[600px] bg-cover bg-fixed bg-center bg-no-repeat text-white grid place-items-center"
+        className="min-h-[600px] bg-cover md:bg-fixed bg-center bg-no-repeat text-white grid place-items-center"
       >
         <div className="grid place-items-center max-w-[650px] text-center gap-3 px-5">
           <span className="uppercase text-[34px] ms:text-[40px] font-bold">
@@ -264,9 +264,9 @@ const AboutUsPage = () => {
               </span>
             </div>
             <div className="Content_Feel grid gap-y-7 mb-6 lg:mb-0">
-              <div className="flex gap-x-0 md:gap-x-6">
+              <div className="flex gap-x-3 md:gap-x-6">
                 <img
-                  className="rounded-xl w-[200px] h-[150px]"
+                  className="rounded-xl w-32 sm:w-[200px] sm:h-[150px] object-contain self-start"
                   src="/images/thumbnail-38.jpg"
                   alt="thum38"
                 />
@@ -281,9 +281,9 @@ const AboutUsPage = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex gap-x-0 md:gap-x-6">
+              <div className="flex gap-x-2 md:gap-x-6">
                 <img
-                  className="rounded-xl w-[200px] h-[150px]"
+                  className="rounded-xl w-32 sm:w-[200px] sm:h-[150px] object-contain self-start"
                   src="/images/thumbnail-38.jpg"
                   alt="thum38"
                 />

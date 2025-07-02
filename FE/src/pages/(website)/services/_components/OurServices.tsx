@@ -1,7 +1,7 @@
 const OurServices = () => {
   return (
     <div
-      className="bg-cover bg-center bg-no-repeat bg-fixed fixed-background"
+      className="bg-cover bg-center bg-no-repeat md:bg-fixed fixed-background"
       style={{ backgroundImage: "url(/OurServices.jpg)" }}
     >
       {/*our services */}
