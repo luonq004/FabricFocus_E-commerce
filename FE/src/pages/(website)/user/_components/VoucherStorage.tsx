@@ -5,11 +5,14 @@ import {
   IVoucherUseage,
 } from "@/pages/(dashboard)/voucher/types";
 import { TicketPercent, Truck } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 const VoucherStorage = () => {
   const { _id }: { _id: string | null } = useUserContext();
+  const [countdowns, setCountdowns] = useState<{
+    [id: string]: string;
+  }>({});
 
   const { data, isLoading, isError } = useGetVoucher("get-all-countdown");
 
@@ -23,10 +26,14 @@ const VoucherStorage = () => {
     document.title = "Kho voucher";
   }, []);
 
-  const intervals = useRef<{ [key: string]: NodeJS.Timeout }>({}); // Lưu trữ các interval
+  const intervals = useRef<{ [key: string]: NodeJS.Timeout }>({});
 
   useEffect(() => {
     if (data) {
+      // Clear intervals cũ nếu có
+      Object.values(intervals.current).forEach(clearInterval);
+      intervals.current = {};
+
       data.forEach((item: IVoucherData) => {
         const present = item.countdown;
         if (item.voucher.status === "active" && present > 0) {
@@ -35,48 +42,21 @@ const VoucherStorage = () => {
       });
     }
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
       Object.values(intervals.current).forEach(clearInterval);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [data]);
 
-  const handleVisibilityChange = () => {
-    if (document.hidden) {
-      // Dừng countdown khi tab không còn visible
-      Object.values(intervals.current).forEach(clearInterval);
-    } else {
-      // Bắt đầu lại countdown khi tab visible
-      if (data) {
-        data.forEach((item: IVoucherData) => {
-          const present = item.countdown;
-          if (item.voucher.status === "active" && present > 0) {
-            startCountdown(present, item.voucher._id);
-          }
-        });
-      }
-    }
-  };
-
-  function startCountdown(timeRemaining: number, id: string) {
-    const countdownElement = document.getElementById(`countdown-${id}`);
-    const parentDiv = countdownElement?.closest(".voucher-item");
-
-    if (!countdownElement) return;
+  function startCountdown(initialTime: number, id: string) {
+    let timeRemaining = initialTime;
 
     intervals.current[id] = setInterval(() => {
-      if (timeRemaining <= 60000) {
-        countdownElement.classList.add("text-red-500");
-      }
       if (timeRemaining <= 0) {
         clearInterval(intervals.current[id]);
-        countdownElement.innerText = "Voucher đã hết hạn";
-        if (parentDiv) {
-          parentDiv.classList.add("pointer-events-none");
-        }
-        // changeStatusVoucher.mutate({ status: 'inactive', id });
+        setCountdowns((prev) => ({
+          ...prev,
+          [id]: "Voucher đã hết hạn",
+        }));
         return;
       }
 
@@ -86,7 +66,11 @@ const VoucherStorage = () => {
       );
       const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-      countdownElement.innerText = `${hours}h ${minutes}m ${seconds}s`;
+      const countdownText = `${hours}h ${minutes}m ${seconds}s`;
+      setCountdowns((prev) => ({
+        ...prev,
+        [id]: countdownText,
+      }));
 
       timeRemaining -= 1000;
     }, 1000);
@@ -163,10 +147,19 @@ const VoucherStorage = () => {
                   </div>
                   <div className="text-gray-400 flex gap-2 items-center">
                     <div>HSD:</div>
-                    <div
+                    {/* <div
                       className=""
                       id={`countdown-${item.voucher._id}`}
-                    ></div>
+                    ></div> */}
+                    <div
+                      className={`text-gray-400 ${
+                        countdowns[item.voucher._id]?.includes("hết hạn")
+                          ? "text-red-500"
+                          : ""
+                      }`}
+                    >
+                      {countdowns[item.voucher._id] || "..."}
+                    </div>
                   </div>
                 </div>
                 {/* //kiểm tra voucher đã sử dụng */}

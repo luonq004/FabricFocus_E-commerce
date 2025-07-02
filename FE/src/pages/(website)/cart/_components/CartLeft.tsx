@@ -27,9 +27,6 @@ const CartLeft = ({
       {/* Top  */}
       <div className="Top flex justify-between pb-6 border-b border-[#C8C9CB]">
         <p className="font-medium text-[24px] max-sm:text-[16px]">Giỏ hàng</p>
-        <p className="text-[#9D9EA2] max-sm:text-[14px] transition-all duration-500">
-          {cart?.products.length && cart?.products.length}
-        </p>
       </div>
       {/* End Top  */}
 
@@ -147,11 +144,14 @@ const CartLeft = ({
               </div>
             </div>
             {/* information */}
-            <div className="flex flex-col gap-3">
-              <div className="flex max-sm:grid max-sm:grid-cols-[50%_auto] justify-between items-center gap-4">
+            <div className="flex flex-col md:gap-3">
+              <div className="flex max-sm:grid max-sm:grid-cols-[2fr_1fr] justify-between items-center gap-4">
                 <div className="text-[#9D9EA2] flex w-[45%] max-sm:w-full transition-all duration-500 max-sm:text-[14px]">
                   <div className="hover:text-blue-500">
-                    <Link to={`/product/${item.productItem._id}`}>
+                    <Link
+                      to={`/product/${item.productItem._id}`}
+                      className="line-clamp-2 md:line-clamp-none lg:line-clamp-2 xl:line-clamp-none"
+                    >
                       {item.productItem.name}
                     </Link>
                   </div>
@@ -173,7 +173,7 @@ const CartLeft = ({
                     >
                       -
                     </div>
-                    <div className="border border-[#F4F4F4] rounded-[4px] bg-[#F4F4F4] px-[12.8px] py-[5px] text-black flex justify-center items-center">
+                    <div className="border border-[#F4F4F4] rounded-[4px] bg-[#F4F4F4] md:px-[12.8px] py-[5px] text-black flex justify-center items-center">
                       <input
                         onChange={(value) =>
                           userAction({
@@ -211,7 +211,7 @@ const CartLeft = ({
                   </div>
                 </div>
 
-                <div className="">
+                <div className="hidden md:block">
                   <p>
                     <span>
                       {formatCurrency(
@@ -252,25 +252,33 @@ const CartLeft = ({
                   </svg>
                 </div>
               </div>
-              {/* Attribute  */}
-              <div className="flex items-center gap-4 max-sm:justify-between">
-                <p className="text-[#9D9EA2] w-[52%] max-[1408px]:w-[49%] max-xl:w-[47%] max-lg:w-[52%] transition-all duration-500 max-sm:text-[14px]">
-                  Phân loại
+              <div className="md:hidden">
+                <p>
+                  <span>
+                    {formatCurrency(
+                      item.variantItem.priceSale > 0
+                        ? item.variantItem.priceSale
+                        : item.variantItem.price
+                    )}{" "}
+                    VNĐ
+                  </span>
                 </p>
-                <div className="relative">
-                  <div className="flex items-center gap-1 px-2 py-1 border rounded-md cursor-pointer max-sm:text-[14px] select-none">
-                    {item.variantItem.values.map((value, index: number) => (
-                      <div key={value._id}>
-                        {value.type}: {value.name}
-                        {index < item.variantItem.values.length - 1 ? "," : ""}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              </div>
+              {/* Attribute  */}
+              <div className="sm:flex items-center gap-4 max-sm:justify-between">
+                <p className="text-[#9D9EA2] w-[52%] max-[1408px]:w-[49%] max-xl:w-[47%] max-lg:w-[52%] transition-all duration-500 max-sm:text-[14px]">
+                  Phân loại: &nbsp;
+                  {item.variantItem.values.map((value, index: number) => (
+                    <span className="text-gray-700" key={value._id}>
+                      {value.name}
+                      {index < item.variantItem.values.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </p>
               </div>
               {/* End Attribute  */}
               <div>
-                <p className="text-[#9D9EA2] transition-all duration-500 max-sm:text-[14px]">
+                <p className="text-[#9D9EA2] transition-all duration-500 max-sm:text-[14px] hidden md:block">
                   Còn {item.variantItem.countOnStock} sản phẩm
                 </p>
               </div>

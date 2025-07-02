@@ -220,9 +220,9 @@ const OrderHistory = () => {
         ) : currentOrders.length > 0 ? (
           currentOrders?.map((order) => (
             <div key={order._id} className="p-4 border rounded-lg shadow-md">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col gap-y-3 md:gap-0 md:flex-row md:justify-between md:items-center">
                 <div>
-                  <div className="text-lg">
+                  <div className="text-sm md:text-lg">
                     Mã đơn hàng:{" "}
                     <span className="font-semibold">{order.orderCode}</span>
                   </div>
@@ -231,7 +231,7 @@ const OrderHistory = () => {
                     {new Date(order.createdAt).toLocaleDateString()}
                   </div>
                 </div>
-                <div className="text-green-500 font-semibold text-lg">
+                <div className="text-green-500 font-semibold text-sm md:text-lg">
                   <span className="text-black">Trạng thái:</span> {order.status}
                 </div>
               </div>
@@ -241,7 +241,7 @@ const OrderHistory = () => {
                 {order.products && order.products.length > 0 ? (
                   order?.products?.map((item) => (
                     <div key={item._id}>
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col gap-y-3 md:gap-0 md:flex-row md:justify-between md:items-center">
                         {/* sản phẩm */}
                         <Link to={`/product/${item.productItem._id}`}>
                           <div className="flex items-center space-x-4 space-y-4">
@@ -256,7 +256,7 @@ const OrderHistory = () => {
                               className="w-16 h-16 object-cover"
                             />
                             <div>
-                              <div className="font-medium">
+                              <div className="font-medium text-sm md:text-base">
                                 {item.productItem?.name ||
                                   "Sản phẩm không có tên"}
                               </div>
@@ -306,7 +306,7 @@ const OrderHistory = () => {
                   </div>
                 )}
               </div>
-              <div className="mt-4  text-lg">
+              <div className="mt-3 text-sm md:text-lg">
                 {/* <h3 className="font-semibold">Địa chỉ nhận hàng</h3> */}
                 {order.addressId && Object.keys(order.addressId).length > 0 ? (
                   <div>
@@ -344,7 +344,7 @@ const OrderHistory = () => {
                   <span className="text-[rgba(0,0,0,.8)]">30.000 ₫</span>
                 </p>
               </div>
-              <div className="mt-4 text-lg text-right">
+              <div className="mt-4 text-sm md:text-lg text-right">
                 Tổng tiền:{" "}
                 <span className="font-semibold text-[red]">
                   {formatCurrencyVND(order.totalPrice)}
@@ -408,63 +408,64 @@ const OrderHistory = () => {
         )}
       </div>
       {/* Phân trang */}
-      <Pagination className="mt-8">
-        <PaginationContent>
-          {/* Nút Trước */}
-          <PaginationItem>
-            <PaginationPrevious
-              className="cursor-pointer"
-              onClick={() => handlePageChange(currentPage - 1)}
-              // disabled={currentPage === 1}
-            />
-          </PaginationItem>
+      {totalPages > 0 && (
+        <Pagination className="mt-8">
+          <PaginationContent>
+            {/* Nút Trước */}
+            <PaginationItem>
+              <PaginationPrevious
+                className="cursor-pointer"
+                onClick={() => handlePageChange(currentPage - 1)}
+                // disabled={currentPage === 1}
+              />
+            </PaginationItem>
 
-          {/* Hiển thị danh sách các trang */}
-          {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .filter((page) => {
-              // Hiển thị trang đầu, trang cuối, và các trang xung quanh currentPage
-              return (
-                page === 1 || // Trang đầu
-                page === totalPages || // Trang cuối
-                (page >= currentPage - 2 && page <= currentPage + 2) // Các trang xung quanh currentPage
-              );
-            })
-            .reduce((acc, page, index, array) => {
-              // Thêm dấu ... giữa các trang không liền kề
-              if (index > 0 && page > array[index - 1] + 1) {
-                acc.push("...");
-              }
-              acc.push(page);
-              return acc;
-            }, [] as (number | string)[])
-            .map((page, index) =>
-              page === "..." ? (
-                <PaginationItem key={`ellipsis-${index}`}>
-                  <span className="px-2">...</span>
-                </PaginationItem>
-              ) : (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    className="cursor-pointer"
-                    onClick={() => handlePageChange(page as number)}
-                    isActive={page === currentPage}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              )
-            )}
+            {/* Hiển thị danh sách các trang */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter((page) => {
+                // Hiển thị trang đầu, trang cuối, và các trang xung quanh currentPage
+                return (
+                  page === 1 || // Trang đầu
+                  page === totalPages || // Trang cuối
+                  (page >= currentPage - 2 && page <= currentPage + 2) // Các trang xung quanh currentPage
+                );
+              })
+              .reduce((acc, page, index, array) => {
+                // Thêm dấu ... giữa các trang không liền kề
+                if (index > 0 && page > array[index - 1] + 1) {
+                  acc.push("...");
+                }
+                acc.push(page);
+                return acc;
+              }, [] as (number | string)[])
+              .map((page, index) =>
+                page === "..." ? (
+                  <PaginationItem key={`ellipsis-${index}`}>
+                    <span className="px-2">...</span>
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      className="cursor-pointer"
+                      onClick={() => handlePageChange(page as number)}
+                      isActive={page === currentPage}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
 
-          {/* Nút Tiếp */}
-          <PaginationItem>
-            <PaginationNext
-              className="cursor-pointer"
-              onClick={() => handlePageChange(currentPage + 1)}
-              // disabled={currentPage === totalPages}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            {/* Nút Tiếp */}
+            <PaginationItem>
+              <PaginationNext
+                className="cursor-pointer"
+                onClick={() => handlePageChange(currentPage + 1)}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 };

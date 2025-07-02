@@ -1,9 +1,9 @@
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTrigger
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
 import React, { useState } from "react";
@@ -23,7 +23,7 @@ const SidebarMobile: React.FC = () => {
   return (
     <>
       {/* Trigger để mở Sidebar */}
-      <div className="sm:hidden">
+      <div className="lg:hidden">
         <Sheet>
           <SheetTrigger>
             <div>
@@ -125,12 +125,13 @@ const SidebarMobile: React.FC = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <h3
-                    className="text-base font-medium  cursor-pointer"
+                  <Link
+                    to="/users/order-history"
+                    className="block"
                     onClick={() => setActiveMenu(null)}
                   >
                     Đơn Mua
-                  </h3>
+                  </Link>
                 </div>
               </div>
 
@@ -149,12 +150,13 @@ const SidebarMobile: React.FC = () => {
                   />
                 </svg>
 
-                <h3
+                <Link
+                  to="/users/voucher"
                   className="text-base font-medium cursor-pointer"
                   onClick={() => setActiveMenu(null)}
                 >
                   Kho Voucher
-                </h3>
+                </Link>
               </div>
 
               {/* Đăng xuất */}

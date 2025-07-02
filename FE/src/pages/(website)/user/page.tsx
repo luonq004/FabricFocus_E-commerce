@@ -3,10 +3,10 @@ import ProfilePageModern from "./_components/ProfileUser";
 
 const ProfilePage = () => {
   React.useEffect(() => {
-        document.title = "Thông Tin Cá Nhân"; 
-      }, []);
+    document.title = "Thông Tin Cá Nhân";
+  }, []);
   return (
-    <div className="flex">
+    <div>
       <ProfilePageModern />
     </div>
   );

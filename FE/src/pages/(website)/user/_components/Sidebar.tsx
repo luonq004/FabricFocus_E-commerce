@@ -18,7 +18,7 @@ const SidebarAccount: React.FC = () => {
   return (
     <div className="flex">
       {/* Sidebar bên trái */}
-      <div className="w-64 hidden sm:block bg-gray-200 p-4 shadow-lg">
+      <div className="w-64 hidden lg:block bg-gray-200 p-4 shadow-lg">
         {/* Ảnh đại diện của người dùng */}
         <h2 className="text-base text-center font-semibold mt-7">
           {user?.firstName} {user?.lastName}
@@ -178,7 +178,7 @@ const SidebarAccount: React.FC = () => {
 
       {/* Nội dung bên phải */}
       <div className="flex-1 relative bg-white overflow-y-auto min-h-screen">
-        <div className=" absolute top-2 right-4">
+        <div className="z-10 absolute top-2 right-4">
           <SidebarMobile />
         </div>
 
