@@ -415,8 +415,11 @@ const OrderHistory = () => {
             <PaginationItem>
               <PaginationPrevious
                 className="cursor-pointer"
-                onClick={() => handlePageChange(currentPage - 1)}
-                // disabled={currentPage === 1}
+                onClick={() => {
+                  if (currentPage < 1) {
+                    handlePageChange(currentPage - 1);
+                  }
+                }}
               />
             </PaginationItem>
 
@@ -427,7 +430,7 @@ const OrderHistory = () => {
                 return (
                   page === 1 || // Trang đầu
                   page === totalPages || // Trang cuối
-                  (page >= currentPage - 2 && page <= currentPage + 2) // Các trang xung quanh currentPage
+                  (page >= currentPage - 2 && page <= currentPage + 1) // Các trang xung quanh currentPage
                 );
               })
               .reduce((acc, page, index, array) => {
@@ -460,7 +463,11 @@ const OrderHistory = () => {
             <PaginationItem>
               <PaginationNext
                 className="cursor-pointer"
-                onClick={() => handlePageChange(currentPage + 1)}
+                onClick={() => {
+                  if (currentPage < totalPages) {
+                    handlePageChange(currentPage + 1);
+                  }
+                }}
               />
             </PaginationItem>
           </PaginationContent>
