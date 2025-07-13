@@ -46,6 +46,14 @@ export function InfoTest() {
                 <p>Email: clienttest2@gmail.com</p>
                 <p>Password: clienttest2</p>
               </div>
+
+              <div className="my-4 bg-gray-200">
+                <h3>Thông tin khi thanh toán bằng VNPay:</h3>
+                <p>ngân hàng: ncb</p>
+                <p>số thẻ: 9704198526191432198</p>
+                <p>tên: NGUYEN VAN A</p>
+                <p>ngày: 07/15</p>
+              </div>
             </div>
             <DialogFooter>
               <DialogClose asChild>
