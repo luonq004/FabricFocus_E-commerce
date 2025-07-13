@@ -6,7 +6,7 @@ const ProfilePage = () => {
     document.title = "Thông Tin Cá Nhân";
   }, []);
   return (
-    <div>
+    <div className="flex">
       <ProfilePageModern />
     </div>
   );
