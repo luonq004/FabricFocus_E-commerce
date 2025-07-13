@@ -171,15 +171,15 @@ export const createUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const { includeDeleted = "false" } = req.query;
+    const { includeDeleted = "false", role = "User" } = req.query;
 
     // Chuyển includeDeleted thành boolean
     const includeDeletedFlag = includeDeleted === "true";
 
     // Tạo bộ lọc dữ liệu
     const filter = includeDeletedFlag
-      ? { isDeleted: true }
-      : { isDeleted: false };
+      ? { isBanned: true, role }
+      : { isBanned: false, role };
 
     // Truy vấn tất cả người dùng
     const users = await Users.find(filter);

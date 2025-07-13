@@ -54,11 +54,10 @@ const ListBlog = () => {
     fetch(`${import.meta.env.VITE_API_URL}/blogs`)
       .then((response) => response.json())
       .then((data) => {
-        if (Array.isArray(data)) {
-          setBlogs(data);
-          setFilteredBlogs(data);
+        if (Array.isArray(data.data)) {
+          setBlogs(data.data);
+          setFilteredBlogs(data.data);
         } else {
-          // console.error("API không trả về mảng hợp lệ:", data);
           setBlogs([]);
           setFilteredBlogs([]);
         }

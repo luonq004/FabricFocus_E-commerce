@@ -7,6 +7,7 @@ import NewArrivals from "./_componnents/NewArrivals";
 import OurSeries from "./_componnents/OurSeries";
 import Slider from "./_componnents/Slider";
 import SubscribeSection from "./_componnents/SubscribeSection";
+import { InfoTest } from "@/components/InfoTest";
 
 const HomePageNew = () => {
   React.useEffect(() => {
@@ -28,6 +29,7 @@ const HomePageNew = () => {
         <SubscribeSection />
         {/* Chat */}
         {_id && <ChatPopup />}
+        <InfoTest />
       </main>
     </div>
   );

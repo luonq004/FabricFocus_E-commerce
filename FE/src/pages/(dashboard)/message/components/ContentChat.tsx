@@ -102,13 +102,13 @@ const ContentChat = () => {
     }
   };
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter" && newMessage) {
-      // await sendMessage(_id);
-    }
-  };
+  // const handleKeyDown = async (
+  //   event: React.KeyboardEvent<HTMLInputElement>
+  // ) => {
+  //   if (event.key === "Enter" && newMessage) {
+  //     // await sendMessage(_id);
+  //   }
+  // };
 
   useEffect(() => {
     if (messageEndRef.current && listMessage) {
@@ -169,7 +169,7 @@ const ContentChat = () => {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e)}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
           className="w-full rounded-lg border-gray-200"
           disabled={selectedUser ? false : true}
         />

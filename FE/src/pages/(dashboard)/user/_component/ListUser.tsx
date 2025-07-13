@@ -54,12 +54,14 @@ function ListUser() {
 
   useEffect(() => {
     fetchUsers();
-  }, [includeDeleted]);
+  }, [includeDeleted, roleFilter]);
 
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`/users`);
+      const res = await axios.get(
+        `/users?includeDeleted=${includeDeleted}&role=${roleFilter}`
+      );
 
       const usersData = Array.isArray(res.data?.data) ? res.data.data : [];
 
@@ -306,7 +308,7 @@ function ListUser() {
                 className="border w-full sm:w-auto px-4 py-2 rounded-md"
               >
                 <option value="active">Tài khoản đang hoạt động</option>
-                <option value="deleted">Tài khoản đã bị xóa</option>
+                <option value="deleted">Tài khoản đã bị khóa</option>
               </select>
 
               <Dialog open={isOpen} onOpenChange={setIsOpen}>
